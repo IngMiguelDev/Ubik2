@@ -1,0 +1,12 @@
+{
+  "source": "Secretaría Distrital de Planeación / servicio Catastro Distrital",
+  "url": "https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/ordenamientoterritorial/unidadplaneamiento/MapServer/55",
+  "downloadedAt": "2026-10-06",
+  "license": "CC BY 4.0 (ficha IDECA)",
+  "crs": "EPSG:4326",
+  "sourceFeatures": 114,
+  "domains": 95,
+  "memberUpz": 112,
+  "method": "Multipartes oficiales agrupadas por codigos_upz del CSV; se preservan los límites internos, sin desagregar indicadores.",
+  "limitation": "Correspondencia por códigos verificada; equivalencia exacta con límites históricos EM 2021 pendiente de validación SIG."
+}

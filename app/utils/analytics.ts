@@ -11,6 +11,8 @@ export function integral(row: Row, schema: Schema) {
   return vals.every(x => x !== null) ? vals.filter(x => x! > 0).length : null
 }
 export function need(row: Row, all: Row[], schema: Schema, scenario = 'equal'): number | null {
+  const suppliedKey = scenario === 'housing' ? 'necesidad_vivienda' : scenario === 'risk' ? 'necesidad_riesgo' : 'necesidad_igual'
+  if (schema[suppliedKey]) return numeric(value(row, schema, suppliedKey))
   let sum = 0, weights = 0
   for (const key of dimensions) {
     const v = numeric(value(row, schema, key))

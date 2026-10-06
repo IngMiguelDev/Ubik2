@@ -9,4 +9,4 @@ export const lines = [
   { key: 'reasentamientos', label: 'Reasentamientos', color: '#887745' }
 ] as const
 export type Schema = Record<string, string>
-export interface Dataset { rows: Row[]; columns: string[]; schema: Schema; source: { name: string; date: string | null; license: string | null }; status?: string }
+export interface Dataset { rows: Row[]; columns: string[]; schema: Schema; source: { name: string; date: string | null; license: string | null }; status?: string; analysis?: { kind: string; dimensionsScale: string; proposal: string; housingScope: string; periods: string } }

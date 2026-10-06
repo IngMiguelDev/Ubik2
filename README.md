@@ -1,10 +1,10 @@
 # UBiK2 · Observatorio territorial CVP
 
-Dashboard estático en español con Vue 3, Nuxt 4, TypeScript, Tailwind CSS, ECharts y Leaflet. Incluye seis secciones, navegación plegable, filtros combinados, búsqueda, paginación, comparación de ponderaciones, fichas y descargas. Sin autenticación ni backend.
+Dashboard estático en español con Vue 3, Nuxt 4, TypeScript, Tailwind CSS, ECharts y Leaflet. Incluye seis secciones, filtros combinados, búsqueda, paginación, fichas, sensibilidad de ponderaciones, descargas y cartografía. Sin autenticación ni backend.
 
-## Ejecutar
+## Instalación y ejecución
 
-Requiere **Node 24.11 o posterior** y npm 10 o posterior. Se incluye `package-lock.json` para instalaciones reproducibles. En este equipo ya está instalado Node 24.18.0; si usas fnm, ejecuta `fnm use 24.18.0` antes de npm (la sesión inicial usaba Node 20).
+Requiere Node 24.11 o posterior y npm 10 o posterior. En este equipo: `fnm use 24.18.0`. Se incluyen `.node-version` y `package-lock.json`.
 
 ```sh
 npm ci
@@ -18,85 +18,101 @@ npm run build
 npm run generate
 ```
 
-La generación estática produce `.output/public`. Sirve ese directorio con cualquier servidor estático. Las secciones usan fragmentos de URL (`#mapa`, `#ficha`, etc.), por lo que no requieren reglas de reescritura del servidor.
+La generación produce `.output/public`, listo para un servidor estático. Las secciones usan fragmentos de URL (`#mapa`, `#ficha`), sin reglas de reescritura.
 
-## Datos pendientes
+## Información integrada
 
-En esta entrega solo estuvo disponible el texto de la solicitud. **No estaban adjuntos el PDF Data Jam CVP 2026, `ubik2_indicadores_preliminares.csv` ni la imagen de referencia.** El repositorio original solo contenía README y LICENSE. El archivo público inicial es un conjunto vacío explícito, sin cifras simuladas. No fue posible analizar la estructura real del CSV, comprobar sus conteos ni contrastar la metodología con el PDF.
+Se analizaron los cuatro archivos aportados por el usuario:
 
-Puedes cargar un CSV en la aplicación y asignar sus columnas mediante el formulario. La carga es local a la sesión y no se envía a un servidor ni modifica el repositorio. El archivo debe contener **una fila por dominio**, con código único; no se aceptan códigos vacíos o duplicados. Los códigos permanecen como texto. El tipo territorial proviene del archivo; no se deduce por el nombre del dominio.
+- `ubik2_indicadores_preliminares.csv`: 95 dominios, 106 columnas, 80 UPZ individuales y 15 agrupaciones en 19 localidades. Sus dominios contienen 112 UPZ integrantes. Una fila representa un dominio completo.
+- `UBiK2 · Propuesta Data Jam CVP 2026.pdf`: seis páginas; disponible en Metodología. Describe el alcance propuesto, que se diferencia del resultado preliminar entregado.
+- `intervencion_de_mejoramiento_de_barrios.geojson`: 557 elementos geométricos y 233 IDs de intervención distintos; se muestra como capa separada y se puede descargar. No contiene límites de dominios EM.
+- `ubik2.png`: logo original incorporado sin alteración en la navegación.
 
-Solo asigna dimensiones numéricas con significado verificado. Un código de estado o riesgo no es un indicador continuo. Documenta las unidades y el sentido de mayor necesidad con el diccionario. Los campos sin asignación se mantienen sin dato. Pobreza y jefatura femenina se muestran como contexto, fuera del índice.
+La aplicación carga automáticamente el CSV convertido. El CSV original se conserva y descarga completo. La fecha `2026-10-06` es la fecha de validación preliminar declarada en las filas, **no un corte temporal común de actuaciones**. Los adjuntos no declaran una licencia del CSV o GeoJSON de intervenciones; se indica como pendiente, sin asumir la licencia del repositorio de software.
 
-## Actualización reproducible
+### Conteos verificados del CSV
 
-1. Carga el archivo real, verifica su diccionario, asigna las columnas y registra fuente, fecha y licencia en la aplicación.
-2. En Metodología, descarga el esquema JSON; este contiene los nombres **reales** de las columnas y la lista explícita de columnas numéricas.
-3. Ejecuta:
+| Línea | Registros publicados |
+|---|---:|
+| Mejoramiento de Barrios | 494 |
+| Mejoramiento de Vivienda | 864 |
+| Curaduría Pública Social | 1.185 |
+| Titulación Predial | 5.899 |
+| Reasentamientos | 18.347 |
+
+No se suman líneas como beneficiarios únicos. Los campos de IDs distintos se presentan por dominio; su suma no prueba que sean IDs únicos globales. El GeoJSON de Barrios tiene un universo distinto al del CSV (557 elementos frente a 494 registros; 233 IDs globales frente a 206 IDs distintos sumados por dominio). No se sustituyen los conteos ni se establece una explicación no verificada para esa diferencia.
+
+## Reproducir y actualizar los datos
+
+El esquema revisado está en `data/preliminary-schema.json`. Declara las columnas numéricas explícitamente; conserva como texto los códigos territoriales, nombres, fechas y estados. El conversor preserva los nulos y rechaza códigos de dominio vacíos o duplicados.
 
 ```sh
-npm run convert -- ruta/ubik2_indicadores_preliminares.csv ruta/ubik2_esquema.json
+npm run convert -- ruta/ubik2_indicadores_preliminares.csv data/preliminary-schema.json
+node scripts/build-domains.mjs
+npm run test
 npm run generate
 ```
 
-El conversor detecta el delimitador, interpreta campos entre comillas, preserva códigos con ceros iniciales, convierte únicamente columnas numéricas declaradas y conserva celdas vacías como `null`. Admite punto o coma decimal sin separador de miles; rechaza números ambiguos o textos en columnas numéricas. Escribe `public/data/dataset.json` y una copia del CSV original en `public/data/original.csv`. Con salida personalizada, ambos archivos se escriben en el directorio de salida.
+`scripts/configure-preliminary.mjs` reproduce el esquema de las 106 columnas conocidas. Solo usarlo para esta estructura; si cambia el CSV, revisar antes las columnas y el diccionario. Desde la aplicación se pueden cargar otros CSV y asignar sus campos; la carga es local a la sesión, sin envío a un servidor. El esquema se puede descargar desde Metodología.
 
-Las columnas no asignadas se conservan como texto, para no inferir tipos ni reinterpretar códigos. El original se descarga completo; los resultados filtrados incluyen las filas convertidas, los tres índices exploratorios y la integralidad, preservando nulos y protegiendo frente a fórmulas de hojas de cálculo. Las columnas calculadas llevan prefijo `ubik2_` (con prefijos adicionales si hay colisiones). Ninguna transformación desagrega dominios agrupados ni deduplica beneficiarios entre líneas.
+El conversor escribe `public/data/dataset.json` y copia el archivo de entrada a `public/data/original.csv`. Con una salida personalizada escribe ambos archivos en ese directorio. Detecta delimitadores, maneja comillas y admite punto o coma decimal sin separadores de miles. Celdas vacías son `null`, nunca cero. Columnas no declaradas numéricas permanecen como texto.
 
-## Cálculos y limitaciones
+La exportación filtrada incluye las columnas originales convertidas, los tres índices exploratorios y la integralidad. Las columnas añadidas llevan prefijo `ubik2_` y evitan colisiones. Se protegen textos que podrían interpretarse como fórmulas al abrir una hoja de cálculo.
 
-- Índice exploratorio: normalización min–max de cada dimensión sobre todo el archivo, con dirección explícitamente verificada. Si mayor valor significa menor necesidad, se invierte el rango. Los filtros no cambian la normalización. Es una decisión provisional de implementación, pendiente de contraste con el PDF.
-- Pesos: iguales (25% por dimensión), vivienda doble (40% vivienda y 20% otras) y riesgo doble (40% riesgo y 20% otras). Resultado de 0 a 100. Una dimensión faltante, sin dirección o constante produce «Sin dato»; no se imputan valores.
-- Integralidad: número de las cinco líneas con conteo mayor a cero. Solo se calcula cuando las cinco tienen dato. Un cero explícito es diferente de un nulo.
-- Los totales por línea suman únicamente valores disponibles. Son sumas parciales cuando hay nulos; la sección Presencia indica cuántos dominios tienen dato. Las tasas e identificadores distintos del CSV se muestran por dominio sin agregarlos ni inventar denominadores.
-- Brecha, ranking y actuaciones ejecutadas vacíos: «Pendiente de validación». No se calcula brecha entre el índice y los conteos. Un orden por necesidad es exploración, no priorización institucional.
-- Encuesta EM 2021 frente a publicaciones misionales de períodos heterogéneos. Presencia publicada no equivale a cobertura efectiva, ni su ausencia a ausencia del Estado. Registros de distintas líneas no se suman como beneficiarios únicos.
-- El servicio oficial de Mejoramiento de Vivienda describe Plan Terrazas. Falta comprobar si ese mismo alcance aplica al CSV.
+## Metodología aplicada
 
-## Fuentes oficiales
+- Se utilizan **los índices del CSV**, sin renormalizarlos: `indice_tenencia_relativo`, `indice_vivienda_relativo`, `indice_entorno_relativo`, `indice_riesgo_reportado_relativo`, y las tres columnas de necesidad. Las cuatro dimensiones van de 0 a 100. La reproducción de los promedios ponderados coincide con los índices publicados con error inferior a 0,000001 puntos.
+- Se reprodujo `100 × (x − mínimo) / (máximo − mínimo)` sobre `pct_tenencia_proxy`, `pct_deficit_cualitativo`, `entorno_proxy_pct_medio` y `pct_riesgo_reportado_alguno`; el error es inferior a 0,000004 puntos por los valores redondeados del CSV. El proxy medio de entorno coincide con la media de vía mala, iluminación insuficiente y basuras inadecuadas. Esta comprobación numérica no valida los microdatos, el diseño muestral ni la selección de preguntas.
+- Pesos iguales: 25% por dimensión. Doble vivienda: 40% vivienda y 20% cada otra dimensión. Doble riesgo: 40% riesgo y 20% cada otra dimensión. Los filtros no recalculan rangos ni índices.
+- Para un CSV personalizado sin índices publicados: min–max sobre todos los dominios, con dirección de mayor necesidad explícitamente verificada. Se invierte si es decreciente. Una dimensión constante, sin dirección o faltante impide calcular el índice; no se imputa.
+- Las fichas muestran porcentajes originales de tenencia, vivienda, entorno, riesgo reportado y contexto, junto a sus denominadores cuando existen. Propietarios sin escritura usa el subconjunto de propietarios. No se promedian porcentajes entre dominios.
+- Pobreza monetaria, pobreza multidimensional y jefatura femenina son contexto diferencial, **fuera del índice preliminar**. El PDF propone una vulnerabilidad transversal, pero no se incorpora arbitrariamente.
+- Integralidad: cantidad de las cinco líneas con registros positivos; coincide con `lineas_con_registro_publicado` en las 95 filas. Se requiere dato en las cinco líneas.
+- Tasas: las columnas publicadas usan 1.000 hogares expandidos EM 2021; Barrios usa km². Se muestran por dominio sin agregar tasas o cambiar denominadores.
+- Vivienda está limitada a `SOLO_PLAN_TERRAZAS`. El archivo reporta 462 programados, 167 en ejecución, 235 asistencias técnicas ejecutadas y 0 no ejecutables. Asistencia técnica ejecutada no equivale a obra terminada ni a cobertura efectiva.
+- `indice_presencia_ejecutada_2021_mas`, `brecha_total_validada`, `ranking_priorizacion_validado` e `indice_riesgo_integrado_validado` están vacíos en las 95 filas: «Pendiente de validación». No se calcula brecha restando conteos a necesidad.
+- Los códigos de estado misional y riesgo POT se conservan sin asignarles etiquetas no verificadas. Riesgo reportado no equivale a clasificación técnica de amenaza. El PDF plantea riesgo integrado y presencia ejecutada desde 2021; esas etapas todavía no están validadas en el CSV.
+- Encuesta 2021 frente a registros de períodos heterogéneos (`TODOS_LOS_REGISTROS_PUBLICADOS_NO_PERIODO_COMUN`). Un orden por necesidad es exploración, no priorización institucional; ausencia de registros CVP no prueba ausencia del Estado. Las descripciones no formulan conclusiones causales.
 
-Consulta realizada el **6 de octubre de 2026**. El enlace inicial de búsqueda falló, pero el [catálogo por entidad](https://datosabiertos.bogota.gov.co/dataset/?organization=caja-de-la-vivienda-popular) permitió identificar las cinco publicaciones. Se verificaron fichas, fechas del dato, licencia CC BY 4.0 y enlaces anunciados; los intentos de acceder a servicios y diccionarios dieron errores o tiempos de espera. Por eso sus campos y códigos permanecen sin interpretación. El inventario está en `app/utils/sources.ts` y aparece en la aplicación.
+## Cartografía oficial y adjunta
 
-| Conjunto | Fecha del dato | Recursos anunciados |
-|---|---|---|
-| [Mejoramiento de Barrios](https://datosabiertos.bogota.gov.co/dataset/mejoramiento_barrio) | 2024-12-23 | REST, WMS, WFS, HTML y formatos geográficos |
-| [Mejoramiento de Vivienda](https://datosabiertos.bogota.gov.co/dataset/mejoramiento-de-vivienda) | 2024-12-23 | REST, WMS, WFS y formatos geográficos |
-| [Curaduría Pública Social](https://datosabiertos.bogota.gov.co/dataset/tramite-curaduria-publica-social) | 2024-12-23 | REST, WMS, WFS y formatos geográficos |
-| [Titulación Predial](https://datosabiertos.bogota.gov.co/dataset/titulacion-predial-bogota-d-c) | 2026-03-06 | REST, WMS, WFS, HTML y formatos geográficos |
-| [Reasentamiento](https://datosabiertos.bogota.gov.co/dataset/reasentamiento-humano) | 2024-12-23 | REST, WMS, WFS, HTML y formatos geográficos |
+Se descargó la [capa oficial de planeamiento zonal/rural SDP–Catastro](https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/ordenamientoterritorial/unidadplaneamiento/MapServer/55) el 6 de octubre de 2026, seleccionando `UPLTIPO=1`, campos verificados `UPLCODIGO`, `UPLNOMBRE`, `UPLTIPO` y salida WGS84. Contiene 114 geometrías y 112 códigos UPZ distintos (UPZ52 y UPZ60 tienen dos partes). Las 112 claves coinciden con los integrantes del CSV; no hay claves faltantes ni UPZ asignadas a dos dominios.
 
-Las fechas de modificación de metadatos no se usan como cortes de actuaciones. Los diccionarios enlazados son referencias identificadas, no contenidos verificados.
+`scripts/build-domains.mjs` agrupa **todas** las partes oficiales según `codigos_upz`. Produce 95 features MultiPolygon, una por dominio; preserva los límites internos y no reparte estimaciones. No es una reconstrucción de los límites históricos de la EM 2021: la equivalencia exacta y el corte de esa capa requieren validación SIG. La [ficha IDECA](https://www.ideca.gov.co/recursos/mapas/unidad-de-planeamiento-bogota-dc) identifica la fuente SDP y licencia CC BY 4.0. La procedencia de esta descarga y su limitación están en `public/data/geometry-provenance.json`.
 
-## Cartografía
+```sh
+# Solo si se quiere actualizar la descarga oficial; requiere red.
+node scripts/download-upz.mjs
+node scripts/build-domains.mjs
+```
 
-El explorador permite cargar GeoJSON oficial de **dominios completos**, en WGS84, asignar la propiedad de código y registrar procedencia/licencia. Exige confirmar que las agrupaciones tienen geometrías unidas. La unión con el CSV es por código exacto; geometrías sin coincidencia o sin indicador se muestran grises. Permite zoom, consulta de valores, selección y ficha; la tabla proporciona la alternativa mediante teclado. No depende de teselas externas.
+El mapa funciona con archivos locales, sin teselas externas. Permite seleccionar necesidad, dimensiones, presencia o integralidad y abrir fichas. La capa azul de intervenciones adjuntas se filtra **solo por localidad**, usando `loccodigo`; no tiene un cruce espacial validado por dominio ni altera el CSV. El selector de línea desactiva la capa de Barrios al consultar otra línea. Los códigos de estado se muestran literalmente. Existe carga alternativa de GeoJSON de dominios completos con validación de formato y procedencia; la tabla proporciona consulta por teclado.
 
-Se identificó la [fuente IDECA de unidades de planeamiento](https://www.ideca.gov.co/recursos/mapas/unidad-de-planeamiento-bogota-dc), CC BY 4.0. Su enlace REST actual conduce a UPL y la descarga GeoJSON respondió 403. También se verificó una [capa de planeamiento zonal/rural](https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/ordenamientoterritorial/unidadplaneamiento/MapServer/55), pero no la correspondencia histórica con los dominios EM 2021. No se incorporó como geometría de dominios. Sin el CSV y una tabla verificada de pertenencia de UPZ, no se puede construir correctamente la geometría de sus agrupaciones.
+## Catálogo oficial
+
+La consulta inicial de búsqueda falló; el [catálogo por entidad](https://datosabiertos.bogota.gov.co/dataset/?organization=caja-de-la-vivienda-popular) permitió identificar las cinco publicaciones. Las fichas consultadas indican CC BY 4.0, enlaces de recursos y diccionarios; sus cortes son 2024-12-23, excepto [Titulación Predial](https://datosabiertos.bogota.gov.co/dataset/titulacion-predial-bogota-d-c), con fecha del dato 2026-03-06. No se confunde modificación del metadato con fecha del dato. El inventario de enlaces verificados aparece en Metodología y en `app/utils/sources.ts`.
+
+Los intentos iniciales de acceder a servicios misionales y diccionarios fallaron; no se interpretan sus códigos. La integración utiliza los archivos entregados. La descarga posterior de la capa oficial UPZ sí fue accesible y se documenta por separado.
 
 ## GitLab Pages
 
-El pipeline `.gitlab-ci.yml` instala, prueba, comprueba tipos y genera los archivos estáticos. Publica únicamente en la rama principal cuando el repositorio se suba a GitLab; esta entrega no realiza despliegues.
+`.gitlab-ci.yml` usa Node 24, instala con `npm ci`, ejecuta pruebas y TypeScript, y genera el sitio en la rama principal. `scripts/generate-pages.mjs` deriva la ruta de `CI_PAGES_URL` o respeta `NUXT_APP_BASE_URL`. Para un sitio bajo `/Ubik2/` puedes establecer esa ruta; para un dominio dedicado, `/`.
 
-El pipeline deriva la ruta base de `CI_PAGES_URL` y respeta `NUXT_APP_BASE_URL` si la defines explícitamente. Para forzar un sitio bajo `/Ubik2/`, configura `NUXT_APP_BASE_URL=/Ubik2/` en las variables de CI. Para un dominio dedicado o Pages con dominio único usa `/`. El directorio publicado es `pages-output`, separado de los archivos fuente `public/data`. La configuración usa [`pages.publish`](https://docs.gitlab.com/ci/yaml/#pagespublish) de GitLab 17.9 o posterior.
+El directorio publicado es `pages-output`, separado de `public/data`. Usa [`pages.publish`](https://docs.gitlab.com/ci/yaml/#pagespublish), GitLab 17.9 o posterior. No se realizó despliegue remoto en esta entrega.
+
+## Verificaciones
+
+- Diez pruebas automatizadas: tipos, nulos, filtros, ponderaciones, exportación, conversor y comprobación de **cada celda** de las 95 filas y 106 columnas frente al CSV.
+- Totales de las cinco líneas, integralidad y escenarios comprobados contra valores reales.
+- Correspondencia completa de códigos y multipartes cartográficos, conservación de agrupaciones y separación del GeoJSON de actuaciones.
+- Compilación/generación estática y comprobación TypeScript. `scripts/verify-ui.mjs` usa Edge headless para probar carga inicial real, mapas, filtros, fichas, importación alternativa, descargas, paginación y diseño de escritorio/móvil. Las capturas están en `artifacts/`, excluidas de Git.
+- La prueba de navegador pasó con los 95 dominios reales, las 557 intervenciones (17 al filtrar Usaquén), una ficha de agrupación y el logo. También pasó bajo `/Ubik2/`, comprobando los recursos en la ruta de GitLab Pages y sin errores JavaScript.
+
+Pendientes del equipo: licencias y cortes de los adjuntos, equivalencia histórica de límites, discrepancia del GeoJSON con el CSV, diccionarios de estados/riesgo, presencia ejecutada, índice de riesgo integrado, brecha y ranking institucional. No se implementan resultados prescriptivos ni se dan por demostradas las hipótesis del PDF.
 
 ## Organización
 
-- `app/components`: controles reutilizables, gráficos, cartografía, fichas y fuentes.
-- `app/composables/useTerritorialData.ts`: carga, asignación, filtros y descargas.
-- `app/types`: modelos y líneas misionales.
-- `app/utils`: CSV, indicadores, opciones ECharts y procedencia.
-- `scripts/convert-csv.mjs`: conversión reproducible.
-- `tests`: pruebas de nulos, tipos, filtros, ponderaciones y conversor con datos artificiales exclusivamente de prueba.
-- `scripts/verify-ui.mjs`: comprobación funcional con Playwright y Edge. Ejecutar `node scripts/verify-ui.mjs` después de generar; produce capturas en `artifacts/`. No modifica los datos públicos.
+`app/components` contiene gráficos, mapas, fichas, metodología y controles; `app/composables` gestiona datos y filtros; `app/types` define modelos; `app/utils` separa cálculos y procedencia. `scripts` reproduce conversión y cartografía; `tests` verifica lógica y archivos reales. Los activos públicos incluyen CSV, JSON, GeoJSON, PDF y logo.
 
-Antes de usar resultados institucionales, el equipo debe aportar los tres adjuntos y validar unidades, columnas, ponderaciones, cortes, licencias, claves de unión y geometrías de las agrupaciones.
-
-## Verificaciones de esta entrega
-
-- Seis pruebas automatizadas aprobadas: tipos, nulos, conteos parciales, filtros combinados, sensibilidad de pesos, exportación y conversión reproducible.
-- Comprobación completa con `nuxt typecheck` y compilación/generación estática sin errores.
-- Edge headless: escritorio de 1440 px y móvil de 390 px, sin desbordamiento horizontal de la página ni errores JavaScript. Se revisaron las capturas.
-- Prueba funcional con un CSV artificial de 12 dominios: paginación, filtrado a 6 dominios por localidad y a 5 con registros de Barrios, búsqueda sin resultados, limpieza, descarga de 12 filas, fichas con campos pendientes y carga/selección de un polígono GeoJSON de prueba.
-- La misma prueba pasó bajo `/Ubik2/`, verificando carga de datos y recursos con la ruta base de Pages.
-
-Estas pruebas verifican el comportamiento de la aplicación. **No validan los conteos del CSV solicitado, que no estuvo disponible**, ni la oficialidad de geometrías aportadas por un usuario. GitLab CI no se ejecutó en un servidor remoto.
+La [bitácora de apoyo de IA](docs/bitacora-ia.md) distingue comprobaciones automatizadas de la validación humana pendiente.

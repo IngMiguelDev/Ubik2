@@ -3,6 +3,7 @@ node_modules/
 .output/
 dist/
 .npm-cache/
+.python-deps/
 test-results/
 playwright-report/
 build.log

@@ -1,0 +1,3 @@
+public/data/original.csv -text
+*.png binary
+*.pdf binary
