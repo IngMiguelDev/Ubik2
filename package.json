@@ -1,0 +1,38 @@
+{
+  "name": "ubik2-observatorio",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.11.0",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck",
+    "convert": "node scripts/convert-csv.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "echarts": "^6.0.0",
+    "leaflet": "^1.9.4",
+    "lucide-vue-next": "^0.468.0",
+    "nuxt": "4.2.2",
+    "papaparse": "^5.5.3",
+    "tailwindcss": "^4.1.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/geojson": "^7946.0.16",
+    "@types/leaflet": "^1.9.0",
+    "@types/papaparse": "^5.3.16",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vue-tsc": "^3.0.0"
+  }
+}

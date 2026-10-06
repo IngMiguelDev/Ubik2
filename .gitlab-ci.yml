@@ -1,0 +1,19 @@
+image: node:24
+stages:
+  - deploy
+pages:
+  stage: deploy
+  script:
+    - npm ci
+    - npm run test
+    - npm run typecheck
+    - node scripts/generate-pages.mjs
+    - mkdir -p pages-output
+    - cp -a .output/public/. pages-output/
+  pages:
+    publish: pages-output
+  artifacts:
+    paths:
+      - pages-output
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

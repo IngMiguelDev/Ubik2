@@ -1,0 +1,11 @@
+node_modules/
+.nuxt/
+.output/
+dist/
+.npm-cache/
+test-results/
+playwright-report/
+build.log
+install.log
+typecheck.log
+artifacts/
