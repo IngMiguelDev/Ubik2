@@ -53,12 +53,16 @@ function exportSelection(){download('ubik2_seleccion.csv',exportRows(visible.val
         <p class="chart-footnote">La EM publica dominios estadísticos: algunas UPZ se agrupan y conservan su resultado conjunto. {{ visible.length }} dominios en la selección · {{ dataset.rows.length }} en el archivo.</p>
         <p v-if="filters.domain || filters.line" class="notice">Hay filtros adicionales de dominio o línea activos. Restablécelos para ampliar la consulta.</p>
       </section>
-      <ClientOnly><LazyTerritorialMap :dataset="dataset" :rows="visible" :line="filters.line" :metric-key="metric" :metric-label="indicator?.label" :selected-code="selected" compact @select="selected=$event"/><template #fallback><section class="panel loading">Preparando mapa territorial…</section></template></ClientOnly>
+      <div class="overview-map-column">
+        <ClientOnly><LazyTerritorialMap :dataset="dataset" :rows="visible" :line="filters.line" :metric-key="metric" :metric-label="indicator?.label" :selected-code="selected" compact @select="selected=$event"/><template #fallback><section class="panel loading">Preparando mapa territorial…</section></template></ClientOnly>
+        <TerritoryCharts v-if="territory" :row="territory" :dataset="dataset" @indicator="metric=$event"/>
+      </div>
       <section class="panel overview-territory" aria-label="Territorio seleccionado">
         <div class="section-label">TERRITORIO SELECCIONADO</div>
         <template v-if="territory"><h2>{{ get(territory,'nombre') }}</h2><p class="muted">{{ get(territory,'localidad') }} · {{ get(territory,'tipo') }}<br>Código {{ get(territory,'codigo') }} · UPZ: {{ territory.codigos_upz || 'sin dato' }}</p>
           <div class="territory-highlight"><p>{{ indicator?.label }}</p><strong>{{ metricDisplay(territory) }}</strong><small v-if="validSample!==null && validSample!==undefined">{{ format(validSample) }} hogares con respuesta válida en la muestra</small><small v-else>{{ indicator?.unit }}</small></div>
           <div class="territory-mini-stats"><div><strong>{{ format(territory.pct_deficit_cualitativo) }} %</strong><small>Necesidad de mejoras</small></div><div><strong>{{ format(territory.pct_riesgo_reportado_alguno) }} %</strong><small>Riesgo reportado</small></div><div><strong>{{ format(typeof territory.hogares_expandidos_em2021==='number' ? Math.round(territory.hogares_expandidos_em2021) : null) }}</strong><small>Hogares representados</small></div><div><strong>{{ format(integral(territory,schema)) }}/5</strong><small>Líneas con registros</small></div></div>
+          <ContextIndicators :row="territory" :dataset="dataset"/>
           <h3>Presencia publicada de la CVP</h3><div class="territory-presence"><div v-for="l in lines" :key="l.key"><span>{{ l.label }}<small>{{ l.key==='vivienda'?'Solo Plan Terrazas · registros':l.key==='barrios'?'Elementos físicos publicados':'Registros publicados' }}</small></span><strong>{{ format(get(territory,`registros_${l.key}`)) }}</strong></div></div>
           <p class="notice">Las líneas usan unidades y períodos distintos. Los registros no equivalen a hogares atendidos ni a cobertura completa.</p><p class="chart-footnote">Brecha y priorización: pendientes de validación.</p>
           <button class="text-button" @click="emit('select',String(get(territory,'codigo')))">Ver ficha completa <ArrowUpRight :size="15"/></button>

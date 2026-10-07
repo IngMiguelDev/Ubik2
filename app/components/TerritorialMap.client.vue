@@ -3,10 +3,11 @@ import L from 'leaflet'
 import type { FeatureCollection } from 'geojson'
 import { dimensions, type Dataset, type Row } from '../types/data'
 import { value, numeric, format, need, integral } from '../utils/analytics'
-import { explorerValue } from '../utils/explorer'
+import { availableIndicators, explorerValue } from '../utils/explorer'
 const props=defineProps<{ dataset:Dataset; rows:Row[]; line:string; compact?:boolean; metricKey?:string; metricLabel?:string; selectedCode?:string }>()
 const emit=defineEmits<{ select:[code:string] }>()
 const config=useRuntimeConfig()
+const contextIndicators=computed(()=>availableIndicators(props.dataset).filter(i=>['raw:pct_jefatura_femenina','raw:pct_pobreza_monetaria_hogares','raw:pct_pobreza_multidimensional_hogares'].includes(i.key)))
 const host=ref<HTMLElement>(), geo=shallowRef<FeatureCollection>(), interventions=shallowRef<FeatureCollection>()
 const key=ref(''), error=ref(''), loading=ref(false), indicator=ref('necesidad'), provenance=ref(''), acknowledged=ref(false), showInterventions=ref(false), official=ref(false)
 const matched=ref(0), interventionCount=ref(0)
@@ -73,7 +74,7 @@ onBeforeUnmount(()=>{destroyed=true;drawVersion++;observer?.disconnect();map?.re
 <template>
   <section class="panel" :class="{ 'overview-map': compact }">
     <div class="panel-heading"><div><h2>{{ compact ? 'Mapa de necesidades' : 'Explorador geográfico' }}</h2><p>{{ compact ? `${rows.length} territorios visibles · ${metricLabel}` : 'Dominios completos de la EM 2021 · agrupación por códigos del CSV' }}</p></div><button v-if="compact" class="outline" aria-label="Restablecer vista del mapa" @click="draw">⌂</button><label v-else class="upload-button">Cargar otro GeoJSON<input type="file" accept=".geojson,.json" @change="upload"></label></div>
-    <div v-if="!compact" class="mapping-grid"><label>Indicador<select aria-label="Indicador" v-model="indicator"><option value="necesidad">Necesidad exploratoria · 0–100</option><option v-for="d in dimensions" :key="d" :value="d">{{ d }} · índice relativo</option><option value="presencia">Registros · línea seleccionada o Barrios</option><option value="integralidad">Integralidad · 0–5 líneas</option></select></label><label v-if="geo&&!official">Propiedad con código de dominio<select aria-label="Propiedad con código de dominio" v-model="key"><option value="">Selecciona una propiedad</option><option v-for="f in fields" :key="f">{{ f }}</option></select></label><label v-if="geo&&!official">Procedencia oficial / licencia<input v-model="provenance" placeholder="URL y licencia verificadas"></label></div>
+    <div v-if="!compact" class="mapping-grid"><label>Indicador<select aria-label="Indicador" v-model="indicator"><option value="necesidad">Necesidad exploratoria · 0–100</option><option v-for="d in dimensions" :key="d" :value="d">{{ d }} · índice relativo</option><option v-for="i in contextIndicators" :key="i.key" :value="i.key">{{ i.label }} · % de hogares</option><option value="presencia">Registros · línea seleccionada o Barrios</option><option value="integralidad">Integralidad · 0–5 líneas</option></select></label><label v-if="geo&&!official">Propiedad con código de dominio<select aria-label="Propiedad con código de dominio" v-model="key"><option value="">Selecciona una propiedad</option><option v-for="f in fields" :key="f">{{ f }}</option></select></label><label v-if="geo&&!official">Procedencia oficial / licencia<input v-model="provenance" placeholder="URL y licencia verificadas"></label></div>
     <label v-if="geo&&!official" class="check-label"><input v-model="acknowledged" type="checkbox">Confirmo que son geometrías oficiales de dominios completos; las agrupaciones están unidas y no se desagregan.</label>
     <label v-if="interventions&&!compact" class="check-label"><input v-model="showInterventions" :disabled="!overlayAllowed" type="checkbox">Superponer elementos de Barrios del GeoJSON adjunto (filtrado solo por localidad)</label>
     <div v-if="official&&!compact" class="notice mt-5">95 dominios construidos con 112 UPZ de la capa oficial SDP/Catastro. Las agrupaciones se muestran completas. La correspondencia por código está verificada; la equivalencia de límites con la EM 2021 requiere validación SIG.</div>

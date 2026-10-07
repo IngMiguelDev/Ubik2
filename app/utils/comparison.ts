@@ -1,11 +1,11 @@
 import type { Dataset, Row } from '../types/data'
 import { lines, dimensions } from '../types/data'
-import { explorerIndicators, explorerValue } from './explorer'
+import { availableIndicators, explorerValue } from './explorer'
 import { numeric, value, format } from './analytics'
 export interface ComparisonMetric { key:string; label:string; unit:string }
 export function comparisonMetrics(dataset:Dataset):ComparisonMetric[] {
   return [
-    ...explorerIndicators.filter(i=>!i.key.startsWith('raw:') || dataset.columns.includes(i.key.slice(4))),
+    ...availableIndicators(dataset).filter(i=>!dimensions.some(d=>d===i.key)),
     ...dimensions.filter(d=>dataset.schema[d]).map(d=>({key:d,label:`${d} · dimensión`,unit:dataset.analysis?'Índice relativo · 0–100':'Unidad del archivo'})),
     ...lines.filter(l=>dataset.schema[`registros_${l.key}`]).map(l=>({key:`registros_${l.key}`,label:`${l.label} · registros`,unit:'Registros publicados'})),
     ...lines.filter(l=>dataset.schema[`tasa_${l.key}`]).map(l=>({key:`tasa_${l.key}`,label:`${l.label} · tasa publicada`,unit:l.key==='barrios'?'Elementos / km²':'Registros / 1.000 hogares EM 2021'}))

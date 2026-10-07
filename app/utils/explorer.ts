@@ -1,6 +1,11 @@
 import type { Dataset, Row } from '../types/data'
 import { integral, need, numeric, value } from './analytics'
 export const explorerIndicators = [
+  { key:'tenencia', label:'Tenencia · índice relativo', description:'Dimensión de tenencia publicada en el CSV preliminar.', unit:'Índice relativo · 0–100' },
+  { key:'vivienda', label:'Vivienda · índice relativo', description:'Dimensión de vivienda publicada en el CSV preliminar.', unit:'Índice relativo · 0–100' },
+  { key:'entorno', label:'Entorno · índice relativo', description:'Dimensión de entorno publicada en el CSV preliminar.', unit:'Índice relativo · 0–100' },
+  { key:'riesgo', label:'Riesgo reportado · índice relativo', description:'Dimensión de riesgo reportado publicada en el CSV preliminar. No equivale a clasificación técnica de amenaza del POT.', unit:'Índice relativo · 0–100' },
+  { key:'raw:pct_jefatura_femenina', label:'Jefatura femenina', description:'Porcentaje de hogares con jefatura femenina. Es contexto diferencial y no se incorpora al índice preliminar. No indica cuántos de estos hogares están en pobreza.', unit:'% de hogares · EM 2021' },
   { key:'raw:pct_deficit_cualitativo', label:'Viviendas con necesidades de mejora', description:'Hogares cuya vivienda requiere mejoras para superar el déficit cualitativo. No indica que deban cambiar de vivienda.', unit:'% de hogares · EM 2021' },
   { key:'raw:pct_deficit_cuantitativo', label:'Déficit cuantitativo de vivienda', description:'Hogares con déficit cuantitativo según el indicador publicado de la encuesta.', unit:'% de hogares · EM 2021' },
   { key:'raw:pct_tenencia_proxy', label:'Señales de dificultad en la tenencia', description:'Proxy publicado de tenencia. No es una certificación jurídica de propiedad.', unit:'% de hogares · EM 2021' },
@@ -26,5 +31,5 @@ export function presenceFilter(row: Row, dataset: Dataset, filter: string) {
   return filter==='0' ? n===0 : n>=Number(filter)
 }
 export function availableIndicators(dataset: Dataset) {
-  return explorerIndicators.filter(i=>i.key.startsWith('raw:') ? dataset.columns.includes(i.key.slice(4)) : true)
+  return explorerIndicators.filter(i=>i.key.startsWith('raw:') ? dataset.columns.includes(i.key.slice(4)) : ['tenencia','vivienda','entorno','riesgo'].includes(i.key) ? Boolean(dataset.analysis && dataset.schema[i.key]) : true)
 }

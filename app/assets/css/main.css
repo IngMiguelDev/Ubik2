@@ -81,6 +81,24 @@ thead th { font-size: 11px; color: #726476; }
 .overview-stats .stat small { color: #ed2919; font-size: 11px; }
 .overview-explorer { display: grid; grid-template-columns: 224px minmax(0,1fr) 300px; gap: 20px; align-items: start; margin-bottom: 24px; }
 .overview-explorer>.panel { margin-bottom: 0; }
+.overview-map-column { min-width: 0; }
+.overview-map-column>.panel { margin-bottom: 0; }
+.territory-charts { margin-top: 22px; }
+.territory-charts-heading { margin: 0 4px 16px; }
+.territory-charts-heading h2 { font-size: 18px; margin-top: 5px; }
+.territory-chart { padding: 22px; margin-bottom: 14px; border-color: #e4e9ef; }
+.territory-chart:last-child { margin-bottom: 0; }
+.territory-chart h3 { font-size: 15px; margin-bottom: 18px; }
+.territory-bar { display: grid; grid-template-columns: minmax(100px, .8fr) minmax(70px, 1fr) minmax(72px, .45fr); gap: 14px; align-items: center; width: 100%; text-align: left; margin: 0; padding: 9px 0; font-size: 12px; }
+.territory-bar i { display: block; height: 11px; border-radius: 4px; background: #edf0f4; overflow: hidden; }
+.territory-bar b { display: block; height: 100%; background: #fa241a; border-radius: 4px; }
+.territory-bar b.presence-bar { background: #176eac; }
+.territory-bar strong { text-align: right; font-size: 12px; }
+button.territory-bar:disabled { opacity: 1; cursor: default; }
+button.territory-bar:not(:disabled):hover { background: #f7f9fb; }
+button.territory-bar:focus-visible { outline: 2px solid #176eac; outline-offset: 3px; border-radius: 4px; }
+.territory-chart-note { font-size: 12px; line-height: 1.7; color: #728092; margin-top: 12px; }
+@media(max-width:760px) { .territory-chart { padding: 18px; } .territory-bar { grid-template-columns: minmax(90px, .9fr) minmax(45px, 1fr) minmax(65px, .6fr); gap: 8px; font-size: 11px; } .territory-bar strong { font-size: 11px; } }
 .overview-filters { padding: 20px; }
 .overview-filters label { margin: 20px 0 0; color: #263443; font-size: 12px; gap: 8px; }
 .overview-filters input,.overview-filters select { min-height: 42px; font-size: 12px; color: #354354; border-color: #d5dde6; }
@@ -109,6 +127,12 @@ thead th { font-size: 11px; color: #726476; }
 .territory-mini-stats strong { display: block; font-size: 17px; margin-bottom: 7px; }
 .territory-mini-stats small { font-size: 10px; line-height: 1.6; display: block; color: #728092; }
 .overview-territory h3 { font-size: 14px; }
+.territory-context { margin: 22px 0; }
+.territory-context h3 { font-size: 14px; }
+.territory-context dl { margin: 8px 0 0; }
+.territory-context dl>div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid #e4e9ef; font-size: 12px; }
+.territory-context dt { min-width: 0; }
+.territory-context dd { margin: 0; font-weight: 700; white-space: nowrap; }
 .territory-presence>div { display: flex; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid #e4e9ef; font-size: 12px; }
 .territory-presence small { display: block; font-size: 10px; margin-top: 4px; color: #728092; }
 .overview-territory .notice { background: #fff9e9; border: 0; border-left: 3px solid #ffc400; border-radius: 0; margin-top: 18px; padding: 12px; }

@@ -7,6 +7,9 @@ const data=JSON.parse(fs.readFileSync('public/data/dataset.json','utf8')) as Dat
 test('explorador distingue porcentajes originales de índices, conservando agrupaciones y nulos',()=>{
   const row=data.rows.find(r=>r.codigo_dominio_em==='802')!
   assert.equal(explorerValue(row,data,'raw:pct_deficit_cualitativo'),row.pct_deficit_cualitativo)
+  assert.equal(explorerValue(row,data,'raw:pct_jefatura_femenina'),row.pct_jefatura_femenina)
+  assert.equal(explorerValue({...row,pct_jefatura_femenina:null},data,'raw:pct_jefatura_femenina'),null)
+  assert.ok(availableIndicators(data).some(i=>i.key==='raw:pct_jefatura_femenina'))
   assert.equal(explorerValue(row,data,'necesidad'),row.indice_necesidad_exploratorio_4dim)
   assert.equal(explorerValue({...row,pct_deficit_cualitativo:null},data,'raw:pct_deficit_cualitativo'),null)
   assert.ok(availableIndicators(data).some(i=>i.key==='raw:pct_pobreza_multidimensional_hogares'))
