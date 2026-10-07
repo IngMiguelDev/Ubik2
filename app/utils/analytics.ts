@@ -29,5 +29,10 @@ export function need(row: Row, all: Row[], schema: Schema, scenario = 'equal'): 
   return 100 * sum / weights
 }
 export function filterRows(rows: Row[], schema: Schema, filters: { locality: string; domain: string; line: string; search: string }) {
-  return rows.filter(r => (!filters.locality || String(value(r, schema, 'localidad')) === filters.locality) && (!filters.domain || String(value(r, schema, 'codigo')) === filters.domain) && (!filters.line || (numeric(value(r, schema, `registros_${filters.line}`)) ?? -1) > 0) && (!filters.search || Object.values(r).some(v => String(v ?? '').toLocaleLowerCase('es').includes(filters.search.toLocaleLowerCase('es')))))
+  const normalize=(v:unknown)=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim()
+  const query=normalize(filters.search)
+  const matches=(r:Row)=>!query || (/^\d+$/.test(query)
+    ? String(value(r,schema,'codigo'))===query || String(r.codigos_upz??'').split('|').some(code=>code.trim()===query)
+    : ['nombre','localidad'].some(key=>normalize(value(r,schema,key)).includes(query)))
+  return rows.filter(r => (!filters.locality || String(value(r, schema, 'localidad')) === filters.locality) && (!filters.domain || String(value(r, schema, 'codigo')) === filters.domain) && (!filters.line || (numeric(value(r, schema, `registros_${filters.line}`)) ?? -1) > 0) && matches(r))
 }

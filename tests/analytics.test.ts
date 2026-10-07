@@ -16,6 +16,8 @@ test('filtros combinados y ausencia de registros', () => {
   assert.equal(filterRows(rows,schema,{ locality:'L1', domain:'001', line:'barrios', search:'prueba' }).length,1)
   assert.equal(filterRows(rows,schema,{ locality:'L2',domain:'',line:'barrios',search:'' }).length,0)
   assert.equal(filterRows(rows,schema,{ locality:'',domain:'',line:'',search:'002' }).length,1)
+  assert.equal(filterRows([{...rows[0]!,b:7777}],schema,{locality:'',domain:'',line:'',search:'7777'}).length,0)
+  assert.equal(filterRows([{...rows[0]!,name:'Chicó'}],schema,{locality:'',domain:'',line:'',search:'chico'}).length,1)
 })
 test('normalización, inversión y sensibilidad', () => {
   assert.equal(need(rows[0]!,rows,schema),25); assert.equal(need(rows[0]!,rows,schema,'housing'),40); assert.equal(need(rows[0]!,rows,schema,'risk'),20)

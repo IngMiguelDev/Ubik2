@@ -1,6 +1,6 @@
 # UBiK2 · Observatorio territorial CVP
 
-Dashboard estático en español con Vue 3, Nuxt 4, TypeScript, Tailwind CSS, ECharts y Leaflet. Incluye seis secciones, filtros combinados, búsqueda, paginación, fichas, sensibilidad de ponderaciones, descargas y cartografía. Sin autenticación ni backend.
+Dashboard estático en español con Vue 3, Nuxt 4, TypeScript, Tailwind CSS, ECharts y Leaflet. Incluye siete secciones, asistente de consultas, filtros combinados, búsqueda, paginación, fichas, sensibilidad de ponderaciones, descargas y cartografía. Sin autenticación ni backend.
 
 ## Instalación y ejecución
 
@@ -62,6 +62,10 @@ La exportación filtrada incluye las columnas originales convertidas, los tres �
 
 ## Metodología aplicada
 
+El modelo definido por el equipo tiene tres medidas, en orden: **necesidad → presencia → brecha**, con `brecha = necesidad − presencia`. Necesidad utiliza la Encuesta Multipropósito y cinco dimensiones: tenencia (Urbanizaciones y Titulación), vivienda (Mejoramiento de Vivienda y Curaduría Pública Social), entorno (Mejoramiento de Barrios), riesgo (Reasentamientos) y vulnerabilidad transversal. Esta última pondera la necesidad total y ayuda a priorizar zonas con brechas similares; no corresponde a una dirección exclusiva. Su regla e indicadores aún deben definirse. El índice de presencia lo desarrollará el equipo a partir de las cinco direcciones; se requiere una escala y alcance comparables para restarlo de necesidad.
+
+La aplicación distingue ese modelo del **CSV preliminar de cuatro dimensiones**. No cambia los índices originales ni introduce un peso supuesto para vulnerabilidad.
+
 - Se utilizan **los índices del CSV**, sin renormalizarlos: `indice_tenencia_relativo`, `indice_vivienda_relativo`, `indice_entorno_relativo`, `indice_riesgo_reportado_relativo`, y las tres columnas de necesidad. Las cuatro dimensiones van de 0 a 100. La reproducción de los promedios ponderados coincide con los índices publicados con error inferior a 0,000001 puntos.
 - Se reprodujo `100 × (x − mínimo) / (máximo − mínimo)` sobre `pct_tenencia_proxy`, `pct_deficit_cualitativo`, `entorno_proxy_pct_medio` y `pct_riesgo_reportado_alguno`; el error es inferior a 0,000004 puntos por los valores redondeados del CSV. El proxy medio de entorno coincide con la media de vía mala, iluminación insuficiente y basuras inadecuadas. Esta comprobación numérica no valida los microdatos, el diseño muestral ni la selección de preguntas.
 - Pesos iguales: 25% por dimensión. Doble vivienda: 40% vivienda y 20% cada otra dimensión. Doble riesgo: 40% riesgo y 20% cada otra dimensión. Los filtros no recalculan rangos ni índices.
@@ -74,6 +78,27 @@ La exportación filtrada incluye las columnas originales convertidas, los tres �
 - `indice_presencia_ejecutada_2021_mas`, `brecha_total_validada`, `ranking_priorizacion_validado` e `indice_riesgo_integrado_validado` están vacíos en las 95 filas: «Pendiente de validación». No se calcula brecha restando conteos a necesidad.
 - Los códigos de estado misional y riesgo POT se conservan sin asignarles etiquetas no verificadas. Riesgo reportado no equivale a clasificación técnica de amenaza. El PDF plantea riesgo integrado y presencia ejecutada desde 2021; esas etapas todavía no están validadas en el CSV.
 - Encuesta 2021 frente a registros de períodos heterogéneos (`TODOS_LOS_REGISTROS_PUBLICADOS_NO_PERIODO_COMUN`). Un orden por necesidad es exploración, no priorización institucional; ausencia de registros CVP no prueba ausencia del Estado. Las descripciones no formulan conclusiones causales.
+
+## Asistente de datos
+
+Abre **Asistente de datos** (`#asistente`). El motor local entiende consultas habituales por nombres de localidad/dominio y códigos UPZ, comparaciones, órdenes por indicador y totales de registros de una línea. Por ejemplo:
+
+- «¿Cuáles son los 5 dominios con mayor necesidad?»
+- «¿Cuántos registros de Barrios hay en Usaquén?»
+- «Compara la necesidad de UPZ 9 y UPZ 11», seguido de «y vivienda».
+- «¿Cómo se calcula la brecha?» o «¿Qué significa vulnerabilidad?».
+
+Permite elegir archivo completo o filtros actuales. Cada respuesta conserva alcance, archivo y columnas consultadas; incluye valores y acceso a fichas, y se puede descargar la conversación en JSON. La conversación se mantiene al cambiar de sección y se borra al cargar/asignar otro conjunto. Al abrir una ficha fuera de los filtros desde una consulta al archivo completo, se limpian los filtros para mostrarla.
+
+Es un **motor de reglas en el navegador, no un modelo generativo**. No requiere API, credenciales ni envío de archivos. Su comprensión es limitada a las consultas admitidas y pide reformular cuando no identifica el territorio o indicador. No consulta el texto del PDF ni realiza análisis espacial sobre el GeoJSON. No suma índices, promedia porcentajes territoriales, inventa beneficiarios o filtra actuaciones por años inexistentes. Los nulos siguen siendo faltantes. Si una UPZ pertenece a una agrupación, se consulta la agrupación completa. Presencia, brecha y riesgo integrado permanecen pendientes cuando sus columnas no tienen datos.
+
+La interfaz del motor está en `app/utils/assistant.ts`; puede reemplazarse en una futura integración generativa conservando respuestas estructuradas, trazabilidad y verificaciones analíticas.
+
+## Diseño y organización
+
+La portada adopta la organización del [observatorio de referencia indicado por el usuario](https://ubik2-observatorio.avainnova.chatgpt.site/): cabecera con logo y descargas, tarjetas de contexto, filtros a la izquierda, mapa al centro y ficha seleccionada a la derecha. Debajo aparecen los diez mayores valores, una tabla ordenable/paginada y explicaciones desplegables. Se conserva el logo entregado y se usa una paleta roja y amarilla sobre fondo gris claro. La navegación horizontal mantiene el asistente, las fichas completas, presencia, necesidad y metodología; las herramientas de asignación de columnas quedan en Metodología o aparecen cuando el archivo necesita configuración.
+
+El panorama comienza en déficit cualitativo y Lucero, cuando ese dominio está disponible. Permite seleccionar nueve porcentajes originales, necesidad exploratoria o integralidad. Localidad, búsqueda y número de líneas con registros afectan simultáneamente mapa, ficha, barras, tabla, tarjetas y descarga de la selección. Los hogares expandidos se redondean solo para presentación; el archivo y la descarga mantienen la precisión original. En móvil, los filtros, mapa y ficha se apilan y las opciones de navegación se desplazan horizontalmente.
 
 ## Cartografía oficial y adjunta
 
@@ -103,10 +128,10 @@ El directorio publicado es `pages-output`, separado de `public/data`. Usa [`page
 
 ## Verificaciones
 
-- Diez pruebas automatizadas: tipos, nulos, filtros, ponderaciones, exportación, conversor y comprobación de **cada celda** de las 95 filas y 106 columnas frente al CSV.
+- Diecinueve pruebas automatizadas: tipos, nulos, filtros, ponderaciones, exportación, conversor, consultas del asistente, indicadores del explorador, filtros de integralidad y comprobación de **cada celda** de las 95 filas y 106 columnas frente al CSV.
 - Totales de las cinco líneas, integralidad y escenarios comprobados contra valores reales.
 - Correspondencia completa de códigos y multipartes cartográficos, conservación de agrupaciones y separación del GeoJSON de actuaciones.
-- Compilación/generación estática y comprobación TypeScript. `scripts/verify-ui.mjs` usa Edge headless para probar carga inicial real, mapas, filtros, fichas, importación alternativa, descargas, paginación y diseño de escritorio/móvil. Las capturas están en `artifacts/`, excluidas de Git.
+- Compilación/generación estática y comprobación TypeScript. `scripts/verify-ui.mjs` usa Edge headless para probar carga inicial real, mapas, filtros, fichas, importación alternativa, descargas, paginación y diseño de escritorio/móvil. También comprueba preguntas, continuación, alcance, apertura de fichas y exportación del asistente. Las capturas están en `artifacts/`, excluidas de Git.
 - La prueba de navegador pasó con los 95 dominios reales, las 557 intervenciones (17 al filtrar Usaquén), una ficha de agrupación y el logo. También pasó bajo `/Ubik2/`, comprobando los recursos en la ruta de GitLab Pages y sin errores JavaScript.
 
 Pendientes del equipo: licencias y cortes de los adjuntos, equivalencia histórica de límites, discrepancia del GeoJSON con el CSV, diccionarios de estados/riesgo, presencia ejecutada, índice de riesgo integrado, brecha y ranking institucional. No se implementan resultados prescriptivos ni se dan por demostradas las hipótesis del PDF.
