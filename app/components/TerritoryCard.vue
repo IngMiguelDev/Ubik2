@@ -9,9 +9,9 @@ const pending = (key: string) => v(key) === null ? 'Pendiente de validación' : 
   <article class="panel territory-card">
     <div class="section-label">FICHA TERRITORIAL · EM 2021</div><h2>{{ v('nombre') }}</h2><p>{{ v('localidad') }} · Código {{ v('codigo') }} · {{ v('tipo') }}</p>
     <div class="notice">Las estimaciones corresponden al dominio completo. Una agrupación de UPZ no se desagrega entre sus integrantes.</div>
+    <ContextIndicators :row="row" :dataset="dataset" prominent/>
     <div class="mapping-grid mt-5"><StatCard v-for="d in dimensions" :key="d" :label="d" :value="format(v(d))" :note="dataset.analysis ? 'Índice relativo del CSV · 0–100' : 'Valor original · unidad según diccionario'"/></div>
     <OriginalIndicators v-if="dataset.analysis" :row="row"/>
-    <ContextIndicators :row="row" :dataset="dataset"/>
     <p>El dominio {{ v('nombre') }} presenta un índice exploratorio de {{ format(need(row, dataset.rows, dataset.schema)) }} con pesos iguales. El número de líneas con registros es {{ format(integral(row, dataset.schema)) }}. Esta descripción no establece relaciones causales.</p>
     <div class="table-scroll"><table><caption>Presencia publicada por línea; tasas de Barrios por km², las demás por 1.000 hogares EM 2021</caption><thead><tr><th>Línea</th><th>Registros</th><th>Tasa publicada</th><th>IDs distintos</th><th>Ejecutadas validadas</th></tr></thead><tbody><tr v-for="line in lines" :key="line.key"><th>{{ line.label }}</th><td>{{ format(v(`registros_${line.key}`)) }}</td><td>{{ format(v(`tasa_${line.key}`)) }}</td><td>{{ format(v(`distintos_${line.key}`)) }}</td><td>{{ pending(`ejecutada_${line.key}`) }}</td></tr></tbody></table></div>
     <div v-if="dataset.analysis" class="notice mt-5">Vivienda limitada a Plan Terrazas. El archivo reporta {{ format(row.vivienda_asistencia_ejecutada) }} asistencias técnicas ejecutadas, {{ format(row.vivienda_programados) }} programadas y {{ format(row.vivienda_en_ejecucion) }} en ejecución. Asistencia técnica ejecutada no se equipara a obra de mejoramiento terminada ni a presencia ejecutada validada.</div>

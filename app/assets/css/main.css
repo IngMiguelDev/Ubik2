@@ -165,6 +165,19 @@ button.territory-bar:focus-visible { outline: 2px solid #176eac; outline-offset:
 .territory-context dl>div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid #e4e9ef; font-size: 12px; }
 .territory-context dt { min-width: 0; }
 .territory-context dd { margin: 0; font-weight: 700; white-space: nowrap; }
+.context-prominent { margin: 0 0 24px; border-top: 4px solid #AA1023; }
+.context-prominent h2 { font-size: 20px; }
+.context-prominent .context-territory { margin-top: 8px; font-size: 13px; color: #566576; }
+.context-prominent dl { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin-top: 20px; }
+.context-prominent dl>div { display: block; padding: 20px; border: 1px solid #eadde1; border-top: 3px solid #AA1023; border-radius: 8px; background: #fff8fa; }
+.context-prominent dl>div.active { border-color: #AA1023; background: #fff0f3; }
+.context-prominent dt { font-size: 14px; font-weight: 650; min-height: 40px; }
+.context-prominent dd { margin-top: 12px; white-space: normal; }
+.context-prominent dd>span { display: block; color: #AA1023; font-size: 32px; font-variant-numeric: tabular-nums; }
+.context-prominent dd>small { display: block; margin-top: 6px; font-size: 12px; font-weight: 400; color: #566576; }
+.context-prominent .text-button { margin-top: 16px; color: #AA1023; }
+.context-prominent>.chart-footnote { margin-top: 16px; }
+@media(max-width:760px) { .context-prominent dl { grid-template-columns: minmax(0,1fr); gap: 10px; } .context-prominent dt { min-height: 0; } .context-prominent dl>div { padding: 16px; } }
 .territory-presence>div { display: flex; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid #e4e9ef; font-size: 12px; }
 .territory-presence small { display: block; font-size: 10px; margin-top: 4px; color: #728092; }
 .overview-territory .notice { background: #fff9e9; border: 0; border-left: 3px solid #ffc400; border-radius: 0; margin-top: 18px; padding: 12px; }
