@@ -1,6 +1,6 @@
 # UBiK2 · Observatorio territorial CVP
 
-Dashboard estático en español con Vue 3, Nuxt 4, TypeScript, Tailwind CSS, ECharts y Leaflet. Incluye siete secciones, asistente de consultas, filtros combinados, búsqueda, paginación, fichas, sensibilidad de ponderaciones, descargas y cartografía. Sin autenticación ni backend.
+Dashboard en español con Vue 3, Nuxt 4, TypeScript, Tailwind CSS, ECharts y Leaflet. Incluye siete secciones, asistente de IA con backend opcional, consultas básicas locales, dispersión, filtros, fichas, sensibilidad de ponderaciones, descargas y cartografía. La visualización sigue siendo exportable como sitio estático; las preguntas libres de IA requieren un servidor.
 
 ## Instalación y ejecución
 
@@ -81,24 +81,50 @@ La aplicación distingue ese modelo del **CSV preliminar de cuatro dimensiones**
 
 ## Asistente de datos
 
-Abre **Asistente de datos** (`#asistente`). El motor local entiende consultas habituales por nombres de localidad/dominio y códigos UPZ, comparaciones, órdenes por indicador y totales de registros de una línea. Por ejemplo:
+Abre **Asistente de datos** (`#asistente`). El modo principal usa IA para interpretar preguntas libres y continuaciones, consultar los archivos compartidos mediante herramientas y explicar los resultados en español sencillo. Por ejemplo:
 
 - «¿Cuáles son los 5 dominios con mayor necesidad?»
 - «¿Cuántos registros de Barrios hay en Usaquén?»
-- «Compara la necesidad de UPZ 9 y UPZ 11», seguido de «y vivienda».
+- «¿Dónde coinciden pobreza alta y viviendas que necesitan mejoras? Explícamelo con los datos».
+- «¿Qué relación hay entre necesidad y los registros de Barrios?».
 - «¿Cómo se calcula la brecha?» o «¿Qué significa vulnerabilidad?».
 
-Permite elegir archivo completo o filtros actuales. Cada respuesta conserva alcance, archivo y columnas consultadas; incluye valores y acceso a fichas, y se puede descargar la conversación en JSON. La conversación se mantiene al cambiar de sección y se borra al cargar/asignar otro conjunto. Al abrir una ficha fuera de los filtros desde una consulta al archivo completo, se limpian los filtros para mostrarla.
+Permite elegir archivo completo o los dominios de los filtros actuales. Cada respuesta de IA incluye evidencia numerada obtenida por el servidor: campos, resultados, fuente y páginas del PDF cuando se consultan. Se conserva el historial de hasta seis intercambios recientes para continuaciones, y se puede descargar la conversación. Las herramientas consultan las columnas originales del CSV, el texto de las seis páginas del PDF y las propiedades originales del GeoJSON; no realizan un cruce espacial no validado.
 
-Es un **motor de reglas en el navegador, no un modelo generativo**. No requiere API, credenciales ni envío de archivos. Su comprensión es limitada a las consultas admitidas y pide reformular cuando no identifica el territorio o indicador. No consulta el texto del PDF ni realiza análisis espacial sobre el GeoJSON. No suma índices, promedia porcentajes territoriales, inventa beneficiarios o filtra actuaciones por años inexistentes. Los nulos siguen siendo faltantes. Si una UPZ pertenece a una agrupación, se consulta la agrupación completa. Presencia, brecha y riesgo integrado permanecen pendientes cuando sus columnas no tienen datos.
+La integración usa [Responses API y herramientas de función](https://developers.openai.com/api/docs/guides/function-calling), con `store: false`. El modelo interpreta y redacta; los filtros, sumas y correlaciones los ejecuta código sobre los datos reales. Se rechazan campos desconocidos y agregaciones incompatibles. No se calculan índices de presencia o brechas a partir de conteos, ni se imputan nulos. La redacción generativa todavía requiere verificar la evidencia; las pruebas con proveedor simulado comprueban el flujo, no la calidad de un modelo externo.
 
-La interfaz del motor está en `app/utils/assistant.ts`; puede reemplazarse en una futura integración generativa conservando respuestas estructuradas, trazabilidad y verificaciones analíticas.
+**Estado de esta entrega:** integración implementada, pero sin clave real configurada y sin una llamada al modelo externo. La interfaz muestra «IA pendiente de conexión» en ese caso. La opción «Consulta básica» conserva el motor de reglas local, con capacidades limitadas, identificado explícitamente. La IA usa los archivos publicados del servidor; para un CSV alternativo cargado solo en el navegador se mantiene el modo local, evitando confundirlo con la fuente del servidor.
+
+### Activar la IA
+
+Configura una clave en el entorno del servidor, siguiendo [la documentación oficial de despliegue](https://developers.openai.com/api/docs/guides/production-best-practices). No se introduce en el navegador ni se añade a Git. `.env.example` documenta las variables:
+
+```env
+NUXT_OPENAI_API_KEY=valor_configurado_solo_en_el_servidor
+NUXT_OPENAI_MODEL=gpt-4.1-mini
+NUXT_PUBLIC_AI_ENABLED=true
+```
+
+El [modelo configurable predeterminado](https://developers.openai.com/api/docs/models/gpt-4.1-mini) admite Responses y llamadas a funciones. También se acepta `OPENAI_API_KEY` durante desarrollo/compilación; en un servidor compilado usa `NUXT_OPENAI_API_KEY` para la configuración en ejecución.
+
+```sh
+npm run build
+node .output/server/index.mjs
+```
+
+El servidor proporciona `GET /api/assistant/status` y `POST /api/assistant/chat`. Cada navegador conserva su conversación, sin registro de conversaciones en el servidor. Hay validación de cuerpo, orígenes permitidos, 30 consultas por hora/IP y dos consultas simultáneas por proceso/IP; el agente tiene un límite de operaciones y tiempo. En hosting con varias réplicas, configurar también límites y presupuesto del proveedor/perímetro; el límite en memoria no es global entre réplicas.
+
+Si mantienes **GitLab Pages**, despliega el backend aparte y genera el frontend con `NUXT_PUBLIC_AI_BASE_URL=https://tu-backend.example/api/assistant`. En el backend configura `NUXT_AI_ALLOWED_ORIGINS` con el origen exacto de Pages (sin ruta; varios separados por comas). El sitio estático por sí solo no ejecuta el backend y no debe contener la clave.
+
+`npm run prepare:knowledge` reproduce las propiedades del GeoJSON para el agente, conservando huella SHA-256. El texto extraído del PDF está en `data/proposal-text.json`; si se reemplaza el PDF, regenerar ese texto y revisar las páginas. Para comprobar el flujo completo sin una llamada pagada: `npm run build` y `npm run verify:ai`. Esta comprobación inicia un servidor local con proveedor simulado, datos reales y una clave ficticia de prueba; no acredita una conexión externa.
 
 ## Diseño y organización
 
 La portada adopta la organización del [observatorio de referencia indicado por el usuario](https://ubik2-observatorio.avainnova.chatgpt.site/): cabecera con logo y descargas, tarjetas de contexto, filtros a la izquierda, mapa al centro y ficha seleccionada a la derecha. Debajo aparecen los diez mayores valores, una tabla ordenable/paginada y explicaciones desplegables. Se conserva el logo entregado y se usa una paleta roja y amarilla sobre fondo gris claro. La navegación horizontal mantiene el asistente, las fichas completas, presencia, necesidad y metodología; las herramientas de asignación de columnas quedan en Metodología o aparecen cuando el archivo necesita configuración.
 
 El panorama comienza en déficit cualitativo y Lucero, cuando ese dominio está disponible. Permite seleccionar nueve porcentajes originales, necesidad exploratoria o integralidad. Localidad, búsqueda y número de líneas con registros afectan simultáneamente mapa, ficha, barras, tabla, tarjetas y descarga de la selección. Los hogares expandidos se redondean solo para presentación; el archivo y la descarga mantienen la precisión original. En móvil, los filtros, mapa y ficha se apilan y las opciones de navegación se desplazan horizontalmente.
+
+Los **gráficos de dispersión** están nuevamente en la portada, bajo la comparación territorial. Ambos ejes se pueden elegir entre porcentajes, dimensiones, necesidad, conteos y tasas publicadas. Mantienen los filtros, muestran pares disponibles, colores por localidad y Pearson descriptivo (sin ponderación ni causalidad). Se pueden intercambiar ejes, seleccionar un punto para actualizar la ficha, revisar los valores en una tabla accesible y exportarlos con sus unidades. Las agrupaciones se mantienen completas.
 
 ## Cartografía oficial y adjunta
 
@@ -128,7 +154,7 @@ El directorio publicado es `pages-output`, separado de `public/data`. Usa [`page
 
 ## Verificaciones
 
-- Diecinueve pruebas automatizadas: tipos, nulos, filtros, ponderaciones, exportación, conversor, consultas del asistente, indicadores del explorador, filtros de integralidad y comprobación de **cada celda** de las 95 filas y 106 columnas frente al CSV.
+- Veintisiete pruebas automatizadas: tipos, nulos, filtros, ponderaciones, exportación, conversor, consultas locales, herramientas de IA, indicadores del explorador, dispersión/Pearson y comprobación de **cada celda** de las 95 filas y 106 columnas frente al CSV. Las pruebas de IA simulan el transporte del proveedor; los cálculos y las fuentes son reales.
 - Totales de las cinco líneas, integralidad y escenarios comprobados contra valores reales.
 - Correspondencia completa de códigos y multipartes cartográficos, conservación de agrupaciones y separación del GeoJSON de actuaciones.
 - Compilación/generación estática y comprobación TypeScript. `scripts/verify-ui.mjs` usa Edge headless para probar carga inicial real, mapas, filtros, fichas, importación alternativa, descargas, paginación y diseño de escritorio/móvil. También comprueba preguntas, continuación, alcance, apertura de fichas y exportación del asistente. Las capturas están en `artifacts/`, excluidas de Git.

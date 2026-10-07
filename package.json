@@ -13,6 +13,8 @@
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
     "convert": "node scripts/convert-csv.mjs",
+    "prepare:knowledge": "node scripts/prepare-knowledge.mjs",
+    "verify:ai": "node scripts/verify-ai-server.mjs",
     "test": "node --import tsx --test tests/*.test.ts",
     "postinstall": "nuxt prepare"
   },

@@ -10,3 +10,6 @@ build.log
 install.log
 typecheck.log
 artifacts/
+.env
+.env.*
+!.env.example

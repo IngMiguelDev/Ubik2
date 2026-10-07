@@ -16,6 +16,7 @@ const sections = [
   { id: 'metodologia', label: 'Metodología y fuentes', icon: BookOpen, description: 'Conoce los alcances, las fuentes y las decisiones de cálculo del observatorio.' }
 ]
 const active = ref('panorama'), collapsed = ref(false), mobileOpen = ref(false), page = ref(1), selected = ref(''), order = ref('name')
+const menuSections = sections.filter(section => !['necesidad', 'presencia', 'ficha'].includes(section.id))
 const current = computed(() => sections.find(s => s.id === active.value)!)
 const schema = computed(() => dataset.value.schema)
 const get = (r: Row, key: string) => value(r, schema.value, key)
@@ -50,7 +51,7 @@ function exportConfig() { download('ubik2_esquema.json', JSON.stringify({ schema
       <a href="#panorama" class="brand" aria-label="UBiK2, panorama territorial" @click.prevent="navigate('panorama')"><img :src="`${baseURL}brand/ubik2.png`" alt="UBiK2" class="project-logo"><span class="logo-caption">OBSERVATORIO<br>TERRITORIAL</span></a>
       <div class="header-actions"><span class="status-pill">DATOS REALES · PRELIMINARES</span><button class="outline" @click="navigate('metodologia')">Cómo leer los datos</button><button class="primary" :disabled="!original" @click="downloadOriginal">Descargar CSV</button></div>
       <div class="sidebar-divider"/><p class="nav-label">EXPLORAR EL OBSERVATORIO</p>
-      <nav><a v-for="s in sections" :key="s.id" :href="`#${s.id}`" :class="{ active: active===s.id }" :aria-current="active===s.id ? 'page' : undefined" :title="s.label" @click.prevent="navigate(s.id)"><component :is="s.icon" :size="19"/><span>{{ s.label }}</span><ChevronRight v-if="active===s.id" :size="14" class="nav-arrow"/></a></nav>
+      <nav><a v-for="s in menuSections" :key="s.id" :href="`#${s.id}`" :class="{ active: active===s.id }" :aria-current="active===s.id ? 'page' : undefined" :title="s.label" @click.prevent="navigate(s.id)"><component :is="s.icon" :size="19"/><span>{{ s.label }}</span><ChevronRight v-if="active===s.id" :size="14" class="nav-arrow"/></a></nav>
       <div class="sidebar-bottom"><div class="institution"><span>CVP</span><p>Caja de la<br><strong>Vivienda Popular</strong></p></div><p class="sidebar-note">Datos para comprender<br>y transformar el territorio.</p><button class="collapse-button" :aria-label="collapsed ? 'Expandir barra lateral' : 'Plegar barra lateral'" :aria-expanded="!collapsed" @click="collapsed=!collapsed"><component :is="collapsed ? ChevronRight : ChevronLeft" :size="18"/><span>Plegar menú</span></button></div>
     </aside>
     <div class="workspace">
