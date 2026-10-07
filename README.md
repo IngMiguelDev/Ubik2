@@ -62,6 +62,10 @@ La exportación filtrada incluye las columnas originales convertidas, los tres �
 
 ## Metodología aplicada
 
+El panorama sigue la organización del dashboard de referencia aportado el 7 de octubre de 2026: cifras generales, resultados del territorio, mapa con barras y ficha, dispersión necesidad/presencia, comparación territorial y metodología. El explorador general de otras variables permanece disponible en un desplegable.
+
+El escenario V1 de esa entrega se reproduce en `app/utils/scenario.ts`: necesidad física 80 % y pobreza monetaria normalizada 20 %; presencia como promedio de los cinco índices min–max de log(1 + tasa publicada); brecha relativa como diferencia. Las pruebas comparan los cuatro resultados principales de los 95 dominios con `tests/fixtures/scenario-reference.json`, extraído de `datos.json` del paquete de referencia. Los filtros conservan los rangos originales. Se preservan los 106 campos originales y los campos validados vacíos; el escenario se calcula aparte y se añade al exportar la selección del panorama. Jefatura femenina y pobreza multidimensional siguen como contexto. Fórmulas y límites de la entrega: `public/documents/escenario-exploratorio-v1.md`. Las reglas descritas a continuación corresponden al CSV preliminar original.
+
 El modelo definido por el equipo tiene tres medidas, en orden: **necesidad → presencia → brecha**, con `brecha = necesidad − presencia`. Necesidad utiliza la Encuesta Multipropósito y cinco dimensiones: tenencia (Urbanizaciones y Titulación), vivienda (Mejoramiento de Vivienda y Curaduría Pública Social), entorno (Mejoramiento de Barrios), riesgo (Reasentamientos) y vulnerabilidad transversal. Esta última pondera la necesidad total y ayuda a priorizar zonas con brechas similares; no corresponde a una dirección exclusiva. Su regla e indicadores aún deben definirse. El índice de presencia lo desarrollará el equipo a partir de las cinco direcciones; se requiere una escala y alcance comparables para restarlo de necesidad.
 
 La aplicación distingue ese modelo del **CSV preliminar de cuatro dimensiones**. No cambia los índices originales ni introduce un peso supuesto para vulnerabilidad.

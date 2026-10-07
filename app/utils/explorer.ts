@@ -1,6 +1,11 @@
 import type { Dataset, Row } from '../types/data'
 import { integral, need, numeric, value } from './analytics'
+import { scenarioValue } from './scenario'
 export const explorerIndicators = [
+  { key:'scenario:need', label:'1. Necesidad ajustada', description:'Escenario exploratorio: necesidad física 80 % y vulnerabilidad económica 20 %. Los pesos son una propuesta.', unit:'Puntos de índice · 0 a 100' },
+  { key:'scenario:presence', label:'2. Presencia publicada CVP', description:'Promedio de cinco índices de densidad de registros publicados, con transformación logarítmica. No mide cobertura efectiva ni ejecución validada.', unit:'Puntos de índice · 0 a 100' },
+  { key:'scenario:gap', label:'3. Brecha relativa', description:'Necesidad ajustada menos presencia publicada. Positiva: necesidad relativa mayor que presencia relativa. Negativa: la relación inversa, sin demostrar exceso de ayuda. Cero no significa necesidad resuelta.', unit:'Puntos de índice · −100 a 100' },
+  { key:'scenario:vulnerability', label:'Vulnerabilidad económica', description:'Pobreza monetaria normalizada sobre todos los dominios originales. Es una aproximación económica y no una medida completa de vulnerabilidad.', unit:'Puntos de índice · 0 a 100' },
   { key:'tenencia', label:'Tenencia · índice relativo', description:'Dimensión de tenencia publicada en el CSV preliminar.', unit:'Índice relativo · 0–100' },
   { key:'vivienda', label:'Vivienda · índice relativo', description:'Dimensión de vivienda publicada en el CSV preliminar.', unit:'Índice relativo · 0–100' },
   { key:'entorno', label:'Entorno · índice relativo', description:'Dimensión de entorno publicada en el CSV preliminar.', unit:'Índice relativo · 0–100' },
@@ -19,6 +24,7 @@ export const explorerIndicators = [
   { key:'integralidad', label:'Líneas CVP con registros publicados', description:'Número de las cinco líneas con registros positivos. No mide intensidad ni cobertura efectiva.', unit:'Líneas · 0–5' }
 ]
 export function explorerValue(row: Row, dataset: Dataset, key: string): number | null {
+  if (key.startsWith('scenario:')) return scenarioValue(row, dataset, key)
   if (key.startsWith('raw:')) return numeric(row[key.slice(4)])
   if (key === 'necesidad') return need(row,dataset.rows,dataset.schema)
   if (key === 'integralidad') return integral(row,dataset.schema)
@@ -31,5 +37,5 @@ export function presenceFilter(row: Row, dataset: Dataset, filter: string) {
   return filter==='0' ? n===0 : n>=Number(filter)
 }
 export function availableIndicators(dataset: Dataset) {
-  return explorerIndicators.filter(i=>i.key.startsWith('raw:') ? dataset.columns.includes(i.key.slice(4)) : ['tenencia','vivienda','entorno','riesgo'].includes(i.key) ? Boolean(dataset.analysis && dataset.schema[i.key]) : true)
+  return explorerIndicators.filter(i=>i.key.startsWith('scenario:') ? Boolean(dataset.analysis) : i.key.startsWith('raw:') ? dataset.columns.includes(i.key.slice(4)) : ['tenencia','vivienda','entorno','riesgo'].includes(i.key) ? Boolean(dataset.analysis && dataset.schema[i.key]) : true)
 }

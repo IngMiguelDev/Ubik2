@@ -16,11 +16,12 @@ const ready=computed(()=>Boolean(geo.value&&key.value&&acknowledged.value&&prove
 let map:L.Map|undefined, layer:L.GeoJSON|undefined, works:L.GeoJSON|undefined, observer:ResizeObserver|undefined
 let destroyed=false, drawVersion=0
 const metric=(r:Row)=>explorerValue(r,props.dataset,props.metricKey || (indicator.value==='presencia'?`registros_${props.line||'barrios'}`:indicator.value))
-const vals=computed(()=>props.rows.map(metric).filter((v):v is number=>v!==null))
+const vals=computed(()=>props.dataset.rows.map(metric).filter((v):v is number=>v!==null))
+const isGap=computed(()=>props.metricKey==='scenario:gap')
 const lo=computed(()=>vals.value.length?Math.min(...vals.value):null),hi=computed(()=>vals.value.length?Math.max(...vals.value):null)
 const overlayAllowed=computed(()=>!props.line||props.line==='barrios')
 const visibleGeo=computed(()=>({type:'FeatureCollection' as const,features:geo.value?.features.filter(f=>props.rows.some(r=>String(value(r,props.dataset.schema,'codigo'))===String(f.properties?.[key.value])))||[]}))
-function color(v:number|null) {if(v===null||lo.value===null||hi.value===null)return '#d7d5d5';const t=hi.value===lo.value?0:(v-lo.value)/(hi.value-lo.value);return ['#ffedbb','#ffd180','#ffab50','#fa722e','#ef321c','#9f160e'][Math.min(5,Math.floor(t*6))]!}
+function color(v:number|null) {if(v===null||lo.value===null||hi.value===null)return '#d7d5d5';if(isGap.value){const t=Math.min(Math.abs(v)/Math.max(Math.abs(lo.value),Math.abs(hi.value),1),1),end=v>=0?[180,25,20]:[25,104,166];return `rgb(${end.map(c=>Math.round(245+(c-245)*t)).join(',')})`}const t=hi.value===lo.value?0:(v-lo.value)/(hi.value-lo.value);return ['#ffedbb','#ffd180','#ffab50','#fa722e','#ef321c','#9f160e'][Math.min(5,Math.floor(t*6))]!}
 async function loadOfficial() {
   if(!props.dataset.analysis)return
   loading.value=true;error.value=''
@@ -49,7 +50,7 @@ async function draw() {
   if(destroyed)return
   if(!ready.value){layer?.remove();works?.remove();matched.value=0;return}
   await nextTick();if(destroyed||version!==drawVersion||!host.value)return
-  if(!map){map=L.map(host.value,{zoomSnap:props.compact ? 0.1 : 1,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false}).setView([4.65,-74.1],10);observer=new ResizeObserver(()=>{if(!destroyed)map?.invalidateSize()});observer.observe(host.value)}
+  if(!map){map=L.map(host.value,{zoomControl:!props.compact,zoomSnap:props.compact ? 0.1 : 1,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false}).setView([4.65,-74.1],10);observer=new ResizeObserver(()=>{if(!destroyed)map?.invalidateSize()});observer.observe(host.value)}
   layer?.remove();works?.remove();matched.value=visibleGeo.value.features.length;interventionCount.value=0
   layer=L.geoJSON(visibleGeo.value,{
     style:f=>{const code=String(f?.properties?.[key.value]);const r=props.rows.find(r=>String(value(r,props.dataset.schema,'codigo'))===code);return{color:code===props.selectedCode?'#263443':'#ffffff',weight:code===props.selectedCode?2.5:1,fillOpacity:.95,fillColor:color(r?metric(r):null)}},
@@ -73,17 +74,16 @@ onBeforeUnmount(()=>{destroyed=true;drawVersion++;observer?.disconnect();map?.re
 </script>
 <template>
   <section class="panel" :class="{ 'overview-map': compact }">
-    <div class="panel-heading"><div><h2>{{ compact ? 'Mapa de necesidades' : 'Explorador geográfico' }}</h2><p>{{ compact ? `${rows.length} territorios visibles · ${metricLabel}` : 'Dominios completos de la EM 2021 · agrupación por códigos del CSV' }}</p></div><button v-if="compact" class="outline" aria-label="Restablecer vista del mapa" @click="draw">⌂</button><label v-else class="upload-button">Cargar otro GeoJSON<input type="file" accept=".geojson,.json" @change="upload"></label></div>
+    <div class="panel-heading"><div><h2>{{ compact ? 'Mapa de indicadores' : 'Explorador geográfico' }}</h2><p>{{ compact ? `${rows.length} territorios visibles · ${metricLabel}` : 'Dominios completos de la EM 2021 · agrupación por códigos del CSV' }}</p></div><div v-if="compact" class="map-zoom"><button class="outline" aria-label="Acercar mapa" @click="map?.zoomIn()">+</button><button class="outline" aria-label="Alejar mapa" @click="map?.zoomOut()">−</button><button class="outline" aria-label="Restablecer vista del mapa" @click="draw">⌂</button></div><label v-else class="upload-button">Cargar otro GeoJSON<input type="file" accept=".geojson,.json" @change="upload"></label></div>
     <div v-if="!compact" class="mapping-grid"><label>Indicador<select aria-label="Indicador" v-model="indicator"><option value="necesidad">Necesidad exploratoria · 0–100</option><option v-for="d in dimensions" :key="d" :value="d">{{ d }} · índice relativo</option><option v-for="i in contextIndicators" :key="i.key" :value="i.key">{{ i.label }} · % de hogares</option><option value="presencia">Registros · línea seleccionada o Barrios</option><option value="integralidad">Integralidad · 0–5 líneas</option></select></label><label v-if="geo&&!official">Propiedad con código de dominio<select aria-label="Propiedad con código de dominio" v-model="key"><option value="">Selecciona una propiedad</option><option v-for="f in fields" :key="f">{{ f }}</option></select></label><label v-if="geo&&!official">Procedencia oficial / licencia<input v-model="provenance" placeholder="URL y licencia verificadas"></label></div>
     <label v-if="geo&&!official" class="check-label"><input v-model="acknowledged" type="checkbox">Confirmo que son geometrías oficiales de dominios completos; las agrupaciones están unidas y no se desagregan.</label>
     <label v-if="interventions&&!compact" class="check-label"><input v-model="showInterventions" :disabled="!overlayAllowed" type="checkbox">Superponer elementos de Barrios del GeoJSON adjunto (filtrado solo por localidad)</label>
     <div v-if="official&&!compact" class="notice mt-5">95 dominios construidos con 112 UPZ de la capa oficial SDP/Catastro. Las agrupaciones se muestran completas. La correspondencia por código está verificada; la equivalencia de límites con la EM 2021 requiere validación SIG.</div>
     <p v-if="loading" role="status">Cargando cartografía oficial…</p><p v-if="error" role="alert" class="notice error">{{ error }} <button class="text-button" @click="loadOfficial">Reintentar</button></p>
     <EmptyState v-if="!loading&&!ready" title="Geometrías pendientes de verificación" description="Carga polígonos de dominios completos con procedencia documentada. Los elementos de intervención CVP no son límites de dominios."/>
-    <div ref="host" v-show="ready" class="map" aria-label="Mapa de dominios territoriales"/>
-    <div v-if="ready" class="map-legend"><span>Menor: {{ format(lo) }}</span><i/><span>Mayor: {{ format(hi) }}</span><span class="muted">Gris: sin dato · {{ matched }} geometrías coincidentes</span></div>
+    <div class="map-viewport"><div ref="host" v-show="ready" class="map" aria-label="Mapa de dominios territoriales"/><p v-if="compact&&ready" class="map-instructions">Selecciona un territorio · arrastra para mover · usa + / − para acercar</p></div>
+    <div v-if="ready" class="map-legend" :class="{ 'gap-legend': isGap }"><span>Menor: {{ format(lo) }}</span><i/><span>Mayor: {{ format(hi) }}</span><span class="muted">Gris: sin dato · {{ matched }} geometrías coincidentes</span></div>
     <div v-if="showInterventions&&overlayAllowed" class="notice mt-5">Azul: {{ interventionCount }} elementos cartográficos de Barrios en las localidades seleccionadas. El adjunto contiene 557 elementos y 233 IDs de intervención distintos; el CSV contiene 494 registros y 206 IDs distintos agregados por dominio. No se sustituyen ni suman ambos conjuntos. No hay cruce espacial de actuaciones validado por dominio y los códigos de estado permanecen sin interpretar.</div>
-    <p v-if="compact&&ready" class="map-instructions">Selecciona un territorio · arrastra para mover · usa + / − para acercar</p>
     <p v-if="!compact" class="muted mt-5">{{ provenance }}. Selecciona un dominio en el mapa o abre su ficha desde la tabla mediante teclado. Un valor de necesidad es exploratorio, no una priorización institucional.</p>
   </section>
 </template>

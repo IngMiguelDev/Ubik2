@@ -1,0 +1,667 @@
+[
+  {
+    "codigo_dominio_em": 9,
+    "indice_vulnerabilidad_economica_exploratorio": 28.820923,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 30.323725,
+    "indice_presencia_publicada_exploratorio": 13.559015,
+    "brecha_relativa_exploratoria": 16.764711
+  },
+  {
+    "codigo_dominio_em": 11,
+    "indice_vulnerabilidad_economica_exploratorio": 52.213533,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 42.253856,
+    "indice_presencia_publicada_exploratorio": 18.722199,
+    "brecha_relativa_exploratoria": 23.531657
+  },
+  {
+    "codigo_dominio_em": 12,
+    "indice_vulnerabilidad_economica_exploratorio": 11.678199,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 14.870229,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 14.870229
+  },
+  {
+    "codigo_dominio_em": 13,
+    "indice_vulnerabilidad_economica_exploratorio": 1.838871,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 1.60982,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 1.60982
+  },
+  {
+    "codigo_dominio_em": 14,
+    "indice_vulnerabilidad_economica_exploratorio": 6.990467,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 7.810717,
+    "indice_presencia_publicada_exploratorio": 3.684101,
+    "brecha_relativa_exploratoria": 4.126616
+  },
+  {
+    "codigo_dominio_em": 18,
+    "indice_vulnerabilidad_economica_exploratorio": 6.053362,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 16.154197,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 16.154197
+  },
+  {
+    "codigo_dominio_em": 19,
+    "indice_vulnerabilidad_economica_exploratorio": 5.711352,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 18.45821,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 18.45821
+  },
+  {
+    "codigo_dominio_em": 20,
+    "indice_vulnerabilidad_economica_exploratorio": 1.82304,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 9.390036,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 9.390036
+  },
+  {
+    "codigo_dominio_em": 21,
+    "indice_vulnerabilidad_economica_exploratorio": 15.570963,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 15.973337,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 15.973337
+  },
+  {
+    "codigo_dominio_em": 23,
+    "indice_vulnerabilidad_economica_exploratorio": 9.71639,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 6.279053,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 6.279053
+  },
+  {
+    "codigo_dominio_em": 24,
+    "indice_vulnerabilidad_economica_exploratorio": 6.237992,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 12.106154,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 12.106154
+  },
+  {
+    "codigo_dominio_em": 25,
+    "indice_vulnerabilidad_economica_exploratorio": 3.348638,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 10.313531,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 10.313531
+  },
+  {
+    "codigo_dominio_em": 26,
+    "indice_vulnerabilidad_economica_exploratorio": 32.447361,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 18.022947,
+    "indice_presencia_publicada_exploratorio": 0.34253,
+    "brecha_relativa_exploratoria": 17.680416
+  },
+  {
+    "codigo_dominio_em": 27,
+    "indice_vulnerabilidad_economica_exploratorio": 22.778063,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 19.577571,
+    "indice_presencia_publicada_exploratorio": 0.202576,
+    "brecha_relativa_exploratoria": 19.374995
+  },
+  {
+    "codigo_dominio_em": 28,
+    "indice_vulnerabilidad_economica_exploratorio": 47.06158,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 33.996591,
+    "indice_presencia_publicada_exploratorio": 8.695357,
+    "brecha_relativa_exploratoria": 25.301234
+  },
+  {
+    "codigo_dominio_em": 29,
+    "indice_vulnerabilidad_economica_exploratorio": 32.175446,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 20.010485,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 20.010485
+  },
+  {
+    "codigo_dominio_em": 30,
+    "indice_vulnerabilidad_economica_exploratorio": 24.303309,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 18.242627,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 18.242627
+  },
+  {
+    "codigo_dominio_em": 32,
+    "indice_vulnerabilidad_economica_exploratorio": 72.17878,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 50.786889,
+    "indice_presencia_publicada_exploratorio": 35.317338,
+    "brecha_relativa_exploratoria": 15.469551
+  },
+  {
+    "codigo_dominio_em": 33,
+    "indice_vulnerabilidad_economica_exploratorio": 34.122546,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 27.351868,
+    "indice_presencia_publicada_exploratorio": 2.796648,
+    "brecha_relativa_exploratoria": 24.555221
+  },
+  {
+    "codigo_dominio_em": 34,
+    "indice_vulnerabilidad_economica_exploratorio": 56.098517,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 32.485151,
+    "indice_presencia_publicada_exploratorio": 10.684921,
+    "brecha_relativa_exploratoria": 21.80023
+  },
+  {
+    "codigo_dominio_em": 35,
+    "indice_vulnerabilidad_economica_exploratorio": 30.370309,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 22.057313,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 22.057313
+  },
+  {
+    "codigo_dominio_em": 36,
+    "indice_vulnerabilidad_economica_exploratorio": 41.266999,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 25.240897,
+    "indice_presencia_publicada_exploratorio": 0.232454,
+    "brecha_relativa_exploratoria": 25.008443
+  },
+  {
+    "codigo_dominio_em": 37,
+    "indice_vulnerabilidad_economica_exploratorio": 44.372034,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 32.069826,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 32.069826
+  },
+  {
+    "codigo_dominio_em": 38,
+    "indice_vulnerabilidad_economica_exploratorio": 24.921377,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 29.722209,
+    "indice_presencia_publicada_exploratorio": 0.228497,
+    "brecha_relativa_exploratoria": 29.493712
+  },
+  {
+    "codigo_dominio_em": 39,
+    "indice_vulnerabilidad_economica_exploratorio": 57.384334,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 37.544415,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 37.544415
+  },
+  {
+    "codigo_dominio_em": 40,
+    "indice_vulnerabilidad_economica_exploratorio": 34.221915,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 15.484267,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 15.484267
+  },
+  {
+    "codigo_dominio_em": 41,
+    "indice_vulnerabilidad_economica_exploratorio": 27.267918,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 15.633896,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 15.633896
+  },
+  {
+    "codigo_dominio_em": 42,
+    "indice_vulnerabilidad_economica_exploratorio": 44.674287,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 36.034021,
+    "indice_presencia_publicada_exploratorio": 0.078891,
+    "brecha_relativa_exploratoria": 35.95513
+  },
+  {
+    "codigo_dominio_em": 43,
+    "indice_vulnerabilidad_economica_exploratorio": 28.985889,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 24.167683,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 24.167683
+  },
+  {
+    "codigo_dominio_em": 44,
+    "indice_vulnerabilidad_economica_exploratorio": 18.972622,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 11.46118,
+    "indice_presencia_publicada_exploratorio": 4.296093,
+    "brecha_relativa_exploratoria": 7.165088
+  },
+  {
+    "codigo_dominio_em": 45,
+    "indice_vulnerabilidad_economica_exploratorio": 39.413984,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 34.058498,
+    "indice_presencia_publicada_exploratorio": 0.411975,
+    "brecha_relativa_exploratoria": 33.646523
+  },
+  {
+    "codigo_dominio_em": 47,
+    "indice_vulnerabilidad_economica_exploratorio": 27.886756,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 22.471575,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 22.471575
+  },
+  {
+    "codigo_dominio_em": 48,
+    "indice_vulnerabilidad_economica_exploratorio": 43.230306,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 24.903801,
+    "indice_presencia_publicada_exploratorio": 3.430133,
+    "brecha_relativa_exploratoria": 21.473669
+  },
+  {
+    "codigo_dominio_em": 49,
+    "indice_vulnerabilidad_economica_exploratorio": 45.138548,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 27.0227,
+    "indice_presencia_publicada_exploratorio": 0.368494,
+    "brecha_relativa_exploratoria": 26.654206
+  },
+  {
+    "codigo_dominio_em": 50,
+    "indice_vulnerabilidad_economica_exploratorio": 64.556899,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 53.76941,
+    "indice_presencia_publicada_exploratorio": 44.07166,
+    "brecha_relativa_exploratoria": 9.69775
+  },
+  {
+    "codigo_dominio_em": 51,
+    "indice_vulnerabilidad_economica_exploratorio": 66.136499,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 42.27653,
+    "indice_presencia_publicada_exploratorio": 40.608924,
+    "brecha_relativa_exploratoria": 1.667606
+  },
+  {
+    "codigo_dominio_em": 52,
+    "indice_vulnerabilidad_economica_exploratorio": 100.0,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 87.291482,
+    "indice_presencia_publicada_exploratorio": 69.50678,
+    "brecha_relativa_exploratoria": 17.784702
+  },
+  {
+    "codigo_dominio_em": 53,
+    "indice_vulnerabilidad_economica_exploratorio": 76.420497,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 48.346781,
+    "indice_presencia_publicada_exploratorio": 12.350546,
+    "brecha_relativa_exploratoria": 35.996235
+  },
+  {
+    "codigo_dominio_em": 54,
+    "indice_vulnerabilidad_economica_exploratorio": 63.373364,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 38.498134,
+    "indice_presencia_publicada_exploratorio": 23.116943,
+    "brecha_relativa_exploratoria": 15.381192
+  },
+  {
+    "codigo_dominio_em": 55,
+    "indice_vulnerabilidad_economica_exploratorio": 81.922247,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 45.558139,
+    "indice_presencia_publicada_exploratorio": 51.11971,
+    "brecha_relativa_exploratoria": -5.561571
+  },
+  {
+    "codigo_dominio_em": 57,
+    "indice_vulnerabilidad_economica_exploratorio": 70.654911,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 43.143829,
+    "indice_presencia_publicada_exploratorio": 41.228498,
+    "brecha_relativa_exploratoria": 1.915331
+  },
+  {
+    "codigo_dominio_em": 58,
+    "indice_vulnerabilidad_economica_exploratorio": 69.988329,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 40.410179,
+    "indice_presencia_publicada_exploratorio": 26.205386,
+    "brecha_relativa_exploratoria": 14.204792
+  },
+  {
+    "codigo_dominio_em": 62,
+    "indice_vulnerabilidad_economica_exploratorio": 79.339011,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 50.394009,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 50.394009
+  },
+  {
+    "codigo_dominio_em": 65,
+    "indice_vulnerabilidad_economica_exploratorio": 32.575808,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 26.297449,
+    "indice_presencia_publicada_exploratorio": 7.125118,
+    "brecha_relativa_exploratoria": 19.172331
+  },
+  {
+    "codigo_dominio_em": 66,
+    "indice_vulnerabilidad_economica_exploratorio": 69.891793,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 43.507116,
+    "indice_presencia_publicada_exploratorio": 19.83669,
+    "brecha_relativa_exploratoria": 23.670427
+  },
+  {
+    "codigo_dominio_em": 67,
+    "indice_vulnerabilidad_economica_exploratorio": 93.914949,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 62.00147,
+    "indice_presencia_publicada_exploratorio": 61.90162,
+    "brecha_relativa_exploratoria": 0.09985
+  },
+  {
+    "codigo_dominio_em": 69,
+    "indice_vulnerabilidad_economica_exploratorio": 65.854997,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 43.210835,
+    "indice_presencia_publicada_exploratorio": 55.644278,
+    "brecha_relativa_exploratoria": -12.433444
+  },
+  {
+    "codigo_dominio_em": 70,
+    "indice_vulnerabilidad_economica_exploratorio": 82.876441,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 60.89994,
+    "indice_presencia_publicada_exploratorio": 39.930667,
+    "brecha_relativa_exploratoria": 20.969273
+  },
+  {
+    "codigo_dominio_em": 71,
+    "indice_vulnerabilidad_economica_exploratorio": 56.488292,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 39.560358,
+    "indice_presencia_publicada_exploratorio": 29.332844,
+    "brecha_relativa_exploratoria": 10.227514
+  },
+  {
+    "codigo_dominio_em": 72,
+    "indice_vulnerabilidad_economica_exploratorio": 11.253043,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 11.307032,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 11.307032
+  },
+  {
+    "codigo_dominio_em": 73,
+    "indice_vulnerabilidad_economica_exploratorio": 25.921718,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 20.46856,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 20.46856
+  },
+  {
+    "codigo_dominio_em": 74,
+    "indice_vulnerabilidad_economica_exploratorio": 49.813394,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 27.7716,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 27.7716
+  },
+  {
+    "codigo_dominio_em": 75,
+    "indice_vulnerabilidad_economica_exploratorio": 30.627079,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 21.62947,
+    "indice_presencia_publicada_exploratorio": 0.810191,
+    "brecha_relativa_exploratoria": 20.81928
+  },
+  {
+    "codigo_dominio_em": 76,
+    "indice_vulnerabilidad_economica_exploratorio": 47.38454,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 28.545712,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 28.545712
+  },
+  {
+    "codigo_dominio_em": 77,
+    "indice_vulnerabilidad_economica_exploratorio": 25.791465,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 26.896259,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 26.896259
+  },
+  {
+    "codigo_dominio_em": 78,
+    "indice_vulnerabilidad_economica_exploratorio": 21.378006,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 25.608715,
+    "indice_presencia_publicada_exploratorio": 15.139076,
+    "brecha_relativa_exploratoria": 10.469638
+  },
+  {
+    "codigo_dominio_em": 79,
+    "indice_vulnerabilidad_economica_exploratorio": 50.240163,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 37.379745,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 37.379745
+  },
+  {
+    "codigo_dominio_em": 80,
+    "indice_vulnerabilidad_economica_exploratorio": 74.527979,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 47.203477,
+    "indice_presencia_publicada_exploratorio": 21.978169,
+    "brecha_relativa_exploratoria": 25.225308
+  },
+  {
+    "codigo_dominio_em": 81,
+    "indice_vulnerabilidad_economica_exploratorio": 51.282998,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 33.166749,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 33.166749
+  },
+  {
+    "codigo_dominio_em": 82,
+    "indice_vulnerabilidad_economica_exploratorio": 85.761454,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 46.500816,
+    "indice_presencia_publicada_exploratorio": 7.235218,
+    "brecha_relativa_exploratoria": 39.265597
+  },
+  {
+    "codigo_dominio_em": 83,
+    "indice_vulnerabilidad_economica_exploratorio": 55.056531,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 22.688448,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 22.688448
+  },
+  {
+    "codigo_dominio_em": 84,
+    "indice_vulnerabilidad_economica_exploratorio": 74.342513,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 41.886701,
+    "indice_presencia_publicada_exploratorio": 5.497846,
+    "brecha_relativa_exploratoria": 36.388855
+  },
+  {
+    "codigo_dominio_em": 85,
+    "indice_vulnerabilidad_economica_exploratorio": 75.723133,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 43.257707,
+    "indice_presencia_publicada_exploratorio": 11.367971,
+    "brecha_relativa_exploratoria": 31.889736
+  },
+  {
+    "codigo_dominio_em": 86,
+    "indice_vulnerabilidad_economica_exploratorio": 67.004324,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 46.22505,
+    "indice_presencia_publicada_exploratorio": 7.599801,
+    "brecha_relativa_exploratoria": 38.625248
+  },
+  {
+    "codigo_dominio_em": 87,
+    "indice_vulnerabilidad_economica_exploratorio": 57.079124,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 56.718803,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 56.718803
+  },
+  {
+    "codigo_dominio_em": 89,
+    "indice_vulnerabilidad_economica_exploratorio": 69.157253,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 80.501005,
+    "indice_presencia_publicada_exploratorio": 12.166424,
+    "brecha_relativa_exploratoria": 68.334581
+  },
+  {
+    "codigo_dominio_em": 92,
+    "indice_vulnerabilidad_economica_exploratorio": 34.345946,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 26.149708,
+    "indice_presencia_publicada_exploratorio": 12.784887,
+    "brecha_relativa_exploratoria": 13.364821
+  },
+  {
+    "codigo_dominio_em": 94,
+    "indice_vulnerabilidad_economica_exploratorio": 40.945338,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 29.73618,
+    "indice_presencia_publicada_exploratorio": 4.815484,
+    "brecha_relativa_exploratoria": 24.920695
+  },
+  {
+    "codigo_dominio_em": 95,
+    "indice_vulnerabilidad_economica_exploratorio": 66.367332,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 38.832159,
+    "indice_presencia_publicada_exploratorio": 0.548927,
+    "brecha_relativa_exploratoria": 38.283232
+  },
+  {
+    "codigo_dominio_em": 96,
+    "indice_vulnerabilidad_economica_exploratorio": 94.840434,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 84.940223,
+    "indice_presencia_publicada_exploratorio": 42.531111,
+    "brecha_relativa_exploratoria": 42.409111
+  },
+  {
+    "codigo_dominio_em": 98,
+    "indice_vulnerabilidad_economica_exploratorio": 18.764068,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 16.762978,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 16.762978
+  },
+  {
+    "codigo_dominio_em": 100,
+    "indice_vulnerabilidad_economica_exploratorio": 13.634659,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 6.746134,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 6.746134
+  },
+  {
+    "codigo_dominio_em": 101,
+    "indice_vulnerabilidad_economica_exploratorio": 9.665647,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 9.017648,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 9.017648
+  },
+  {
+    "codigo_dominio_em": 102,
+    "indice_vulnerabilidad_economica_exploratorio": 51.290942,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 36.122128,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 36.122128
+  },
+  {
+    "codigo_dominio_em": 107,
+    "indice_vulnerabilidad_economica_exploratorio": 3.755319,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 5.362477,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 5.362477
+  },
+  {
+    "codigo_dominio_em": 109,
+    "indice_vulnerabilidad_economica_exploratorio": 1.246725,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 2.308076,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 2.308076
+  },
+  {
+    "codigo_dominio_em": 110,
+    "indice_vulnerabilidad_economica_exploratorio": 6.612993,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 4.816807,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 4.816807
+  },
+  {
+    "codigo_dominio_em": 112,
+    "indice_vulnerabilidad_economica_exploratorio": 6.336411,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 9.988171,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 9.988171
+  },
+  {
+    "codigo_dominio_em": 114,
+    "indice_vulnerabilidad_economica_exploratorio": 4.655278,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 5.85378,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 5.85378
+  },
+  {
+    "codigo_dominio_em": 116,
+    "indice_vulnerabilidad_economica_exploratorio": 12.528948,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 17.603294,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 17.603294
+  },
+  {
+    "codigo_dominio_em": 802,
+    "indice_vulnerabilidad_economica_exploratorio": 27.759994,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 21.807457,
+    "indice_presencia_publicada_exploratorio": 0.059753,
+    "brecha_relativa_exploratoria": 21.747704
+  },
+  {
+    "codigo_dominio_em": 803,
+    "indice_vulnerabilidad_economica_exploratorio": 0.0,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 4.767768,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 4.767768
+  },
+  {
+    "codigo_dominio_em": 804,
+    "indice_vulnerabilidad_economica_exploratorio": 8.370369,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 11.101192,
+    "indice_presencia_publicada_exploratorio": 2.022567,
+    "brecha_relativa_exploratoria": 9.078625
+  },
+  {
+    "codigo_dominio_em": 806,
+    "indice_vulnerabilidad_economica_exploratorio": 7.21066,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 19.292773,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 19.292773
+  },
+  {
+    "codigo_dominio_em": 807,
+    "indice_vulnerabilidad_economica_exploratorio": 25.063627,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 19.652447,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 19.652447
+  },
+  {
+    "codigo_dominio_em": 808,
+    "indice_vulnerabilidad_economica_exploratorio": 5.749432,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 4.84902,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 4.84902
+  },
+  {
+    "codigo_dominio_em": 809,
+    "indice_vulnerabilidad_economica_exploratorio": 51.250145,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 26.051046,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 26.051046
+  },
+  {
+    "codigo_dominio_em": 810,
+    "indice_vulnerabilidad_economica_exploratorio": 16.569492,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 15.264187,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 15.264187
+  },
+  {
+    "codigo_dominio_em": 811,
+    "indice_vulnerabilidad_economica_exploratorio": 84.74604,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 68.35437,
+    "indice_presencia_publicada_exploratorio": 54.261697,
+    "brecha_relativa_exploratoria": 14.092673
+  },
+  {
+    "codigo_dominio_em": 812,
+    "indice_vulnerabilidad_economica_exploratorio": 66.450854,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 44.165657,
+    "indice_presencia_publicada_exploratorio": 32.548494,
+    "brecha_relativa_exploratoria": 11.617163
+  },
+  {
+    "codigo_dominio_em": 813,
+    "indice_vulnerabilidad_economica_exploratorio": 13.803714,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 11.931167,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 11.931167
+  },
+  {
+    "codigo_dominio_em": 814,
+    "indice_vulnerabilidad_economica_exploratorio": 17.807755,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 16.553181,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 16.553181
+  },
+  {
+    "codigo_dominio_em": 815,
+    "indice_vulnerabilidad_economica_exploratorio": 97.201569,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 59.997148,
+    "indice_presencia_publicada_exploratorio": 36.694969,
+    "brecha_relativa_exploratoria": 23.302179
+  },
+  {
+    "codigo_dominio_em": 816,
+    "indice_vulnerabilidad_economica_exploratorio": 8.63709,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 17.243268,
+    "indice_presencia_publicada_exploratorio": 3.869275,
+    "brecha_relativa_exploratoria": 13.373992
+  },
+  {
+    "codigo_dominio_em": 817,
+    "indice_vulnerabilidad_economica_exploratorio": 4.372064,
+    "indice_necesidad_ajustado_vulnerabilidad_exploratorio": 4.918697,
+    "indice_presencia_publicada_exploratorio": 0.0,
+    "brecha_relativa_exploratoria": 4.918697
+  }
+]

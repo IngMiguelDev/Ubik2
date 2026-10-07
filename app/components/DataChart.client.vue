@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import * as echarts from 'echarts/core'
 import { ScatterChart, BarChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent, LegendComponent, AriaComponent } from 'echarts/components'
+import { GridComponent, TooltipComponent, LegendComponent, AriaComponent, MarkLineComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-echarts.use([ScatterChart, BarChart, GridComponent, TooltipComponent, LegendComponent, AriaComponent, CanvasRenderer])
+echarts.use([ScatterChart, BarChart, GridComponent, TooltipComponent, LegendComponent, AriaComponent, MarkLineComponent, CanvasRenderer])
 const props = defineProps<{ option: echarts.EChartsCoreOption; label: string }>()
 const emit = defineEmits<{ select: [code: string] }>()
 const element = ref<HTMLElement>(); let chart: echarts.ECharts | undefined; let observer: ResizeObserver | undefined
