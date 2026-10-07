@@ -11,13 +11,18 @@ export default defineEventHandler(async event=>{
   try{request=validateRequest(JSON.parse(raw))}catch{throw createError({statusCode:400,statusMessage:'Pregunta, historial o alcance inválidos.'})}
   const release=reserveRequest(getRequestIP(event,{xForwardedFor:false})||'unknown')
   const deadline=Date.now()+110000
+  const quotaMessage='La cuenta de OpenAI no tiene cuota disponible. El administrador debe revisar el saldo y la facturación de la API.'
   try {
     return await runAgent(request,async body=>{
       const remaining=deadline-Date.now();if(remaining<=0)throw new Error('Tiempo de consulta agotado.')
       const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:`Bearer ${config.openaiApiKey}`,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(Math.min(45000,remaining))})
-      if(!response.ok)throw createError({statusCode:response.status===429?429:502,statusMessage:response.status===429?'El proveedor está ocupado. Intenta más tarde.':'No se pudo completar la respuesta de IA. Revisa la conexión del servidor.'})
+      if(!response.ok){
+        const failure=await response.json().catch(()=>null) as {error?:{code?:string,type?:string}}|null
+        const noQuota=failure?.error?.type==='insufficient_quota'||['insufficient_quota','credit_balance_exhausted'].includes(failure?.error?.code||'')
+        throw createError({statusCode:response.status===429?429:502,statusMessage:response.status===429?(noQuota?quotaMessage:'El proveedor está ocupado. Intenta más tarde.'):'No se pudo completar la respuesta de IA. Revisa la conexión del servidor.'})
+      }
       return await response.json() as ResponsePayload
     },config.openaiModel)
-  }catch(error){const status=(error as {statusCode?:number}).statusCode;throw createError({statusCode:status===429?429:502,statusMessage:status===429?'El proveedor está ocupado. Intenta más tarde.':'No se pudo completar la respuesta de IA con evidencia. Intenta una pregunta más concreta.'})}
+  }catch(error){const failure=error as {statusCode?:number,statusMessage?:string};throw createError({statusCode:failure.statusCode===429?429:502,statusMessage:failure.statusCode===429?(failure.statusMessage===quotaMessage?quotaMessage:'El proveedor está ocupado. Intenta más tarde.'):'No se pudo completar la respuesta de IA con evidencia. Intenta una pregunta más concreta.'})}
   finally{release()}
 })
