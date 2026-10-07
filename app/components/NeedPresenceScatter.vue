@@ -11,6 +11,7 @@ const points = computed(() => props.rows.flatMap(row => {
   return [{ code, name: String(value(row,props.dataset.schema,'nombre')), value: [x,y], symbolSize: code === props.selectedCode ? 18 : 10, itemStyle: { color: code === props.selectedCode ? '#ffc400' : x > y ? '#ed241b' : '#1968a6', borderColor: code === props.selectedCode ? '#202a35' : '#fff', borderWidth: 1, opacity: .85 } }]
 }))
 const option = computed(() => ({
+  animation: false,
   aria: { enabled: true }, tooltip: { trigger: 'item', renderMode: 'richText' },
   grid: { left: 55, right: 24, top: 50, bottom: 70 },
   xAxis: { type: 'value', min: 0, max: 100, interval: 25, name: 'Necesidad ajustada · puntos de índice', nameLocation: 'middle', nameGap: 40, nameTextStyle: { fontSize: 11 } },
