@@ -98,12 +98,28 @@ try{
   assert.equal(await page.locator('.intro-notice, .filter-panel').count(),0);
   assert.equal(await page.getByText('Asignar columnas del CSV',{exact:false}).count(),0);
   assert.equal(await page.locator('.methodology .method-grid article').count(),8);
+  assert.equal(await page.locator('.timeline-stage [role="img"]').count(),8);
+  assert.equal(await page.getByRole('button',{name:'Exportar resultados',exact:true}).count(),0);
+  assert.ok(!/\bdominios?\b/i.test(await page.locator('.method-timeline').innerText()));
+  await page.getByRole('button',{name:'04 Temporalidad y unidades',exact:true}).click();
+  assert.equal(await page.locator('#method-stage-4').evaluate(el=>document.activeElement===el),true);
+  await page.waitForFunction(()=>document.querySelector('#method-stage-4')?.classList.contains('stage-entered'));
   assert.equal(await page.locator('.final-sources tbody tr').count(),8);
   assert.match(await page.locator('.methodology .method-grid').innerText(),/Consolidados y selección.*Ceros, faltantes y precisión/s);
   assert.match(await page.locator('.footer').innerText(),/Archivo final · lectura exploratoria/);
   assert.match(await page.locator('.methodology .method-grid').innerText(),/Indicadores y normalización.*Índices, brecha y posición.*Temporalidad y unidades.*Cartografía y alcance.*Procedencia y límites/s);
   assert.equal(await page.locator('.sources:not(.final-sources) tbody tr').count(),5);
   assert.match(await page.locator('.sources:not(.final-sources)').innerText(),/Catálogo oficial · consulta del 6 de octubre de 2026/)
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.getByRole('button',{name:'01 Unidad de análisis',exact:true}).click();
+  assert.equal(await page.locator('#method-stage-1').evaluate(el=>getComputedStyle(el).animationName),'none');
+  await page.screenshot({path:'artifacts/methodology-timeline-desktop.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
+  await page.getByRole('button',{name:'08 Ceros, faltantes y precisión',exact:true}).click();
+  assert.equal(await page.locator('#method-stage-8').evaluate(el=>document.activeElement===el),true);
+  await page.screenshot({path:'artifacts/methodology-timeline-mobile.png',fullPage:true});
+  await page.setViewportSize({width:1440,height:1000});
   await page.goto('http://127.0.0.1:4174/')
   await page.waitForSelector('.leaflet-overlay-pane path')
   await page.setViewportSize({width:390,height:844})

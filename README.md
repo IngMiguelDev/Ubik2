@@ -56,6 +56,8 @@ No se suman líneas como hogares beneficiados ni se interpreta la suma de IDs po
 
 El panorama cuenta una historia visual en tres preguntas: necesidad, presencia y brecha. Un recorrido de tres pasos permite ir a los filtros, los resultados y la comparación con navegación por teclado. Las tarjetas de territorio, muestra, hogares representados y fecha comparten un mismo grupo con los índices de necesidad, presencia y brecha. Las explicaciones de cálculo y términos se consultan en el instructivo. El instructivo contiene una primera consulta paso a paso y un diccionario, y permanece disponible en celular.
 
+«Una exploración trazable» presenta la metodología como una línea de tiempo con ilustraciones, navegación entre etapas y animaciones al recorrerla. Conserva el texto metodológico y usa «Territorio» en lugar de «dominio». La animación respeta la preferencia de movimiento reducido.
+
 La descarga CSV del panorama corresponde a los dominios visibles. Las funciones de CSV alternativo se conservan para uso local de sesión; no modifican la entrega final publicada.
 
 ## Reporte territorial PDF
