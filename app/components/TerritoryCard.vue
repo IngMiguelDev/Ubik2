@@ -9,7 +9,7 @@ const pending = (key: string) => v(key) === null ? 'Pendiente de validación' : 
   <article class="panel territory-card">
     <div class="section-label">FICHA TERRITORIAL · EM 2021</div><h2>{{ v('nombre') }}</h2><p>{{ v('localidad') }} · Código {{ v('codigo') }} · {{ v('tipo') }}</p>
     <div class="notice">Las estimaciones corresponden al dominio completo. Una agrupación de UPZ no se desagrega entre sus integrantes.</div>
-    <ContextIndicators :row="row" :dataset="dataset" prominent/>
+    <template v-if="dataset.status==='final'"><FinalTerritoryFields :dataset="dataset" :row="row"/><p>UPZ integrantes: {{ row.upz_incluidas }} · códigos {{ row.codigos_upz }} · {{ format(row.area_ha) }} ha.</p><p>Las tasas de las cinco líneas se expresan por 1.000 hogares. Valores del archivo final.</p></template><template v-else><ContextIndicators :row="row" :dataset="dataset" prominent/>
     <div class="mapping-grid mt-5"><StatCard v-for="d in dimensions" :key="d" :label="d" :value="format(v(d))" :note="dataset.analysis ? 'Índice relativo del CSV · 0–100' : 'Valor original · unidad según diccionario'"/></div>
     <OriginalIndicators v-if="dataset.analysis" :row="row"/>
     <p>El dominio {{ v('nombre') }} presenta un índice exploratorio de {{ format(need(row, dataset.rows, dataset.schema)) }} con pesos iguales. El número de líneas con registros es {{ format(integral(row, dataset.schema)) }}. Esta descripción no establece relaciones causales.</p>
@@ -19,5 +19,6 @@ const pending = (key: string) => v(key) === null ? 'Pendiente de validación' : 
     <dl v-if="dataset.analysis" class="facts"><div><dt>UPZ integrantes del dominio</dt><dd>{{ row.codigos_upz }}</dd></div><div><dt>Hogares de la muestra</dt><dd>{{ format(row.n_hogares_muestra) }}</dd></div><div><dt>Hogares expandidos EM 2021</dt><dd>{{ format(row.hogares_expandidos_em2021) }}</dd></div><div><dt>Área del dominio</dt><dd>{{ format(row.area_km2) }} km²</dd></div><div><dt>Presencia ejecutada desde 2021</dt><dd>{{ pending('presencia_validada') }}</dd></div><div><dt>Riesgo integrado validado</dt><dd>{{ pending('riesgo_integrado') }}</dd></div></dl>
     <details v-if="dataset.analysis" class="original-indicators"><summary>Campos de riesgo POT sin etiquetas verificadas</summary><p v-for="key in ['pct_area_condicion_riesgo_masa_codigo_3','pct_area_amenaza_inundacion_codigo_1','pct_area_amenaza_inundacion_codigo_2','pct_area_amenaza_inundacion_codigo_3']" :key="key">{{ key }}: {{ format(row[key]) }} %</p><p>No se interpretan como riesgo alto, medio o bajo. El índice integrado validado permanece pendiente.</p></details>
     <p class="muted">Pobreza y jefatura femenina no se incorporan al índice. Los registros misionales tienen períodos heterogéneos y no representan cobertura efectiva ni beneficiarios únicos. La encuesta corresponde a 2021.</p>
+    </template>
   </article>
 </template>

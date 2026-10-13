@@ -14,6 +14,7 @@ export function numberColumn(rows: Row[], column: string) {
     const raw = r[column]
     if (raw === null || raw === undefined) return { ...r, [column]: null }
     if (typeof raw === 'number') return r
+    if (typeof raw !== 'string') throw new Error(`Valor no numérico en ${column}: ${raw}`)
     const clean = raw.trim().replace(',', '.')
     if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(clean)) throw new Error(`Valor no numérico en ${column}: ${raw}`)
     const num = Number(clean)

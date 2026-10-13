@@ -1,0 +1,62 @@
+﻿CAMPO,GRUPO,DESCRIPCIÓN,UNIDAD,USO EN EL VISOR
+cod_upz_grupo,Identificación,Código del dominio de la Encuesta Multipropósito 2021 (UPZ individual o grupo 802-817). Llave de todo el análisis,código,Identificador interno
+NOMBRE_UPZ_GRUPO,Identificación,Nombre del dominio,texto,Título de la ventana emergente
+upz_incluidas,Identificación,Nombres de las UPZ que forman el dominio,texto,Detalle cuando el dominio es un grupo
+codigos_upz,Identificación,Códigos de las UPZ que forman el dominio,texto,Detalle
+es_agrupacion,Identificación,Indica si el dominio agrupa varias UPZ,sí/no,Nota «incluye varias UPZ»
+cod_localidad,Identificación,Código de la localidad,código,Filtro
+localidad,Identificación,Nombre de la localidad,texto,Filtro por localidad
+area_ha,Identificación,Área del dominio,hectáreas,Referencia
+n_partes,Identificación,Número de polígonos separados del dominio,número,No mostrar
+hogares_muestra,Población,Hogares encuestados en la Encuesta Multipropósito 2021,hogares,Contexto
+hogares_expandidos,Población,Hogares estimados del dominio (suma del factor de expansión). Denominador de las tasas de presencia,hogares,Ventana emergente
+viv_presencia,Presencia CVP,Predios de Mejoramiento de Vivienda (Plan Terrazas) ejecutados o en ejecución,predios,Ventana emergente
+viv_programado,Presencia CVP,Predios de Mejoramiento de Vivienda programados,predios,Ventana emergente
+cps_presencia,Presencia CVP,Predios con acto de reconocimiento de la Curaduría Pública Social,predios,Ventana emergente
+tit_presencia,Presencia CVP,Predios titulados (únicos) 2015-2025,predios,Ventana emergente
+reas_presencia,Presencia CVP,Reasentamientos terminados,procesos,Ventana emergente
+reas_en_proceso,Presencia CVP,Reasentamientos en proceso,procesos,Ventana emergente
+barrios_presencia,Presencia CVP,Tramos viales intervenidos por Mejoramiento de Barrios,tramos,Ventana emergente
+barrios_area_m2,Presencia CVP,Área intervenida por Mejoramiento de Barrios,m²,Ventana emergente
+viv_x1000hog,Presencia CVP,Tasa de Mejoramiento de Vivienda,por 1.000 hogares,Mapa por línea
+cps_x1000hog,Presencia CVP,Tasa de Curaduría Pública Social,por 1.000 hogares,Mapa por línea
+tit_x1000hog,Presencia CVP,Tasa de Titulación Predial,por 1.000 hogares,Mapa por línea
+reas_x1000hog,Presencia CVP,Tasa de reasentamientos terminados,por 1.000 hogares,Mapa por línea
+barrios_x1000hog,Presencia CVP,Tasa de tramos de Mejoramiento de Barrios,por 1.000 hogares,Mapa por línea
+integralidad,Presencia CVP,Número de líneas de la CVP con presencia en el dominio,0 a 5,Mapa de integralidad
+pct_amenaza_alta,Necesidad,Área del dominio en amenaza alta por movimientos en masa (IDIGER 2016),% (0-100),Ventana emergente
+pct_amenaza_media,Necesidad,Área del dominio en amenaza media por movimientos en masa,% (0-100),Ventana emergente
+pct_amenaza_baja,Necesidad,Área del dominio en amenaza baja por movimientos en masa,% (0-100),No mostrar
+ind_tenencia,Necesidad,Hogares sin seguridad jurídica sobre la vivienda,proporción 0-1 (multiplicar por 100),Ventana emergente
+ind_ten_sin_titulo,Necesidad,Hogares en posesión sin título u ocupación de hecho,proporción 0-1,Detalle
+ind_ten_prop_sin_escritura,Necesidad,Hogares propietarios sin escritura registrada,proporción 0-1,Detalle
+ind_vivienda,Necesidad,Hogares en déficit habitacional (DANE),proporción 0-1 (multiplicar por 100),Ventana emergente
+ind_viv_cuanti,Necesidad,Hogares en déficit cuantitativo,proporción 0-1,Detalle
+ind_viv_cuali,Necesidad,Hogares en déficit cualitativo,proporción 0-1,Detalle
+ind_entorno,Necesidad,Hogares con vía sin pavimentar o en mal estado o sin andén,proporción 0-1 (multiplicar por 100),Ventana emergente
+ind_ent_via_sin_pavimento,Necesidad,Hogares con vía de acceso sin pavimentar,proporción 0-1,Detalle
+ind_ent_via_mal_estado,Necesidad,Hogares con vía de acceso en mal estado,proporción 0-1,Detalle
+ind_ent_sin_anden,Necesidad,Hogares sin andén,proporción 0-1,Detalle
+ind_ent_iluminacion,Necesidad,Hogares con iluminación de la vía insuficiente o inexistente (no entra al índice),proporción 0-1,No mostrar
+ind_vulnerabilidad,Necesidad,Hogares con jefatura femenina en pobreza monetaria,proporción 0-1 (multiplicar por 100),Ventana emergente
+ind_tenencia_n,Normalizada,Tenencia normalizada (tope en percentil 95),0 a 1,No mostrar
+ind_vivienda_n,Normalizada,Vivienda normalizada,0 a 1,No mostrar
+ind_entorno_n,Normalizada,Entorno normalizado,0 a 1,No mostrar
+pct_amenaza_alta_n,Normalizada,Riesgo normalizado,0 a 1,No mostrar
+ind_vulnerabilidad_n,Normalizada,Vulnerabilidad normalizada,0 a 1,No mostrar
+tit_x1000hog_n,Normalizada,Titulación normalizada,0 a 1,No mostrar
+viv_x1000hog_n,Normalizada,Mejoramiento de Vivienda normalizado,0 a 1,No mostrar
+cps_x1000hog_n,Normalizada,Curaduría Pública Social normalizada,0 a 1,No mostrar
+barrios_x1000hog_n,Normalizada,Mejoramiento de Barrios normalizado,0 a 1,No mostrar
+reas_x1000hog_n,Normalizada,Reasentamientos normalizados,0 a 1,No mostrar
+viv_cps_x1000hog_n,Normalizada,Vivienda + Curaduría Pública Social normalizadas (para la brecha de vivienda),0 a 1,No mostrar
+indice_necesidad,Índices,Promedio de las cinco dimensiones de necesidad normalizadas,0 a 1,Mapa y ventana emergente
+indice_presencia,Índices,Promedio de las cinco líneas de presencia normalizadas,0 a 1,Mapa y ventana emergente
+brecha,Índices,Índice de necesidad menos índice de presencia. Alto = mucha necesidad y poca presencia,-1 a 1,Mapa principal (escala divergente)
+brecha_tenencia,Brecha por línea,Tenencia frente a Titulación Predial,-1 a 1,Mapa por línea
+brecha_vivienda,Brecha por línea,Déficit habitacional frente a Mejoramiento de Vivienda y Curaduría Pública Social,-1 a 1,Mapa por línea
+brecha_entorno,Brecha por línea,Entorno frente a Mejoramiento de Barrios,-1 a 1,Mapa por línea
+brecha_riesgo,Brecha por línea,Amenaza alta frente a Reasentamientos,-1 a 1,Mapa por línea
+prioridad,Prioridad,Posición según la brecha (1 = mayor brecha de la ciudad),1 a 95,Ranking
+categoria_brecha,Prioridad,Quintil de la brecha: Muy alta / Alta / Media / Baja / Muy baja (19 dominios cada uno),categoría,Leyenda del mapa principal
+cuadrante,Prioridad,Necesidad (alta/baja respecto a la mediana) frente a presencia (con/sin presencia),categoría,Filtro o mapa de cuadrantes

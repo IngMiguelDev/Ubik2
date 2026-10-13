@@ -21,12 +21,12 @@ const conditions = computed(() => [
   { key: 'raw:pct_jefatura_femenina', label: 'Jefatura femenina', value: get('jefatura'), color: '#b08000' }
 ])
 const width = (result: number | null) => `${Math.max(0, Math.min(100, result ?? 0))}%`
-const display = (result: number | null, unit: string) => result === null ? 'Sin dato' : `${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 1 }).format(result)} ${unit}`
+const display = (result: number | null, unit: string) => result === null ? 'Sin dato' : `${new Intl.NumberFormat('es-CO', { maximumFractionDigits: props.dataset.status==='final'?3:1 }).format(result)} ${unit}`
 </script>
 <template>
   <section class="territory-charts" aria-label="Gráficos del territorio seleccionado">
     <div class="territory-charts-heading"><div class="section-label">LEE LA FICHA CON GRÁFICOS</div><h2>{{ value(row, dataset.schema, 'nombre') }}</h2></div>
-    <article class="panel territory-chart">
+    <template v-if="dataset.status==='final'"><article class="panel territory-chart"><h3>Necesidad frente a presencia</h3><div v-for="item in [{field:'indice_necesidad',label:'Necesidad'},{field:'indice_presencia',label:'Presencia'}]" :key="item.field" class="territory-bar"><span>{{ item.label }}</span><i><b :style="{width:width(typeof row[item.field]==='number' ? Number(row[item.field])*100 : null)}"/></i><strong>{{ display(typeof row[item.field]==='number' ? Number(row[item.field]) : null, '') }}</strong></div><p>Índices de 0 a 1 · Brecha {{ row.brecha }} · {{ row.categoria_brecha }}</p></article><article class="panel territory-chart"><h3>Condiciones de los hogares</h3><button v-for="item in [{field:'ind_tenencia',label:'Tenencia'},{field:'ind_vivienda',label:'Vivienda'},{field:'ind_entorno',label:'Entorno'},{field:'ind_vulnerabilidad',label:'Vulnerabilidad'}]" :key="item.field" class="territory-bar" @click="emit('indicator',`final:${item.field}`)"><span>{{ item.label }}</span><i><b :style="{width:width(explorerValue(row,dataset,`final:${item.field}`))}"/></i><strong>{{ display(explorerValue(row,dataset,`final:${item.field}`),'%') }}</strong></button></article></template><template v-else><article class="panel territory-chart">
       <h3>Necesidad frente a presencia</h3>
       <div class="territory-bar"><span>Necesidad</span><i aria-hidden="true"><b :style="{ width: width(needValue) }"/></i><strong>{{ display(needValue, 'pts') }}</strong></div>
       <div class="territory-bar" :class="{ 'territory-bar-pending': presenceValue === null }"><span>Presencia</span><i v-if="presenceValue !== null" aria-hidden="true"><b class="presence-bar" :style="{ width: width(presenceValue) }"/></i><strong>{{ presenceValue === null ? 'Sin dato' : display(presenceValue, 'pts') }}</strong></div>
@@ -43,5 +43,6 @@ const display = (result: number | null, unit: string) => result === null ? 'Sin 
       <button v-for="item in conditions" :key="item.key" class="territory-bar" :disabled="item.value === null || !dataset.columns.includes(item.key.slice(4))" :aria-label="`Ver ${item.label} en el mapa`" @click="emit('indicator', item.key)"><span>{{ item.label }}</span><i aria-hidden="true"><b :style="{ width: width(item.value), background: item.color }"/></i><strong>{{ display(item.value, '%') }}</strong></button>
       <p class="territory-chart-note">Son porcentajes separados de hogares{{ dataset.analysis ? ' en 2021' : '' }}. No se suman ni indican cuántos hogares con jefatura femenina están en pobreza.</p>
     </article>
+    </template>
   </section>
 </template>

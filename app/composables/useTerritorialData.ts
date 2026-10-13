@@ -9,10 +9,10 @@ export function useTerritorialData() {
   async function load() {
     loading.value = true; error.value = ''
     try {
-      const data = await $fetch<Dataset>(`${config.app.baseURL}data/dataset.json`)
+      const data = await $fetch<Dataset>(`${config.app.baseURL}data/final-dataset.json`)
       if (!Array.isArray(data.rows) || !Array.isArray(data.columns)) throw new Error('Estructura de datos inválida.')
       dataset.value = data; configured.value = Boolean(data.schema.codigo && data.schema.nombre)
-      if (data.rows.length) original.value = await $fetch<string>(`${config.app.baseURL}data/original.csv`, { responseType: 'text' })
+      if (data.rows.length) original.value = await $fetch<string>(`${config.app.baseURL}data/upz_brecha_95.csv`, { responseType: 'text' })
     } catch (e) { error.value = e instanceof Error ? e.message : 'No se pudieron cargar los datos.' }
     finally { loading.value = false }
   }
@@ -39,8 +39,9 @@ export function useTerritorialData() {
   }
   function reset() { Object.assign(filters, { locality: '', domain: '', line: '', search: '' }) }
   const filtered = computed(() => configured.value ? filterRows(dataset.value.rows, dataset.value.schema, filters) : [])
-  const downloadOriginal = () => download(dataset.value.source.name, original.value, 'text/csv;charset=utf-8')
+  const downloadOriginal = () => download(dataset.value.status === 'final' ? 'upz_brecha_95.csv' : dataset.value.source.name, original.value, 'text/csv;charset=utf-8')
   const downloadFiltered = () => {
+    if (dataset.value.status === 'final') { download('upz_brecha_95_filtrado.csv', exportRows(filtered.value), 'text/csv;charset=utf-8'); return }
     const columns = new Set(dataset.value.columns)
     const unique = (base: string) => { let name=base; while (columns.has(name)) name=`_${name}`; columns.add(name); return name }
     const keys = ['ubik2_necesidad_pesos_iguales','ubik2_necesidad_vivienda_doble','ubik2_necesidad_riesgo_doble','ubik2_integralidad_publicada'].map(unique)

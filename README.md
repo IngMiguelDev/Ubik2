@@ -22,6 +22,39 @@ La generación produce `.output/public`, listo para un servidor estático. Las s
 
 ## Información integrada
 
+### Actualización: archivo final de brecha (12 de octubre de 2026)
+
+El visor carga `public/data/final-dataset.json`, generado directamente desde
+`upz_brecha_95.geojson` (95 territorios). Conserva los campos entregados sin
+recalcular índices, quintiles ni prioridad. El mapa principal usa `brecha` y una
+paleta divergente de cinco categorías de `categoria_brecha`. Las categorías
+permanecen estables al filtrar. IDIGER se puede activar como capa superpuesta:
+morado para amenaza alta y naranja para amenaza media. La capa muestra su
+extensión urbana completa y permite seleccionar las UPZ a través de ella.
+
+El diccionario CSV se extrajo del XLSX adjunto. Solo los indicadores `ind_` de
+encuesta se multiplican por 100 para su presentación; los campos normalizados
+`*_n` no se presentan como porcentajes de hogares. Los porcentajes de amenaza
+ya están en 0–100. Los índices necesidad/presencia conservan 0–1 y las brechas
+−1–1. Las cinco tasas misionales están expresadas por 1.000 hogares.
+
+Los GeoJSON originales, XLSX y diccionario CSV están disponibles para descarga.
+Los CSV anteriores y su cartografía se conservan como referencia histórica;
+las secciones siguientes documentan esa versión preliminar.
+
+Para reproducir la importación y verificar la interfaz final:
+
+```sh
+python scripts/import-final-data.py "ruta/a/la/carpeta/con/los/adjuntos"
+npm test
+npm run typecheck
+npm run generate
+node scripts/verify-final-ui.mjs
+```
+
+La prueba de interfaz usa Microsoft Edge con Playwright y cierra su servidor
+temporal al terminar. El CSV filtrado conserva las unidades y valores originales.
+
 Se analizaron los cuatro archivos aportados por el usuario:
 
 - `ubik2_indicadores_preliminares.csv`: 95 dominios, 106 columnas, 80 UPZ individuales y 15 agrupaciones en 19 localidades. Sus dominios contienen 112 UPZ integrantes. Una fila representa un dominio completo.

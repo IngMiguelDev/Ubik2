@@ -24,6 +24,10 @@ export const explorerIndicators = [
   { key:'integralidad', label:'Líneas CVP con registros publicados', description:'Número de las cinco líneas con registros positivos. No mide intensidad ni cobertura efectiva.', unit:'Líneas · 0–5' }
 ]
 export function explorerValue(row: Row, dataset: Dataset, key: string): number | null {
+  if (key.startsWith('final:')) {
+    const field = key.slice(6), v = numeric(row[field])
+    return v === null ? null : field.startsWith('ind_') && !field.endsWith('_n') ? v * 100 : v
+  }
   if (key.startsWith('scenario:')) return scenarioValue(row, dataset, key)
   if (key.startsWith('raw:')) return numeric(row[key.slice(4)])
   if (key === 'necesidad') return need(row,dataset.rows,dataset.schema)
@@ -37,5 +41,9 @@ export function presenceFilter(row: Row, dataset: Dataset, filter: string) {
   return filter==='0' ? n===0 : n>=Number(filter)
 }
 export function availableIndicators(dataset: Dataset) {
+  if (dataset.status === 'final') return (dataset.fieldDefinitions || [])
+    .filter(f => ['brecha','indice_necesidad','indice_presencia','integralidad'].includes(f.field) || (f.usage !== 'No mostrar' && dataset.rows.some(r => typeof r[f.field] === 'number') && !['Identificación','Población','Prioridad','Normalizada'].includes(f.group)))
+    .sort((a,b) => a.field === 'brecha' ? -1 : b.field === 'brecha' ? 1 : 0)
+    .map(f => ({key:`final:${f.field}`,label:f.field === 'brecha' ? 'Brecha · mapa principal' : f.description,description:f.description,unit:f.field.startsWith('ind_') && !f.field.endsWith('_n') ? '% de hogares · EM 2021' : f.unit}))
   return explorerIndicators.filter(i=>i.key.startsWith('scenario:') ? Boolean(dataset.analysis) : i.key.startsWith('raw:') ? dataset.columns.includes(i.key.slice(4)) : ['tenencia','vivienda','entorno','riesgo'].includes(i.key) ? Boolean(dataset.analysis && dataset.schema[i.key]) : true)
 }

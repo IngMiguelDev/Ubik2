@@ -11,6 +11,7 @@ export function integral(row: Row, schema: Schema) {
   return vals.every(x => x !== null) ? vals.filter(x => x! > 0).length : null
 }
 export function need(row: Row, all: Row[], schema: Schema, scenario = 'equal'): number | null {
+  if (schema.codigo === 'cod_upz_grupo') return scenario === 'equal' ? numeric(row.indice_necesidad) : null
   const suppliedKey = scenario === 'housing' ? 'necesidad_vivienda' : scenario === 'risk' ? 'necesidad_riesgo' : 'necesidad_igual'
   if (schema[suppliedKey]) return numeric(value(row, schema, suppliedKey))
   let sum = 0, weights = 0
@@ -32,7 +33,7 @@ export function filterRows(rows: Row[], schema: Schema, filters: { locality: str
   const normalize=(v:unknown)=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim()
   const query=normalize(filters.search)
   const matches=(r:Row)=>!query || (/^\d+$/.test(query)
-    ? String(value(r,schema,'codigo'))===query || String(r.codigos_upz??'').split('|').some(code=>code.trim()===query)
+    ? String(value(r,schema,'codigo'))===query || String(r.codigos_upz??'').split(/[|,;]/).some(code=>code.trim()===query)
     : ['nombre','localidad'].some(key=>normalize(value(r,schema,key)).includes(query)))
   return rows.filter(r => (!filters.locality || String(value(r, schema, 'localidad')) === filters.locality) && (!filters.domain || String(value(r, schema, 'codigo')) === filters.domain) && (!filters.line || (numeric(value(r, schema, `registros_${filters.line}`)) ?? -1) > 0) && matches(r))
 }

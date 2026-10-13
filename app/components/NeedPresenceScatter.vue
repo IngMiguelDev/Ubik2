@@ -5,7 +5,7 @@ import { value } from '../utils/analytics'
 const props = defineProps<{ dataset: Dataset; rows: Row[]; selectedCode: string }>()
 const emit = defineEmits<{ select: [code: string] }>()
 const points = computed(() => props.rows.flatMap(row => {
-  const x = explorerValue(row,props.dataset,'scenario:need'), y = explorerValue(row,props.dataset,'scenario:presence')
+  const x = explorerValue(row,props.dataset,props.dataset.status==='final'?'final:indice_necesidad':'scenario:need'), y = explorerValue(row,props.dataset,props.dataset.status==='final'?'final:indice_presencia':'scenario:presence')
   if (x === null || y === null) return []
   const code = String(value(row,props.dataset.schema,'codigo'))
   return [{ code, name: String(value(row,props.dataset.schema,'nombre')), value: [x,y], symbolSize: code === props.selectedCode ? 18 : 10, itemStyle: { color: code === props.selectedCode ? '#ffc400' : x > y ? '#ed241b' : '#1968a6', borderColor: code === props.selectedCode ? '#202a35' : '#fff', borderWidth: 1, opacity: .85 } }]
@@ -14,9 +14,9 @@ const option = computed(() => ({
   animation: false,
   aria: { enabled: true }, tooltip: { trigger: 'item', renderMode: 'richText' },
   grid: { left: 55, right: 24, top: 50, bottom: 70 },
-  xAxis: { type: 'value', min: 0, max: 100, interval: 25, name: 'Necesidad ajustada · puntos de índice', nameLocation: 'middle', nameGap: 40, nameTextStyle: { fontSize: 11 } },
-  yAxis: { type: 'value', min: 0, max: 100, interval: 25, name: 'Presencia publicada · puntos de índice', nameTextStyle: { fontSize: 11 } },
-  series: [{ type: 'scatter', data: points.value, markLine: { silent: true, symbol: 'none', label: { show: false }, lineStyle: { color: '#8b949e', type: 'dashed' }, data: [[{ coord: [0,0] },{ coord: [100,100] }]] } }]
+  xAxis: { type: 'value', min: 0, max: props.dataset.status==='final'?1:100, interval: props.dataset.status==='final'?.25:25, name: 'Necesidad ajustada · puntos de índice', nameLocation: 'middle', nameGap: 40, nameTextStyle: { fontSize: 11 } },
+  yAxis: { type: 'value', min: 0, max: props.dataset.status==='final'?1:100, interval: props.dataset.status==='final'?.25:25, name: 'Presencia publicada · puntos de índice', nameTextStyle: { fontSize: 11 } },
+  series: [{ type: 'scatter', data: points.value, markLine: { silent: true, symbol: 'none', label: { show: false }, lineStyle: { color: '#8b949e', type: 'dashed' }, data: [[{ coord: [0,0] },{ coord: props.dataset.status==='final'?[1,1]:[100,100] }]] } }]
 }))
 </script>
 <template>

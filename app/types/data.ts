@@ -1,4 +1,4 @@
-export type Cell = string | number | null
+export type Cell = string | number | boolean | null
 export type Row = Record<string, Cell>
 export const dimensions = ['tenencia', 'vivienda', 'entorno', 'riesgo'] as const
 export const lines = [
@@ -9,4 +9,5 @@ export const lines = [
   { key: 'reasentamientos', label: 'Reasentamientos', color: '#887745' }
 ] as const
 export type Schema = Record<string, string>
-export interface Dataset { rows: Row[]; columns: string[]; schema: Schema; source: { name: string; date: string | null; license: string | null }; status?: string; analysis?: { kind: string; dimensionsScale: string; proposal: string; housingScope: string; periods: string } }
+export interface FieldDefinition { field: string; group: string; description: string; unit: string; usage: string }
+export interface Dataset { rows: Row[]; columns: string[]; schema: Schema; source: { name: string; date: string | null; license: string | null }; status?: string; fieldDefinitions?: FieldDefinition[]; analysis?: { kind: string; dimensionsScale: string; proposal: string; housingScope: string; periods: string } }
