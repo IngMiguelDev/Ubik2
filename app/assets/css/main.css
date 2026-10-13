@@ -108,6 +108,12 @@ thead th { font-size: 11px; color: #726476; }
 .legend-dot-red { background: #ed241b; }
 .legend-dot-blue { background: #1968a6; }
 .legend-dot-yellow { background: #ffc400; }
+.hazard-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 16px; background: #faf8ff; border-top: 1px solid #e4e9ef; font-size: 12px; color: #425365; }
+.hazard-legend>strong { width: 100%; font-size: 12px; }
+.hazard-legend>span { display: inline-flex; align-items: center; gap: 8px; }
+.hazard-swatch { display: inline-block; width: 18px; height: 18px; border-radius: 3px; }
+.hazard-high { border: 1px solid #6b21a8; background: rgb(107 33 168 / 35%); }
+.hazard-medium { border: 1px solid #d97706; background: rgb(217 119 6 / 35%); }
 .additional-comparison>summary { cursor: pointer; font-size: 14px; font-weight: 650; }
 .additional-comparison .scatter-comparison { border: 0; padding: 22px 0 0; margin-bottom: 0; }
 @media(min-width:1151px) { .overview-filters { position: sticky; top: 15px; } }

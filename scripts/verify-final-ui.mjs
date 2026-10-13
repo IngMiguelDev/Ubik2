@@ -49,6 +49,7 @@ try{
   await page.waitForFunction(()=>document.querySelector('.territory-results')?.textContent.includes('Consolidado de Barrios Unidos'));
   assert.ok(!/Sin dato/.test(await page.locator('.territory-results').innerText()));
   assert.match(await page.locator('.overview-territory').innerText(),/CONSOLIDADO DE LA LOCALIDAD.*Barrios Unidos/s);
+  assert.ok(!/[-−]1 a 1/.test(await page.locator('.overview-territory .territory-highlight').innerText()));
   assert.match(await page.locator('.territory-charts').innerText(),/Consolidado de Barrios Unidos.*Necesidad frente a presencia.*Condiciones de los hogares/s);
   assert.match(await page.locator('.overview-territory').innerText(),/Presencia CVP.*Mejoramiento de Vivienda.*Titulación Predial/s);
   assert.ok(!/Sin dato/.test(await page.locator('.overview-territory').innerText()));
@@ -63,12 +64,15 @@ try{
   assert.match(await page.locator('.map-legend').innerText(),/Muy baja.*Baja.*Media.*Alta.*Muy alta/s)
   const overlay=page.getByRole('checkbox',{name:/Amenaza por movimientos/})
   assert.equal(await page.locator('.overview-filters').getByRole('checkbox',{name:/Amenaza por movimientos/}).count(),1);
-  assert.match(await page.locator('.overview-date').innerText(),/Encuesta Multipropósito/);
+  assert.equal(await page.locator('.overview-date').count(),0);
   await overlay.check()
   await page.waitForSelector('.leaflet-hazards-pane path')
+  assert.equal(await page.getByRole('group',{name:'Leyenda de amenaza por movimientos en masa'}).isVisible(),true)
+  assert.match(await page.locator('.hazard-legend').innerText(),/Amenaza alta.*Amenaza media/s)
   assert.equal(await page.locator('.leaflet-hazards-pane path').count(),2)
   await page.getByRole('button',{name:'Restablecer filtros',exact:true}).click()
   assert.equal(await overlay.isChecked(),false)
+  assert.equal(await page.locator('.hazard-legend').count(),0)
   await page.waitForFunction(()=>!document.querySelector('.leaflet-hazards-pane path'))
   await page.getByLabel('Localidad del mapa',{exact:true}).selectOption('Usaquén')
   await page.waitForFunction(()=>document.querySelectorAll('.leaflet-overlay-pane path').length===7)

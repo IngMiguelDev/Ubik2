@@ -92,6 +92,11 @@ onBeforeUnmount(()=>{destroyed=true;drawVersion++;observer?.disconnect();map?.re
     <EmptyState v-if="!loading&&!ready" title="Geometrías pendientes de verificación" description="Carga polígonos de dominios completos con procedencia documentada. Los elementos de intervención CVP no son límites de dominios."/>
     <div class="map-viewport"><div ref="host" v-show="ready" class="map" aria-label="Mapa de dominios territoriales"/><p v-if="compact&&ready" class="map-instructions">Selecciona un territorio · arrastra para mover · usa + / − para acercar</p></div>
     <div v-if="ready&&categoryLegend" class="map-legend" style="flex-wrap:wrap"><span v-for="c in gapCategories" :key="c.label" style="display:flex;align-items:center;gap:6px"><b :style="{background:c.color,width:'18px',height:'18px',border:'1px solid #999'}"/>{{ c.label }}</span><span class="muted">Quintiles originales · {{ matched }} territorios · gris: sin dato</span></div><div v-else-if="ready" class="map-legend" :class="{ 'gap-legend': isGap }"><span>Menor: {{ format(lo) }}</span><i/><span>Mayor: {{ format(hi) }}</span><span class="muted">Gris: sin dato · {{ matched }} geometrías coincidentes</span></div>
+    <div v-if="ready && showHazards && hazards" class="hazard-legend" role="group" aria-label="Leyenda de amenaza por movimientos en masa">
+      <strong>Capa de amenaza · IDIGER</strong>
+      <span><i class="hazard-swatch hazard-high" aria-hidden="true"/>Amenaza alta</span>
+      <span><i class="hazard-swatch hazard-medium" aria-hidden="true"/>Amenaza media</span>
+    </div>
     <div v-if="showInterventions&&overlayAllowed" class="notice mt-5">Azul: {{ interventionCount }} elementos cartográficos de Barrios en las localidades seleccionadas. El adjunto contiene 557 elementos y 233 IDs de intervención distintos; el CSV contiene 494 registros y 206 IDs distintos agregados por dominio. No se sustituyen ni suman ambos conjuntos. No hay cruce espacial de actuaciones validado por dominio y los códigos de estado permanecen sin interpretar.</div>
     <p v-if="!compact" class="muted mt-5">{{ provenance }}. Selecciona un dominio en el mapa o abre su ficha desde la tabla mediante teclado. Un valor de necesidad es exploratorio, no una priorización institucional.</p>
   </section>
