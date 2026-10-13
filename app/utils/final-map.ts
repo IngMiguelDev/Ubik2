@@ -1,7 +1,7 @@
 export const gapCategories = [
   { label: 'Muy baja', color: '#2166ac' },
   { label: 'Baja', color: '#92c5de' },
-  { label: 'Media', color: '#f7f7f7' },
+  { label: 'Media', color: '#ffc400' },
   { label: 'Alta', color: '#f4a582' },
   { label: 'Muy alta', color: '#b2182b' }
 ]
