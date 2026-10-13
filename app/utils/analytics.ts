@@ -1,7 +1,8 @@
 import { dimensions, lines, type Row, type Schema } from '../types/data'
 export const numeric = (v: unknown): number | null => typeof v === 'number' && Number.isFinite(v) ? v : null
 export const value = (row: Row, schema: Schema, key: string) => schema[key] ? row[schema[key]!] ?? null : null
-export const format = (v: unknown) => numeric(v) === null ? 'Sin dato' : new Intl.NumberFormat('es-CO', { maximumFractionDigits: 2 }).format(v as number)
+export const format = (v: unknown) => numeric(v) === null ? 'Sin dato' : new Intl.NumberFormat('es-CO', { minimumFractionDigits: Number.isInteger(v) ? 0 : 2, maximumFractionDigits: 2 }).format(v as number)
+export const formatDecimal = (v: unknown) => numeric(v) === null ? 'Sin dato' : new Intl.NumberFormat('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v as number)
 export function total(rows: Row[], schema: Schema, key: string) {
   const nums = rows.map(r => numeric(value(r, schema, key))).filter((x): x is number => x !== null)
   return nums.length ? nums.reduce((a, b) => a + b, 0) : null

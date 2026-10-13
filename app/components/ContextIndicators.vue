@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Dataset, Row } from '../types/data'
-import { format, numeric, value } from '../utils/analytics'
+import { format, formatDecimal, numeric, value } from '../utils/analytics'
 import { availableIndicators } from '../utils/explorer'
 const props = defineProps<{ row?: Row; dataset: Dataset; prominent?: boolean; metric?: string }>()
 const emit = defineEmits<{ indicator: [key: string] }>()
@@ -13,7 +13,7 @@ const indicators = [
 function percentage(key: string, column: string) {
   if (!props.row) return 'Sin dato'
   const result = numeric(props.dataset.schema[key] ? value(props.row, props.dataset.schema, key) : props.row[column])
-  return result === null ? 'Sin dato' : `${format(result)} %`
+  return result === null ? 'Sin dato' : `${formatDecimal(result)} %`
 }
 </script>
 <template>

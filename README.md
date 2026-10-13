@@ -54,6 +54,8 @@ No se suman líneas como hogares beneficiados ni se interpreta la suma de IDs po
 - El mapa ofrece 14 indicadores analíticos. Los quintiles originales permanecen estables; Media usa amarillo `#ffc400`. Amenaza IDIGER puede activarse como superposición.
 - Cómo leer los datos abre una guía accesible en un popup con branding UBiK2.
 
+El panorama cuenta una historia visual en tres preguntas: necesidad, presencia y brecha. Un recorrido de tres pasos permite ir a los filtros, los resultados y la comparación con navegación por teclado. Las tarjetas de territorio, muestra, hogares representados y fecha comparten un mismo grupo con los índices de necesidad, presencia y brecha. Las explicaciones de cálculo y términos se consultan en el instructivo. El instructivo contiene una primera consulta paso a paso y un diccionario, y permanece disponible en celular.
+
 La descarga CSV del panorama corresponde a los dominios visibles. Las funciones de CSV alternativo se conservan para uso local de sesión; no modifican la entrega final publicada.
 
 ## Reporte territorial PDF

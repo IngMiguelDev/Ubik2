@@ -1,10 +1,19 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { filterRows, need, total, integral } from '../app/utils/analytics'
+import { filterRows, need, total, integral, format, formatDecimal } from '../app/utils/analytics'
 import { numberColumn, parseCsv, exportRows } from '../app/utils/csv'
 // Datos sintéticos únicamente de prueba: no se publican ni se cargan en la aplicación.
 const schema = { codigo:'id', nombre:'name', localidad:'loc', tenencia:'t', vivienda:'v', entorno:'e', riesgo:'r', direccion_tenencia:'alta', direccion_vivienda:'alta', direccion_entorno:'baja', direccion_riesgo:'alta', registros_barrios:'b' }
 const rows = [{ id:'001',name:'Prueba A',loc:'L1',t:0,v:10,e:10,r:0,b:2 },{ id:'002',name:'Prueba B',loc:'L2',t:10,v:0,e:0,r:10,b:null }]
+
+test('formato de lectura redondea a dos decimales y conserva conteos y faltantes', () => {
+  assert.equal(formatDecimal(0.352), '0,35')
+  assert.equal(formatDecimal(15.853), '15,85')
+  assert.equal(formatDecimal(12), '12,00')
+  assert.equal(formatDecimal(-0.281), '-0,28')
+  assert.equal(format(1185), '1.185')
+  assert.equal(formatDecimal(null), 'Sin dato')
+})
 test('nulos preservados, códigos como texto, coma decimal explícita', () => {
   const data=parseCsv('id;v;name\n001;1,5;"Nombre; con separador"\n002;;Otro\n')
   assert.equal(data.rows[0]?.id,'001'); assert.equal(data.rows[1]?.v,null)

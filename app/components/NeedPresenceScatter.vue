@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Dataset, Row } from '../types/data'
 import { explorerValue } from '../utils/explorer'
-import { value } from '../utils/analytics'
+import { value, formatDecimal } from '../utils/analytics'
 const props = defineProps<{ dataset: Dataset; rows: Row[]; selectedCode: string }>()
 const emit = defineEmits<{ select: [code: string] }>()
 const points = computed(() => props.rows.flatMap(row => {
@@ -12,7 +12,7 @@ const points = computed(() => props.rows.flatMap(row => {
 }))
 const option = computed(() => ({
   animation: false,
-  aria: { enabled: true }, tooltip: { trigger: 'item', renderMode: 'richText' },
+  aria: { enabled: true }, tooltip: { trigger: 'item', renderMode: 'richText', valueFormatter: formatDecimal },
   grid: { left: 55, right: 24, top: 50, bottom: 70 },
   xAxis: { type: 'value', min: 0, max: props.dataset.status==='final'?1:100, interval: props.dataset.status==='final'?.25:25, name: props.dataset.status==='final' ? 'Índice de necesidad · 0 a 1' : 'Necesidad ajustada · puntos de índice', nameLocation: 'middle', nameGap: 40, nameTextStyle: { fontSize: 11 } },
   yAxis: { type: 'value', min: 0, max: props.dataset.status==='final'?1:100, interval: props.dataset.status==='final'?.25:25, name: 'Presencia publicada · puntos de índice', nameTextStyle: { fontSize: 11 } },

@@ -16,6 +16,7 @@ function backdrop(event:MouseEvent){const element=dialog.value;if(!element || ev
   <dialog ref="dialog" class="reading-guide" aria-labelledby="reading-guide-title" @click="backdrop" @cancel="isOpen=false" @close="isOpen=false">
     <div class="guide-header"><div class="guide-brand"><img :src="`${baseURL}brand/ubik2.png`" alt="UBiK2"><div><div class="section-label">OBSERVATORIO TERRITORIAL</div><h2 id="reading-guide-title">Cómo leer los datos</h2></div></div><button class="outline" autofocus @click="close" aria-label="Cerrar explicación">Cerrar</button></div><div class="guide-content">
     <p>Este mapa ayuda a comparar las condiciones de los hogares y los registros de la Caja de la Vivienda Popular en distintos territorios de Bogotá.</p>
+    <div class="guide-quickstart"><strong>Tu primera consulta, en cuatro pasos</strong><ol><li>En <b>Localidad</b>, elige el lugar que quieres consultar.</li><li>Marca las <b>UPZ o agrupaciones</b> que te interesan. Las tarjetas resumen lo que has marcado.</li><li>Elige un <b>Indicador del mapa</b> y pulsa un territorio para ver sus datos individuales.</li><li>Revisa <b>Compara territorios</b>. Usa “Exportar selección” para obtener el CSV o “Descargar reporte PDF” para guardar un reporte.</li></ol><p>Para empezar de nuevo, pulsa “Restablecer filtros”. Para volver del territorio individual al resumen, pulsa “Limpiar selección territorial”.</p></div>
     <h3>1. Elige qué quieres ver</h3>
     <p>Al elegir una localidad se marcan sus UPZ. Puedes marcar varias casillas para comparar o consolidar solo esos territorios. La búsqueda encuentra nombres y códigos en la lista; no desmarca lo que ya elegiste.</p>
     <p>Las tarjetas y la ficha muestran el consolidado de la selección. Al pulsar una UPZ en el mapa o en la tabla, muestran sus datos individuales. “Limpiar selección territorial” vuelve al consolidado. Algunas UPZ forman una agrupación de la encuesta: sus resultados se leen juntos.</p>
@@ -31,6 +32,7 @@ function backdrop(event:MouseEvent){const element=dialog.value;if(!element || ev
     <h3>5. Ten presente la fecha y el alcance</h3>
     <p>La encuesta es de 2021. Las líneas CVP tienen períodos distintos, detallados en Metodología y fuentes. Vivienda incluye Plan Terrazas ejecutado o en ejecución; otras líneas cuentan predios, procesos o tramos. No se suman como personas beneficiadas. Cero registros significa que no aparecen en las capas utilizadas; “Sin dato” significa información faltante.</p>
     <p>La brecha ayuda a explorar dónde profundizar. No cuenta hogares pendientes de ayuda ni demuestra cobertura completa. La amenaza mostrada corresponde a movimientos en masa, no a todos los riesgos.</p>
+    <details class="guide-glossary"><summary>Diccionario rápido: palabras que verás en la plataforma</summary><dl><dt>UPZ</dt><dd>Unidad de Planeamiento Zonal: un conjunto de barrios de Bogotá.</dd><dt>Dominio estadístico</dt><dd>Territorio para el que la encuesta publica un resultado. Puede ser una UPZ o una agrupación de varias.</dd><dt>Muestra</dt><dd>Hogares que respondieron la encuesta.</dd><dt>Hogares representados</dt><dd>Estimación del total de hogares obtenida al aplicar los factores de expansión de la encuesta a la muestra.</dd><dt>Índice</dt><dd>Medida que combina y ajusta varios indicadores para comparar territorios. Un índice de 0,60 no significa 60 % de hogares.</dd><dt>Quintil</dt><dd>Uno de cinco grupos de igual tamaño al ordenar los territorios. En este archivo, cada grupo reúne 19 territorios.</dd><dt>Consolidado</dt><dd>Resumen de los territorios seleccionados. Los conteos se suman; los índices se ponderan por hogares representados.</dd><dt>CVP y EM</dt><dd>Caja de la Vivienda Popular y Encuesta Multipropósito, respectivamente.</dd></dl></details>
     </div><div class="guide-footer"><span>Caja de la Vivienda Popular · Bogotá</span><button class="primary" @click="close">Entendido</button></div>
   </dialog>
 </template>
@@ -45,6 +47,13 @@ function backdrop(event:MouseEvent){const element=dialog.value;if(!element || ev
 .guide-content { overflow-y: auto; min-height: 0; padding: 8px 24px 20px; }
 .reading-guide h3 { margin: 22px 0 8px; font-size: 16px; padding-left: 10px; border-left: 3px solid #ffc400; }
 .reading-guide p { line-height: 1.65; font-size: 14px; margin: 12px 0; }
+.guide-quickstart { background: #f0f5f8; border: 1px solid #dce6ed; border-radius: 10px; padding: 18px; margin-top: 18px; }
+.guide-quickstart ol { padding-left: 22px; margin: 12px 0; list-style: decimal; }
+.guide-quickstart li { font-size: 14px; line-height: 1.7; margin-bottom: 10px; }
+.guide-glossary { border-top: 1px solid #dce3ed; padding: 18px 0; margin-top: 24px; }
+.guide-glossary summary { cursor: pointer; font-weight: 650; font-size: 15px; }
+.guide-glossary dt { margin-top: 16px; font-weight: 700; font-size: 14px; }
+.guide-glossary dd { margin: 4px 0 0; font-size: 14px; line-height: 1.65; }
 .guide-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; background: #fff9ed; border-top: 1px solid #f0dfb8; flex-shrink: 0; }
 .guide-footer span { font-size: 12px; }
 @media (max-width: 480px) { .guide-header, .guide-footer { padding: 14px 16px; } .guide-content { padding: 8px 16px 16px; } .reading-guide h2 { font-size: 18px; } .guide-brand { gap: 8px; } .guide-brand img { width: 32px; height: 42px; } }

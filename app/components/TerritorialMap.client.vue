@@ -2,7 +2,7 @@
 import L from 'leaflet'
 import type { FeatureCollection } from 'geojson'
 import { dimensions, type Dataset, type Row } from '../types/data'
-import { value, numeric, format, need, integral } from '../utils/analytics'
+import { value, numeric, format, need, integral, formatDecimal } from '../utils/analytics'
 import { availableIndicators, explorerValue } from '../utils/explorer'
 import { gapCategories, categoryColor } from '../utils/final-map'
 const props=defineProps<{ dataset:Dataset; rows:Row[]; line:string; compact?:boolean; metricKey?:string; metricLabel?:string; selectedCode?:string }>()
@@ -12,7 +12,8 @@ const contextIndicators=computed(()=>availableIndicators(props.dataset).filter(i
 const host=ref<HTMLElement>(), geo=shallowRef<FeatureCollection>(), interventions=shallowRef<FeatureCollection>()
 const key=ref(''), error=ref(''), loading=ref(false), indicator=ref('necesidad'), provenance=ref(''), acknowledged=ref(false), showInterventions=ref(false), official=ref(false)
 const matched=ref(0), interventionCount=ref(0)
-const hazards=shallowRef<FeatureCollection>(), showHazards=ref(false)
+const hazards=shallowRef<FeatureCollection>()
+const showHazards=defineModel<boolean>('showHazards', { default: false })
 const finalData=computed(()=>props.dataset.status==='final')
 const fields=computed(()=>[...new Set(geo.value?.features.flatMap(f=>Object.keys(f.properties||{}))||[])])
 const ready=computed(()=>Boolean(geo.value&&key.value&&acknowledged.value&&provenance.value))
@@ -58,7 +59,7 @@ async function draw() {
   layer?.remove();works?.remove();hazardLayer?.remove();matched.value=visibleGeo.value.features.length;interventionCount.value=0
   layer=L.geoJSON(visibleGeo.value,{
     style:f=>{const code=String(f?.properties?.[key.value]);const r=props.rows.find(r=>String(value(r,props.dataset.schema,'codigo'))===code);return{color:code===props.selectedCode?'#263443':'#ffffff',weight:code===props.selectedCode?2.5:1,fillOpacity:.95,fillColor:categoryLegend.value?categoryColor(r?.categoria_brecha):color(r?metric(r):null)}},
-    onEachFeature:(f,shape)=>{const code=String(f.properties?.[key.value]??'');const r=props.rows.find(r=>String(value(r,props.dataset.schema,'codigo'))===code);if(!r)return;shape.bindTooltip(tooltip(`${value(r,props.dataset.schema,'nombre')} · ${format(metric(r))}${categoryLegend.value?` · ${r.categoria_brecha} · prioridad ${r.prioridad}`:''} · ${value(r,props.dataset.schema,'tipo')} · dominio completo`));shape.on('click',()=>emit('select',code))}
+    onEachFeature:(f,shape)=>{const code=String(f.properties?.[key.value]??'');const r=props.rows.find(r=>String(value(r,props.dataset.schema,'codigo'))===code);if(!r)return;shape.bindTooltip(tooltip(`${value(r,props.dataset.schema,'nombre')} · ${formatDecimal(metric(r))}${categoryLegend.value?` · ${r.categoria_brecha} · prioridad ${r.prioridad}`:''} · Localidad: ${value(r,props.dataset.schema,'localidad')}`));shape.on('click',()=>emit('select',code))}
   }).addTo(map)
   if(showInterventions.value&&overlayAllowed.value&&interventions.value){
     const localities=new Set(props.rows.map(r=>r.codigo_localidad).filter(v=>v!==null&&v!==undefined).map(v=>String(Number(v))))
@@ -86,7 +87,7 @@ onBeforeUnmount(()=>{destroyed=true;drawVersion++;observer?.disconnect();map?.re
     <div v-if="!compact" class="mapping-grid"><label>Indicador<select aria-label="Indicador" v-model="indicator"><option value="necesidad">Necesidad exploratoria · 0–100</option><option v-for="d in dimensions" :key="d" :value="d">{{ d }} · índice relativo</option><option v-for="i in contextIndicators" :key="i.key" :value="i.key">{{ i.label }} · % de hogares</option><option value="presencia">Registros · línea seleccionada o Barrios</option><option value="integralidad">Integralidad · 0–5 líneas</option></select></label><label v-if="geo&&!official">Propiedad con código de dominio<select aria-label="Propiedad con código de dominio" v-model="key"><option value="">Selecciona una propiedad</option><option v-for="f in fields" :key="f">{{ f }}</option></select></label><label v-if="geo&&!official">Procedencia oficial / licencia<input v-model="provenance" placeholder="URL y licencia verificadas"></label></div>
     <label v-if="geo&&!official" class="check-label"><input v-model="acknowledged" type="checkbox">Confirmo que son geometrías oficiales de dominios completos; las agrupaciones están unidas y no se desagregan.</label>
     <label v-if="interventions&&!compact" class="check-label"><input v-model="showInterventions" :disabled="!overlayAllowed" type="checkbox">Superponer elementos de Barrios del GeoJSON adjunto (filtrado solo por localidad)</label>
-    <label v-if="hazards" class="check-label"><input v-model="showHazards" type="checkbox">Amenaza por movimientos en masa · IDIGER (alta y media)</label><p v-if="showHazards" class="muted">Morado: amenaza alta · naranja: amenaza media. Capa urbana completa; los filtros seleccionan las UPZ. Amenaza técnica, no riesgo reportado por hogares.</p><div v-if="official&&!compact&&!finalData" class="notice mt-5">95 dominios construidos con 112 UPZ de la capa oficial SDP/Catastro. Las agrupaciones se muestran completas. La correspondencia por código está verificada; la equivalencia de límites con la EM 2021 requiere validación SIG.</div>
+    <label v-if="hazards && !compact" class="check-label"><input v-model="showHazards" type="checkbox">Amenaza por movimientos en masa · IDIGER (alta y media)</label><p v-if="showHazards && !compact" class="muted">Morado: amenaza alta · naranja: amenaza media. Capa urbana completa; los filtros seleccionan los territorios. Amenaza técnica, no riesgo reportado por hogares.</p><div v-if="official&&!compact&&!finalData" class="notice mt-5">95 dominios construidos con 112 UPZ de la capa oficial SDP/Catastro. Las agrupaciones se muestran completas. La correspondencia por código está verificada; la equivalencia de límites con la EM 2021 requiere validación SIG.</div>
     <p v-if="loading" role="status">Cargando cartografía oficial…</p><p v-if="error" role="alert" class="notice error">{{ error }} <button class="text-button" @click="loadOfficial">Reintentar</button></p>
     <EmptyState v-if="!loading&&!ready" title="Geometrías pendientes de verificación" description="Carga polígonos de dominios completos con procedencia documentada. Los elementos de intervención CVP no son límites de dominios."/>
     <div class="map-viewport"><div ref="host" v-show="ready" class="map" aria-label="Mapa de dominios territoriales"/><p v-if="compact&&ready" class="map-instructions">Selecciona un territorio · arrastra para mover · usa + / − para acercar</p></div>

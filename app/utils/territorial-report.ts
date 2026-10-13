@@ -14,7 +14,7 @@ export function reportData(scope: ReportScope) {
     : 'Los índices de necesidad y presencia tienen el mismo valor en esta selección. Esa igualdad no demuestra cobertura completa ni ausencia de necesidades.'
   return {rows,result,conclusion,title:scope.territory ? String(scope.territory[scope.dataset.schema.nombre!]) : scope.locality ? 'Consolidado de '+scope.locality : 'Consolidado de la selección'}
 }
-const fmt=(v:number|null,digits=3)=>v===null?'Sin dato':new Intl.NumberFormat('es-CO',{maximumFractionDigits:digits}).format(v)
+const fmt=(v:number|null,digits=2)=>v===null?'Sin dato':new Intl.NumberFormat('es-CO',{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(v)
 type Raster={data:string;width:number;height:number}
 function raster(canvas:HTMLCanvasElement):Raster {return {data:atob(canvas.toDataURL('image/jpeg',.94).split(',')[1]!),width:canvas.width,height:canvas.height}}
 async function logoImage(base:string) {
