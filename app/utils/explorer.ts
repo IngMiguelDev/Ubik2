@@ -41,9 +41,21 @@ export function presenceFilter(row: Row, dataset: Dataset, filter: string) {
   return filter==='0' ? n===0 : n>=Number(filter)
 }
 export function availableIndicators(dataset: Dataset) {
-  if (dataset.status === 'final') return (dataset.fieldDefinitions || [])
-    .filter(f => ['brecha','indice_necesidad','indice_presencia','integralidad'].includes(f.field) || (f.usage !== 'No mostrar' && dataset.rows.some(r => typeof r[f.field] === 'number') && !['Identificación','Población','Prioridad','Normalizada'].includes(f.group)))
-    .sort((a,b) => a.field === 'brecha' ? -1 : b.field === 'brecha' ? 1 : 0)
-    .map(f => ({key:`final:${f.field}`,label:f.field === 'brecha' ? 'Brecha · mapa principal' : f.description,description:f.description,unit:f.field.startsWith('ind_') && !f.field.endsWith('_n') ? '% de hogares · EM 2021' : f.unit}))
+  if (dataset.status === 'final') {
+    const labels: Record<string, string> = {
+      brecha: 'Brecha · mapa principal', indice_necesidad: 'Índice de necesidad', indice_presencia: 'Índice de presencia CVP',
+      ind_tenencia: 'Tenencia · hogares sin seguridad jurídica', ind_vivienda: 'Vivienda · déficit habitacional',
+      ind_entorno: 'Entorno · condiciones de acceso', pct_amenaza_alta: 'Área en amenaza alta · movimientos en masa',
+      ind_vulnerabilidad: 'Jefatura femenina en pobreza monetaria',
+      viv_x1000hog: 'Presencia · Vivienda por 1.000 hogares', cps_x1000hog: 'Presencia · Curaduría por 1.000 hogares',
+      tit_x1000hog: 'Presencia · Titulación por 1.000 hogares', barrios_x1000hog: 'Presencia · Barrios por 1.000 hogares',
+      reas_x1000hog: 'Presencia · Reasentamientos por 1.000 hogares', integralidad: 'Líneas CVP con presencia · 0 a 5'
+    }
+    return Object.entries(labels).flatMap(([field, label]) => {
+      const definition = dataset.fieldDefinitions?.find(f => f.field === field)
+      if (!definition || !dataset.rows.some(r => typeof r[field] === 'number')) return []
+      return [{key: 'final:' + field, label, description: definition.description, unit: field.startsWith('ind_') ? '% de hogares · EM 2021' : definition.unit}]
+    })
+  }
   return explorerIndicators.filter(i=>i.key.startsWith('scenario:') ? Boolean(dataset.analysis) : i.key.startsWith('raw:') ? dataset.columns.includes(i.key.slice(4)) : ['tenencia','vivienda','entorno','riesgo'].includes(i.key) ? Boolean(dataset.analysis && dataset.schema[i.key]) : true)
 }

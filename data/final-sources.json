@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Mejoramiento de Vivienda (Plan Terrazas)",
+    "entity": "Caja de la Vivienda Popular",
+    "url": "https://geo.cvp.gov.co/arcgis/rest/services/IDECA2024/Mejoramiento_de_Vivienda/MapServer/0",
+    "download": "2026-10-10",
+    "period": "Fechas de estado: diciembre 2021–noviembre 2024",
+    "evidence": "fuentes.csv y cuaderno 01"
+  },
+  {
+    "name": "Trámite Curaduría Pública Social",
+    "entity": "Caja de la Vivienda Popular",
+    "url": "https://geo.cvp.gov.co/arcgis/rest/services/IDECA2024/Curaduria_Publica_Social/MapServer/0",
+    "download": "2026-10-10",
+    "period": "Fechas del acto: mayo 2021–octubre 2024; hay registros sin fecha",
+    "evidence": "fuentes.csv y cuaderno 01"
+  },
+  {
+    "name": "Titulación Predial",
+    "entity": "Caja de la Vivienda Popular",
+    "url": "https://geo.cvp.gov.co/arcgis/rest/services/IDECA2024/titulacion_Predial/MapServer/0",
+    "download": "2026-10-10",
+    "period": "Títulos: 2015–2025; hay registros sin fecha",
+    "evidence": "fuentes.csv y cuaderno 01"
+  },
+  {
+    "name": "Reasentamientos",
+    "entity": "Caja de la Vivienda Popular",
+    "url": "https://geo.cvp.gov.co/arcgis/rest/services/IDECA2024/reasentamientos/MapServer/0",
+    "download": "2026-10-10",
+    "period": "Histórico de procesos; fecha de terminación no disponible",
+    "evidence": "fuentes.csv y cuaderno 01"
+  },
+  {
+    "name": "Mejoramiento de Barrios",
+    "entity": "Caja de la Vivienda Popular",
+    "url": "https://geo.cvp.gov.co/arcgis/rest/services/IDECA2024/mejoramientodebarrios/MapServer/0",
+    "download": "2026-10-10",
+    "period": "Años de contrato: 2020–2023; no equivalen a terminación",
+    "evidence": "fuentes.csv y cuaderno 01"
+  },
+  {
+    "name": "Encuesta Multipropósito 2021 y variables adicionales",
+    "entity": "Secretaría Distrital de Planeación",
+    "url": "https://datosabiertos.bogota.gov.co/dataset/8ac12a95-1415-4812-b343-f07f90608014",
+    "download": "No documentada en fuentes.csv",
+    "period": "Encuesta 2021; variables adicionales identificadas como 20240430",
+    "evidence": "Cuaderno 02"
+  },
+  {
+    "name": "Espacio Público Total por UPZ 2021",
+    "entity": "DADEP",
+    "url": "https://datosabiertos.bogota.gov.co/dataset/espacio-publico-total-upz-2021",
+    "download": "No documentada en fuentes.csv",
+    "period": "Capa identificada como 2021",
+    "evidence": "Cuaderno 01"
+  },
+  {
+    "name": "Amenaza por movimientos en masa en suelo urbano",
+    "entity": "IDIGER",
+    "url": null,
+    "download": "No documentada en fuentes.csv",
+    "period": "2016 según el diccionario final",
+    "evidence": "Cuaderno 01 y diccionario final; archivo amenaza_mm_urbano.geojson"
+  }
+]
