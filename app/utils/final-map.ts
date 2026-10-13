@@ -1,10 +1,10 @@
 export const gapCategories = [
-  { label: 'Muy baja', color: '#2166ac' },
-  { label: 'Baja', color: '#92c5de' },
-  { label: 'Media', color: '#ffc400' },
-  { label: 'Alta', color: '#f4a582' },
-  { label: 'Muy alta', color: '#b2182b' }
+  { label: 'Muy baja', color: '#FFF1A6' },
+  { label: 'Baja', color: '#FFDE09' },
+  { label: 'Media', color: '#F7B325' },
+  { label: 'Alta', color: '#E3351F' },
+  { label: 'Muy alta', color: '#AA1023' }
 ]
 export function categoryColor(category: unknown) {
-  return gapCategories.find(c => c.label === category)?.color ?? '#d7d5d5'
+  return gapCategories.find(c => c.label === category)?.color ?? '#C4C4C4'
 }

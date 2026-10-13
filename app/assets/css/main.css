@@ -103,6 +103,11 @@ thead th { font-size: 11px; color: #726476; }
 .need-presence-scatter>p { font-size: 14px; color: #728092; margin-top: 8px; }
 .need-presence-scatter .chart { height: 420px; max-width: 1050px; margin: 12px auto; }
 .scenario-legend { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: 12px; color: #728092; }
+.scenario-legend>span { display: inline-flex; align-items: center; gap: 8px; }
+.legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.legend-dot-red { background: #ed241b; }
+.legend-dot-blue { background: #1968a6; }
+.legend-dot-yellow { background: #ffc400; }
 .additional-comparison>summary { cursor: pointer; font-size: 14px; font-weight: 650; }
 .additional-comparison .scatter-comparison { border: 0; padding: 22px 0 0; margin-bottom: 0; }
 @media(min-width:1151px) { .overview-filters { position: sticky; top: 15px; } }
@@ -206,6 +211,9 @@ button.territory-bar:focus-visible { outline: 2px solid #176eac; outline-offset:
 .overview-comparison thead th { background: #f3f5f7; color: #263443; }
 .overview-comparison .territory-name { font-size: 12px; font-weight: 650; text-align: left; white-space: normal; min-width: 150px; max-width: 280px; }
 .overview-comparison tbody tr.selected th,.overview-comparison tbody tr.selected td { background: #fff5df; }
+.overview-comparison thead th.gap-column { background: #fecaca; color: #991b1b; }
+.overview-comparison tbody td.gap-column { background: #fff1f2; color: #991b1b; font-weight: 600; }
+.overview-comparison tbody tr.selected td.gap-column { background: #fecaca; }
 .overview-comparison .pagination { padding: 16px 0 0; }
 .overview-transparency { display: grid; grid-template-columns: 1fr 1.5fr; gap: 50px; }
 .overview-transparency p { font-size: 12px; color: #728092; margin: 14px 0; }

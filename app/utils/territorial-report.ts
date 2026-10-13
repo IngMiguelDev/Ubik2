@@ -39,7 +39,7 @@ async function mapImage(scope:ReportScope,base:string) {
   for(const feature of features) {
     const row=lookup.get(String(feature.properties.cod_upz_grupo))!,v=explorerValue(row,scope.dataset,scope.metric)
     const palette=['#ffedbb','#ffd180','#ffab50','#fa722e','#ef321c','#9f160e']
-    ctx.fillStyle=scope.metric==='final:brecha'?categoryColor(row.categoria_brecha):v===null?'#d7d5d5':palette[Math.min(5,Math.floor((hi===lo?0:(v-lo)/(hi-lo))*6))]!
+    ctx.fillStyle=scope.metric==='final:brecha'?categoryColor(row.categoria_brecha):v===null?'#C4C4C4':palette[Math.min(5,Math.floor((hi===lo?0:(v-lo)/(hi-lo))*6))]!
     const parts=feature.geometry.type==='Polygon'?[feature.geometry.coordinates]:feature.geometry.coordinates
     for(const polygon of parts){ctx.beginPath();for(const ring of polygon){ring.forEach((p:number[],i:number)=>{const x=ox+(p[0]!*Math.cos(4.6*Math.PI/180)-loX)*scale,y=oy+(hiY-p[1]!)*scale;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath()}ctx.fill('evenodd');ctx.strokeStyle='#fff';ctx.lineWidth=1.3;ctx.stroke()}
   }
@@ -91,7 +91,7 @@ export async function downloadTerritorialReport(scope:ReportScope,base:string) {
   pdf.paragraph('Para profundizar, revisa qué condiciones de los hogares y qué registros misionales explican la diferencia. Este reporte no establece una prioridad institucional ni demuestra causalidad.')
   pdf.page('Mapa y condiciones de los hogares');pdf.paragraph(scope.metricLabel,true)
   pdf.images.push(map);pdf.image(1,82,pdf.y,432,275);pdf.y+=289
-  pdf.paragraph(scope.metric==='final:brecha'?'Leyenda: azul oscuro Muy baja; azul claro Baja; amarillo Media; naranja Alta; rojo Muy alta. Quintiles del archivo completo, sin recalcular al filtrar.':'Escala: amarillo claro = menor valor; rojo oscuro = mayor valor; gris = sin dato. Los límites se calculan sobre la base completa.')
+  pdf.paragraph(scope.metric==='final:brecha'?'Leyenda: amarillo claro Muy baja; amarillo Baja; amarillo dorado Media; rojo anaranjado Alta; rojo oscuro Muy alta. Gris: sin dato. Quintiles del archivo completo, sin recalcular al filtrar.':'Escala: amarillo claro = menor valor; rojo oscuro = mayor valor; gris = sin dato. Los límites se calculan sobre la base completa.')
   pdf.heading('Condiciones de los hogares')
   for(const [field,label]of [['ind_tenencia','Tenencia'],['ind_vivienda','Déficit habitacional'],['ind_entorno','Entorno'],['ind_vulnerabilidad','Jefatura femenina en pobreza']])pdf.bar(label!,model.result(field!),true)
   pdf.paragraph('Los porcentajes describen hogares representados. Jefatura femenina mide hogares con jefatura femenina en pobreza monetaria sobre todos los hogares; no toda la jefatura femenina.')

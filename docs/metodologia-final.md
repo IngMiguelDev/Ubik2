@@ -40,7 +40,7 @@ El cuaderno 03 calcula promedios simples de cinco componentes: suma los cinco va
 
 Cada dimensión se compara además con la línea de la CVP que la atiende (brecha por línea): tenencia–Titulación, vivienda–Vivienda y Curaduría, entorno–Barrios y amenaza alta–Reasentamientos. En vivienda se normaliza la suma de las tasas de Vivienda y Curaduría Pública Social; no se suman sus índices ya normalizados.
 
-La posición ordena la brecha de mayor a menor; los empates comparten la menor posición (`rank(method="min")`). Las categorías son quintiles: cinco grupos de 19 dominios en el archivo final. **Muy baja** describe brecha relativa, no necesidad baja. La categoría **Media** se muestra en amarillo `#ffc400`; los valores y categorías no cambian con este color.
+La posición ordena la brecha de mayor a menor; los empates comparten la menor posición (`rank(method="min")`). Las categorías son quintiles: cinco grupos de 19 dominios en el archivo final. **Muy baja** describe brecha relativa, no necesidad baja. La paleta del mapa es: Muy baja `#FFF1A6`, Baja `#FFDE09`, Media `#F7B325`, Alta `#E3351F`, Muy alta `#AA1023` y Sin dato `#C4C4C4`. Los colores no cambian los valores ni las categorías.
 
 Los cuadrantes del cuaderno clasifican necesidad alta o baja respecto a la mediana y presencia por encima o no de su mediana. En la base revisada, la mediana de presencia es cero; por eso se interpretan como con o sin registros. El GeoJSON conserva las etiquetas alta/baja presencia exportadas antes del cambio de texto en el cuaderno. La ficha individual utiliza los valores entregados y no asigna clasificaciones institucionales nuevas.
 

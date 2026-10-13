@@ -28,7 +28,7 @@ test('map defaults to delivered gap and displays proportions only as percentages
 })
 test('five fixed quintiles remain stable after filters; IDIGER includes high and medium threat', () => {
   for(const category of gapCategories) assert.equal(dataset.rows.filter(r=>r.categoria_brecha===category.label).length,19)
-  assert.equal(categoryColor(null),'#d7d5d5')
+  assert.equal(categoryColor(null),'#C4C4C4')
   const selected=filterRows(dataset.rows,dataset.schema,{locality:'Usaquén',domain:'',line:'',search:''})
   assert.ok(selected.length>0)
   for(const row of selected) assert.equal(categoryColor(row.categoria_brecha),categoryColor(dataset.rows.find(r=>r.cod_upz_grupo===row.cod_upz_grupo)?.categoria_brecha))
