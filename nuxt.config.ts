@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 import type { NitroConfig } from 'nitropack/types'
+const appBaseURL = (process.env.NUXT_APP_BASE_URL || '/').replace(/\/?$/, '/')
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-06',
   devtools: { enabled: false },
@@ -19,5 +20,9 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css', 'leaflet/dist/leaflet.css'],
   vite: { plugins: [tailwindcss()] },
-  app: { baseURL: process.env.NUXT_APP_BASE_URL || '/', head: { htmlAttrs: { lang: 'es' }, title: 'UBiK2 · Observatorio territorial CVP', meta: [{ name: 'description', content: 'Exploración territorial de necesidad habitacional y presencia publicada de la CVP.' }] } }
+  app: { baseURL: appBaseURL, head: { htmlAttrs: { lang: 'es' }, title: 'UBiK2 · Observatorio territorial CVP', link: [
+    { rel: 'icon', type: 'image/x-icon', href: `${appBaseURL}favicon.ico` },
+    { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${appBaseURL}favicon.png` },
+    { rel: 'apple-touch-icon', sizes: '180x180', href: `${appBaseURL}apple-touch-icon.png` }
+  ], meta: [{ name: 'description', content: 'Exploración territorial de necesidad habitacional y presencia publicada de la CVP.' }] } }
 })
