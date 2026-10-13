@@ -58,7 +58,7 @@
   {
     "name": "Amenaza por movimientos en masa en suelo urbano",
     "entity": "IDIGER",
-    "url": null,
+    "url": "https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/emergencias/gestionriesgos/MapServer",
     "download": "No documentada en fuentes.csv",
     "period": "2016 según el diccionario final",
     "evidence": "Cuaderno 01 y diccionario final; archivo amenaza_mm_urbano.geojson"

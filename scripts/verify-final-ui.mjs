@@ -94,7 +94,7 @@ try{
   assert.match(await page.locator('.territory-card').innerText(),/8,19 %/)
   assert.ok(!errors.length,errors.join('\n'));
   await page.goto('http://127.0.0.1:4174/#metodologia');
-  await page.waitForSelector('.sources:not(.final-sources) table');
+  await page.waitForSelector('.final-sources table');
   assert.equal(await page.locator('.intro-notice, .filter-panel').count(),0);
   assert.equal(await page.getByText('Asignar columnas del CSV',{exact:false}).count(),0);
   assert.equal(await page.locator('.methodology .method-grid article').count(),8);
@@ -108,8 +108,7 @@ try{
   assert.match(await page.locator('.methodology .method-grid').innerText(),/Consolidados y selección.*Ceros, faltantes y precisión/s);
   assert.match(await page.locator('.footer').innerText(),/Archivo final · lectura exploratoria/);
   assert.match(await page.locator('.methodology .method-grid').innerText(),/Indicadores y normalización.*Índices, brecha y posición.*Temporalidad y unidades.*Cartografía y alcance.*Procedencia y límites/s);
-  assert.equal(await page.locator('.sources:not(.final-sources) tbody tr').count(),5);
-  assert.match(await page.locator('.sources:not(.final-sources)').innerText(),/Catálogo oficial · consulta del 6 de octubre de 2026/)
+  assert.equal(await page.locator('.sources:not(.final-sources)').count(),0);
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.getByRole('button',{name:'01 Unidad de análisis',exact:true}).click();
   assert.equal(await page.locator('#method-stage-1').evaluate(el=>getComputedStyle(el).animationName),'none');
