@@ -39,7 +39,7 @@ const visible=computed(()=>props.rows.filter(r=>checkedCodes.value.includes(Stri
 const localitySummary=computed(()=>props.dataset.status==='final' && visible.value.length>0)
 const consolidatedChartRow=computed<Row>(()=>{
   const row:Row={}
-  for(const field of ['indice_necesidad','indice_presencia','brecha','ind_tenencia','ind_vivienda','ind_entorno','ind_vulnerabilidad']){
+  for(const field of ['indice_necesidad','indice_presencia','brecha','ind_tenencia','ind_vivienda','ind_entorno','ind_vulnerabilidad','pct_amenaza_alta']){
     const n=consolidatedField(visible.value,props.dataset,field)
     row[field]=n===null?null:field.startsWith('ind_')?n/100:n
   }

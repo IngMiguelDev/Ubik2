@@ -122,6 +122,8 @@ thead th { font-size: 11px; color: #726476; }
 .territory-bar i { display: block; height: 11px; border-radius: 4px; background: #edf0f4; overflow: hidden; }
 .territory-bar b { display: block; height: 100%; background: #fa241a; border-radius: 4px; }
 .territory-bar b.presence-bar { background: #176eac; }
+.territory-bar b.gap-bar { background: #dc2626; }
+.territory-bar b.risk-bar { background: #dc2626; }
 .territory-bar strong { text-align: right; font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .territory-bar-pending strong { grid-column: 2/-1; color: #728092; font-size: 11px; font-weight: 400; white-space: normal; }
 .territory-chart .chart-footnote { margin-top: 12px; padding-top: 12px; font-size: 12px; line-height: 1.7; }
@@ -266,7 +268,7 @@ button.territory-bar:focus-visible { outline: 2px solid #176eac; outline-offset:
 .reference-layout .territory-result-cards>button.female-indicator { background: #ffc400; border-color: #e0ac00; border-top-color: #a87900; }
 .reference-layout .territory-result-cards>button.female-indicator.active { background: #ffda52; border-color: #6b4f00; }
 .territory-result-cards>button.female-indicator>span,.territory-result-cards>button.female-indicator>b,.territory-result-cards>button.female-indicator>strong { color: #000000; }
-.territory-bar b.female-bar { background: #000000; }
+.territory-bar b.female-bar { background: #ffc400; }
 .reference-layout .overview-stats .stat small { font-size: 12px; line-height: 1.6; }
 button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible { outline: 3px solid #1968a6; outline-offset: 3px; }
 @media(max-width:1000px) { .exploration-intro { grid-template-columns: 1fr; gap: 26px; } .intro-concepts { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; } .intro-concepts article { flex-direction: column; } .result-reading { grid-template-columns: 1fr; } }
@@ -288,3 +290,8 @@ button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible,
 .reference-layout .territory-result-cards>button.gap-indicator.active { background: #991b1b; border-color: #450a0a; }
 .reference-layout .territory-result-cards>button.gap-indicator>span,.reference-layout .territory-result-cards>button.gap-indicator>b,.reference-layout .territory-result-cards>button.gap-indicator>p,.reference-layout .territory-result-cards>button.gap-indicator>strong { color: #ffffff; }
 .reference-layout .territory-result-cards>button.female-indicator>p { color: #302500; }
+
+.territory-bar b.index-bar { background: #ffc400; }
+.territory-bar b.tenure-bar { background: #ffc400; }
+.territory-bar b.housing-bar { background: #ffc400; }
+.territory-bar b.environment-bar { background: #ffc400; }
