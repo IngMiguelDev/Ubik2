@@ -1,7 +1,7 @@
 import type { Dataset, Row } from '../types/data'
 import { consolidatedField } from './consolidation'
 import { explorerValue } from './explorer'
-import { categoryColor } from './final-map'
+import { categoryColor, gapValueColor } from './final-map'
 
 export interface ReportScope { dataset: Dataset; rows: Row[]; territory?: Row; locality: string; metric: string; metricLabel: string; presenceFilter: string }
 export function reportData(scope: ReportScope) {
@@ -39,7 +39,7 @@ async function mapImage(scope:ReportScope,base:string) {
   for(const feature of features) {
     const row=lookup.get(String(feature.properties.cod_upz_grupo))!,v=explorerValue(row,scope.dataset,scope.metric)
     const palette=['#ffedbb','#ffd180','#ffab50','#fa722e','#ef321c','#9f160e']
-    ctx.fillStyle=scope.metric==='final:brecha'?categoryColor(row.categoria_brecha):v===null?'#C4C4C4':palette[Math.min(5,Math.floor((hi===lo?0:(v-lo)/(hi-lo))*6))]!
+    ctx.fillStyle=scope.metric==='final:brecha'?categoryColor(row.categoria_brecha):scope.metric.startsWith('final:brecha_')?gapValueColor(v,lo,hi):v===null?'#C4C4C4':palette[Math.min(5,Math.floor((hi===lo?0:(v-lo)/(hi-lo))*6))]!
     const parts=feature.geometry.type==='Polygon'?[feature.geometry.coordinates]:feature.geometry.coordinates
     for(const polygon of parts){ctx.beginPath();for(const ring of polygon){ring.forEach((p:number[],i:number)=>{const x=ox+(p[0]!*Math.cos(4.6*Math.PI/180)-loX)*scale,y=oy+(hiY-p[1]!)*scale;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath()}ctx.fill('evenodd');ctx.strokeStyle='#fff';ctx.lineWidth=1.3;ctx.stroke()}
   }

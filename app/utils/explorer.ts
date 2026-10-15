@@ -43,7 +43,12 @@ export function presenceFilter(row: Row, dataset: Dataset, filter: string) {
 export function availableIndicators(dataset: Dataset) {
   if (dataset.status === 'final') {
     const labels: Record<string, string> = {
-      brecha: 'Brecha · mapa principal', indice_necesidad: 'Índice de necesidad', indice_presencia: 'Índice de presencia CVP',
+      brecha: 'Brecha - General',
+      brecha_tenencia: 'Brecha - Tenencia',
+      brecha_vivienda: 'Brecha - Vivienda',
+      brecha_entorno: 'Brecha - Entorno',
+      brecha_riesgo: 'Brecha - Riesgo',
+      indice_necesidad: 'Índice de necesidad', indice_presencia: 'Índice de presencia CVP',
       ind_tenencia: 'Tenencia · hogares sin seguridad jurídica', ind_vivienda: 'Vivienda · déficit habitacional',
       ind_entorno: 'Entorno · condiciones de acceso', pct_amenaza_alta: 'Área en amenaza alta · movimientos en masa',
       ind_vulnerabilidad: 'Jefatura femenina en pobreza monetaria',

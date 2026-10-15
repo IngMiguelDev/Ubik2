@@ -21,7 +21,7 @@ test('consolidation uses household weights, preserves gap identity and propagate
 })
 test('map has one option per analytical indicator without counts or detail components', () => {
   const keys=availableIndicators(dataset).map(i=>i.key)
-  assert.equal(keys.length,14)
+  assert.equal(keys.length,18)
   assert.equal(new Set(keys).size,keys.length)
   assert.ok(keys.includes('final:ind_vulnerabilidad'))
   assert.ok(!keys.includes('final:viv_programado'))

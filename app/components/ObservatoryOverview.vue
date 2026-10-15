@@ -21,7 +21,9 @@ async function exportReport(){
 const metric=ref('scenario:gap'), presence=ref(''), selected=ref(''), sort=ref<'value'|'name'>('value'), descending=ref(true), page=ref(1)
 const indicators=computed(()=>availableIndicators(props.dataset))
 watch(indicators,items=>{if(!items.some(i=>i.key===metric.value))metric.value=items[0]?.key||'necesidad'},{immediate:true})
-const isGapMetric=computed(()=>metric.value==='final:brecha' || metric.value==='scenario:gap')
+const isGapMetric=computed(()=>metric.value.startsWith('final:brecha') || metric.value==='scenario:gap')
+const gapIndicators=computed(()=>indicators.value.filter(i=>i.key.startsWith('final:brecha')))
+const mapIndicators=computed(()=>indicators.value.filter(i=>!i.key.startsWith('final:brecha_')))
 const indicator=computed(()=>indicators.value.find(i=>i.key===metric.value)!)
 const schema=computed(()=>props.dataset.schema)
 const displayLines=['vivienda','titulacion','barrios','reasentamientos','curaduria'].map(key=>lines.find(line=>line.key===key)!)
@@ -71,7 +73,7 @@ function sumColumn(column:string){const vals=visible.value.map(r=>typeof r[colum
 const validSample=computed(()=>{const key=metric.value.startsWith('raw:')?`n_validos_${metric.value.slice(4).replace('pct_','')}`:'';return territory.value&&key?territory.value[key]:null})
 const metricDisplay=(r:Row)=>{const v=metricValue(r);return v===null?'Sin dato':`${(metric.value==='integralidad' || metric.value==='final:integralidad' ? format(v) : formatDecimal(v))}${metric.value.startsWith('final:')?(indicator.value?.unit.startsWith('%')?' %':''):metric.value.startsWith('raw:')?' %':metric.value==='integralidad'?'/5':' pts'}`}
 function update(key:'locality'|'search',e:Event){selected.value='';emit('updateFilters',{[key]:(e.target as HTMLInputElement).value,domain:'',search:''})}
-function reset(){showHazards.value=false;presence.value='';selected.value='';checklistSearch.value='';checkedCodes.value=checklistDomains.value.map(r=>String(get(r,'codigo')));emit('reset')}
+function reset(){showHazards.value=false;presence.value='';selected.value='';metric.value=indicators.value[0]?.key||'necesidad';checklistSearch.value='';checkedCodes.value=checklistDomains.value.map(r=>String(get(r,'codigo')));emit('reset')}
 function orderBy(key:'name'|'value'){if(sort.value===key)descending.value=!descending.value;else{sort.value=key;descending.value=key==='value'}}
 function exportSelection(){const scenario=scenarioRows(props.dataset);download('ubik2_seleccion.csv',exportRows(visible.value.map(r=>({...r,...scenario.get(r)}))),'text/csv;charset=utf-8')}
 </script>
@@ -90,7 +92,11 @@ function exportSelection(){const scenario=scenarioRows(props.dataset);download('
           <div class="upz-check-options"><label v-for="r in checklistResults" :key="String(get(r,'codigo'))" class="upz-check-option"><input type="checkbox" v-model="checkedCodes" :value="String(get(r,'codigo'))" :aria-label="`Incluir territorio ${get(r,'nombre')}`" :disabled="!configured">{{ get(r,'nombre') }}</label><p v-if="!checklistResults.length" class="muted">No hay coincidencias.</p></div>
           <p class="chart-footnote">{{ checkedCodes.length }} de {{ checklistDomains.length }} territorios seleccionados.</p>
         </fieldset>
-        <label>Indicador del mapa<select aria-label="Indicador del mapa" v-model="metric"><option v-for="i in indicators" :key="i.key" :value="i.key">{{ i.label }}</option></select></label>
+        <label>Indicador del mapa<select aria-label="Indicador del mapa" :value="metric.startsWith('final:brecha_') ? 'final:brecha' : metric" @change="metric=($event.target as HTMLSelectElement).value"><option v-for="i in mapIndicators" :key="i.key" :value="i.key">{{ i.label }}</option></select></label>
+        <template v-if="gapIndicators.length>1">
+          <label>Brecha por línea<select aria-label="Brecha por línea" :value="isGapMetric ? metric : ''" :disabled="!configured" @change="metric=($event.target as HTMLSelectElement).value"><option value="" disabled>Selecciona una brecha</option><option v-for="i in gapIndicators" :key="i.key" :value="i.key">{{ i.label }}</option></select></label>
+          <p class="chart-footnote">Compara la necesidad con la presencia de la línea elegida, incluidos territorios sin registros. Vivienda y Curaduría comparten la brecha del archivo. Escala de −1 a 1; las categorías por quintiles corresponden solo a la brecha general.</p>
+        </template>
         <div v-if="indicator" class="indicator-description"><strong>{{ indicator.label }}</strong><details><summary>Qué significa</summary><p>{{ indicator.description }}</p></details><small>{{ indicator.unit }}</small></div>
         <label>Líneas CVP con registros<select aria-label="Líneas CVP con registros" v-model="presence"><option value="">Cualquier cantidad</option><option value="0">Sin registros publicados</option><option value="1">Al menos 1 línea</option><option value="3">Al menos 3 líneas</option><option value="5">Las 5 líneas</option></select></label>
         <div v-if="dataset.status==='final'" class="hazard-filter"><label class="check-label"><input v-model="showHazards" type="checkbox">Amenaza por movimientos en masa · IDIGER (alta y media)</label></div>

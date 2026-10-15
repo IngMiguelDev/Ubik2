@@ -40,6 +40,20 @@ try{
   assert.match(await page.locator('.territory-results').innerText(),/Consolidado general/);
   assert.ok(!/Lucero|Sin dato/.test(await page.locator('.territory-results').innerText()));
   assert.equal(await page.getByLabel('Indicador del mapa',{exact:true}).locator('option').count(),14);
+  assert.equal(await page.getByLabel('Indicador del mapa',{exact:true}).locator('option[value^="final:brecha_"]').count(),0);
+  const gapSelect=page.getByLabel('Brecha por línea',{exact:true});
+  for(const field of ['brecha_tenencia','brecha_vivienda','brecha_entorno','brecha_riesgo']){
+    await gapSelect.selectOption('final:'+field);
+    assert.equal(await page.getByLabel('Indicador del mapa',{exact:true}).inputValue(),'final:brecha');
+    assert.equal(await gapSelect.inputValue(),'final:'+field);
+    await page.waitForFunction(()=>document.querySelector('.map-legend')?.classList.contains('gap-legend'));
+    await page.waitForFunction(()=>[...document.querySelectorAll('.leaflet-overlay-pane path')].every(p=>['#FFF1A6','#FFDE09','#F7B325','#E3351F','#AA1023','#C4C4C4'].includes(p.getAttribute('fill'))));
+    assert.match(await page.locator('.map-legend i').getAttribute('style'),/255, 222, 9|FFDE09/i);
+    assert.equal(await page.locator('.leaflet-overlay-pane path').count(),95);
+    assert.match(await page.locator('.overview-comparison th.gap-column').innerText(),/Brecha/);
+  }
+  await page.getByRole('button',{name:'Restablecer filtros',exact:true}).click();
+  assert.equal(await gapSelect.inputValue(),'final:brecha');
   await page.getByLabel('Localidad del mapa',{exact:true}).selectOption('Barrios Unidos');
   assert.equal(await page.locator('.upz-check-options input:checked').count(),3);
   await page.getByLabel('Incluir territorio Los Alcázares',{exact:true}).uncheck();

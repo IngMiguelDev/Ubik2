@@ -4,7 +4,7 @@ import type { FeatureCollection } from 'geojson'
 import { dimensions, type Dataset, type Row } from '../types/data'
 import { value, numeric, format, need, integral, formatDecimal } from '../utils/analytics'
 import { availableIndicators, explorerValue } from '../utils/explorer'
-import { gapCategories, categoryColor } from '../utils/final-map'
+import { gapCategories, categoryColor, gapValueColor } from '../utils/final-map'
 const props=defineProps<{ dataset:Dataset; rows:Row[]; line:string; compact?:boolean; metricKey?:string; metricLabel?:string; selectedCode?:string }>()
 const emit=defineEmits<{ select:[code:string] }>()
 const config=useRuntimeConfig()
@@ -22,11 +22,12 @@ let destroyed=false, drawVersion=0
 const metric=(r:Row)=>explorerValue(r,props.dataset,props.metricKey || (indicator.value==='presencia'?`registros_${props.line||'barrios'}`:indicator.value))
 const vals=computed(()=>props.dataset.rows.map(metric).filter((v):v is number=>v!==null))
 const isGap=computed(()=>props.metricKey==='scenario:gap'||props.metricKey?.startsWith('final:brecha'))
+const gapGradient=`linear-gradient(to right,${gapCategories.map(c=>c.color).join(',')})`
 const categoryLegend=computed(()=>finalData.value&&props.metricKey==='final:brecha')
 const lo=computed(()=>vals.value.length?Math.min(...vals.value):null),hi=computed(()=>vals.value.length?Math.max(...vals.value):null)
 const overlayAllowed=computed(()=>!props.line||props.line==='barrios')
 const visibleGeo=computed(()=>({type:'FeatureCollection' as const,features:geo.value?.features.filter(f=>props.rows.some(r=>String(value(r,props.dataset.schema,'codigo'))===String(f.properties?.[key.value])))||[]}))
-function color(v:number|null) {if(v===null||lo.value===null||hi.value===null)return '#C4C4C4';if(isGap.value){const t=Math.min(Math.abs(v)/Math.max(Math.abs(lo.value),Math.abs(hi.value),1),1),end=v>=0?[180,25,20]:[25,104,166];return `rgb(${end.map(c=>Math.round(245+(c-245)*t)).join(',')})`}const t=hi.value===lo.value?0:(v-lo.value)/(hi.value-lo.value);return ['#ffedbb','#ffd180','#ffab50','#fa722e','#ef321c','#9f160e'][Math.min(5,Math.floor(t*6))]!}
+function color(v:number|null) {if(v===null||lo.value===null||hi.value===null)return '#C4C4C4';if(finalData.value&&isGap.value)return gapValueColor(v,lo.value,hi.value);if(isGap.value){const t=Math.min(Math.abs(v)/Math.max(Math.abs(lo.value),Math.abs(hi.value),1),1),end=v>=0?[180,25,20]:[25,104,166];return `rgb(${end.map(c=>Math.round(245+(c-245)*t)).join(',')})`}const t=hi.value===lo.value?0:(v-lo.value)/(hi.value-lo.value);return ['#ffedbb','#ffd180','#ffab50','#fa722e','#ef321c','#9f160e'][Math.min(5,Math.floor(t*6))]!}
 async function loadOfficial() {
   if(!props.dataset.analysis&&!finalData.value)return
   loading.value=true;error.value=''
@@ -91,7 +92,7 @@ onBeforeUnmount(()=>{destroyed=true;drawVersion++;observer?.disconnect();map?.re
     <p v-if="loading" role="status">Cargando cartografía oficial…</p><p v-if="error" role="alert" class="notice error">{{ error }} <button class="text-button" @click="loadOfficial">Reintentar</button></p>
     <EmptyState v-if="!loading&&!ready" title="Geometrías pendientes de verificación" description="Carga polígonos de dominios completos con procedencia documentada. Los elementos de intervención CVP no son límites de dominios."/>
     <div class="map-viewport"><div ref="host" v-show="ready" class="map" aria-label="Mapa de dominios territoriales"/><p v-if="compact&&ready" class="map-instructions">Selecciona un territorio · arrastra para mover · usa + / − para acercar</p></div>
-    <div v-if="ready&&categoryLegend" class="map-legend" style="flex-wrap:wrap"><span v-for="c in gapCategories" :key="c.label" style="display:flex;align-items:center;gap:6px"><b :style="{background:c.color,width:'18px',height:'18px',border:'1px solid #999'}"/>{{ c.label }}</span><span class="muted">Quintiles originales · {{ matched }} territorios · gris: sin dato</span></div><div v-else-if="ready" class="map-legend" :class="{ 'gap-legend': isGap }"><span>Menor: {{ format(lo) }}</span><i/><span>Mayor: {{ format(hi) }}</span><span class="muted">Gris: sin dato · {{ matched }} geometrías coincidentes</span></div>
+    <div v-if="ready&&categoryLegend" class="map-legend" style="flex-wrap:wrap"><span v-for="c in gapCategories" :key="c.label" style="display:flex;align-items:center;gap:6px"><b :style="{background:c.color,width:'18px',height:'18px',border:'1px solid #999'}"/>{{ c.label }}</span><span class="muted">Quintiles originales · {{ matched }} territorios · gris: sin dato</span></div><div v-else-if="ready" class="map-legend" :class="{ 'gap-legend': isGap }"><span>Menor: {{ format(lo) }}</span><i :style="finalData && isGap ? { background: gapGradient } : undefined"/><span>Mayor: {{ format(hi) }}</span><span class="muted">Gris: sin dato · {{ matched }} geometrías coincidentes</span></div>
     <div v-if="ready && showHazards && hazards" class="hazard-legend" role="group" aria-label="Leyenda de amenaza por movimientos en masa">
       <strong>Capa de amenaza · IDIGER</strong>
       <span><i class="hazard-swatch hazard-high" aria-hidden="true"/>Amenaza alta</span>
