@@ -23,7 +23,10 @@ try{
   await page.waitForSelector('.leaflet-overlay-pane path')
   const banner=page.locator('.overview-banner');
   await banner.locator('img').evaluate(img=>img.decode());
-  assert.match(await banner.locator('img').getAttribute('src'),/images\/bogota_urbana\.jpg$/);
+  assert.match(await banner.locator('img').getAttribute('src'),/images\/bogota_urbana-mejorada\.webp$/);
+  assert.equal(await banner.locator('img').evaluate(img=>img.naturalWidth),2058);
+  assert.equal(await banner.locator('h1').evaluate(el=>getComputedStyle(el).color),'rgb(255, 222, 9)');
+  assert.equal(await banner.locator('.overview-banner-brand').evaluate(el=>getComputedStyle(el).color),'rgb(237, 41, 25)');
   assert.equal(await page.locator('main h1').count(),1);
   assert.equal(await banner.getByRole('heading',{level:1}).innerText(),'UBiK2 · Observatorio territorial');
   assert.equal(await banner.locator('p').innerText(),'Datos para comprender y transformar el territorio de Bogotá.');
@@ -54,7 +57,7 @@ try{
   assert.equal(await page.getByRole('dialog').getByAltText('UBiK2').isVisible(),true);
   await page.keyboard.press('Escape');
   assert.equal(await page.getByRole('dialog',{name:'Cómo leer los datos'}).isVisible(),false);
-  assert.match(await page.locator('.territory-results').innerText(),/Consolidado general/);
+  assert.match(await page.locator('.territory-results').innerText(),/Resumen de tu selección/);
   assert.ok(!/Lucero|Sin dato/.test(await page.locator('.territory-results').innerText()));
   assert.equal(await page.getByLabel('Indicador del mapa',{exact:true}).locator('option').count(),14);
   assert.equal(await page.getByLabel('Indicador del mapa',{exact:true}).locator('option[value^="final:brecha_"]').count(),0);
@@ -77,17 +80,17 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll('.leaflet-overlay-pane path').length===2);
   await page.getByLabel('Seleccionar todos los territorios',{exact:true}).check();
   await page.waitForFunction(()=>document.querySelectorAll('.leaflet-overlay-pane path').length===3);
-  await page.waitForFunction(()=>document.querySelector('.territory-results')?.textContent.includes('Consolidado de Barrios Unidos'));
+  await page.waitForFunction(()=>document.querySelector('.territory-results')?.textContent.includes('Resumen de Barrios Unidos'));
   assert.ok(!/Sin dato/.test(await page.locator('.territory-results').innerText()));
-  assert.match(await page.locator('.overview-territory').innerText(),/CONSOLIDADO DE LA LOCALIDAD.*Barrios Unidos/s);
+  assert.match(await page.locator('.overview-territory').innerText(),/RESUMEN DE LA LOCALIDAD.*Barrios Unidos/s);
   assert.ok(!/[-−]1 a 1/.test(await page.locator('.overview-territory .territory-highlight').innerText()));
-  assert.match(await page.locator('.territory-charts').innerText(),/Consolidado de Barrios Unidos.*Necesidad frente a presencia.*Condiciones de los hogares/s);
+  assert.match(await page.locator('.territory-charts').innerText(),/Resumen de Barrios Unidos.*Necesidad frente a presencia.*Condiciones de los hogares/s);
   assert.match(await page.locator('.overview-territory').innerText(),/Presencia CVP.*Mejoramiento de Vivienda.*Titulación Predial/s);
   assert.ok(!/Sin dato/.test(await page.locator('.overview-territory').innerText()));
   await page.getByRole('button',{name:'Seleccionar territorio Los Alcázares',exact:true}).click();
   assert.match(await page.locator('.overview-territory').innerText(),/TERRITORIO SELECCIONADO.*Los Alcázares/s);
-  await page.getByRole('button',{name:'Limpiar selección territorial',exact:true}).click();
-  assert.match(await page.locator('.overview-territory').innerText(),/CONSOLIDADO DE LA LOCALIDAD/s);
+  await page.getByRole('button',{name:'Volver al resumen',exact:true}).click();
+  assert.match(await page.locator('.overview-territory').innerText(),/RESUMEN DE LA LOCALIDAD/s);
   await page.getByLabel('Localidad del mapa',{exact:true}).selectOption('');
   await page.waitForFunction(()=>document.querySelectorAll('.leaflet-overlay-pane path').length===95);
   assert.equal(await page.getByLabel('Indicador del mapa',{exact:true}).inputValue(),'final:brecha')
@@ -113,7 +116,7 @@ try{
   await page.getByLabel('Buscar territorio',{exact:true}).fill('Verbenal');
   await page.getByLabel('Incluir territorio Verbenal',{exact:true}).check()
   await page.waitForFunction(()=>document.querySelectorAll('.leaflet-overlay-pane path').length===1)
-  assert.match(await page.locator('.overview-territory').innerText(),/CONSOLIDADO DE LA LOCALIDAD/);
+  assert.match(await page.locator('.overview-territory').innerText(),/RESUMEN DE LA LOCALIDAD/);
   assert.ok(!/TERRITORIO SELECCIONADO/.test(await page.locator('.overview-territory').innerText()));
   assert.ok(!/Sin dato/.test(await page.locator('.territory-results').innerText()));
   await page.getByRole('button',{name:'Seleccionar territorio Verbenal',exact:true}).click();
@@ -134,23 +137,23 @@ try{
   assert.equal(await page.getByText('Asignar columnas del CSV',{exact:false}).count(),0);
   assert.equal(await page.locator('.methodology .method-grid article').count(),8);
   assert.equal(await page.locator('.timeline-stage [role="img"]').count(),8);
-  assert.equal(await page.getByRole('button',{name:'Exportar resultados',exact:true}).count(),0);
+  assert.equal(await page.getByRole('button',{name:'Descargar resultados',exact:true}).count(),0);
   assert.ok(!/\bdominios?\b/i.test(await page.locator('.method-timeline').innerText()));
-  await page.getByRole('button',{name:'04 Temporalidad y unidades',exact:true}).click();
+  await page.getByRole('button',{name:'04 De qué años son los registros',exact:true}).click();
   assert.equal(await page.locator('#method-stage-4').evaluate(el=>document.activeElement===el),true);
   await page.waitForFunction(()=>document.querySelector('#method-stage-4')?.classList.contains('stage-entered'));
   assert.equal(await page.locator('.final-sources tbody tr').count(),8);
-  assert.match(await page.locator('.methodology .method-grid').innerText(),/Consolidados y selección.*Ceros, faltantes y precisión/s);
+  assert.match(await page.locator('.methodology .method-grid').innerText(),/Cómo resumimos tu selección.*Qué significa un cero o un dato faltante/s);
   assert.match(await page.locator('.footer').innerText(),/Archivo final · lectura exploratoria/);
-  assert.match(await page.locator('.methodology .method-grid').innerText(),/Indicadores y normalización.*Índices, brecha y posición.*Temporalidad y unidades.*Cartografía y alcance.*Procedencia y límites/s);
+  assert.match(await page.locator('.methodology .method-grid').innerText(),/Cómo hacemos comparables los datos.*Cómo leemos los índices y la brecha.*De qué años son los registros.*Qué muestra el mapa.*De dónde vienen y hasta dónde llegan/s);
   assert.equal(await page.locator('.sources:not(.final-sources)').count(),0);
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.getByRole('button',{name:'01 Unidad de análisis',exact:true}).click();
+  await page.getByRole('button',{name:'01 Qué territorios miramos',exact:true}).click();
   assert.equal(await page.locator('#method-stage-1').evaluate(el=>getComputedStyle(el).animationName),'none');
   await page.screenshot({path:'artifacts/methodology-timeline-desktop.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
-  await page.getByRole('button',{name:'08 Ceros, faltantes y precisión',exact:true}).click();
+  await page.getByRole('button',{name:'08 Qué significa un cero o un dato faltante',exact:true}).click();
   assert.equal(await page.locator('#method-stage-8').evaluate(el=>document.activeElement===el),true);
   await page.screenshot({path:'artifacts/methodology-timeline-mobile.png',fullPage:true});
   await page.setViewportSize({width:1440,height:1000});

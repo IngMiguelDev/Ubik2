@@ -17,9 +17,9 @@ function percentage(key: string, column: string) {
 }
 </script>
 <template>
-  <section class="territory-context" :class="{ 'panel context-prominent': prominent }" aria-label="Enfoque diferencial y contexto">
+  <section class="territory-context" :class="{ 'panel context-prominent': prominent }" aria-label="Los hogares, más allá del promedio">
     <div v-if="prominent" class="section-label">CONDICIONES DE LOS HOGARES</div>
-    <component :is="prominent ? 'h2' : 'h3'">Enfoque diferencial y contexto</component>
+    <component :is="prominent ? 'h2' : 'h3'">Los hogares, más allá del promedio</component>
     <p v-if="prominent" class="context-territory">{{ row ? `${value(row,dataset.schema,'nombre')} · ${value(row,dataset.schema,'localidad')}` : 'Sin territorios con estos filtros' }}</p>
     <dl>
       <div v-for="item in indicators" :key="item.key" :class="{ active: metric === `raw:${item.column}` }">
@@ -29,6 +29,6 @@ function percentage(key: string, column: string) {
         </dd>
       </div>
     </dl>
-    <p class="chart-footnote">Los porcentajes se leen por separado y no indican cuántos hogares con jefatura femenina están en pobreza. <template v-if="dataset.analysis">Jefatura femenina y pobreza multidimensional son contexto; el escenario de necesidad ajustada incorpora pobreza monetaria normalizada con un peso del 20 %.</template><template v-else>Se presentan como contexto y quedan fuera del índice preliminar.</template></p>
+    <p class="chart-footnote">Lee estos porcentajes por separado: no permiten saber cuántos hogares cumplen ambas condiciones a la vez. <template v-if="dataset.analysis">Jefatura femenina y pobreza multidimensional son contexto; el escenario de necesidad ajustada incorpora pobreza monetaria normalizada con un peso del 20 %.</template><template v-else>Se presentan como contexto y quedan fuera del índice preliminar.</template></p>
   </section>
 </template>

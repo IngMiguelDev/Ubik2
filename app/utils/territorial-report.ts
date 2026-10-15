@@ -8,11 +8,11 @@ export function reportData(scope: ReportScope) {
   const rows = scope.territory ? [scope.territory] : scope.rows
   const result = (field: string) => scope.territory ? explorerValue(scope.territory,scope.dataset,'final:'+field) : consolidatedField(rows,scope.dataset,field)
   const gap=result('brecha')
-  const conclusion=gap===null ? 'No hay información suficiente para interpretar la brecha de esta selección.' : gap>0
-    ? 'En esta selección, el índice de necesidad supera al de presencia CVP. Esto señala una diferencia relativa que conviene revisar junto con las condiciones de los hogares y las actuaciones registradas. No permite contar hogares pendientes de atención.'
-    : gap<0 ? 'En esta selección, el índice de presencia CVP supera al de necesidad. Esto no demuestra exceso de ayuda ni que las necesidades estén resueltas: los índices comparan medidas relativas y períodos diferentes.'
-    : 'Los índices de necesidad y presencia tienen el mismo valor en esta selección. Esa igualdad no demuestra cobertura completa ni ausencia de necesidades.'
-  return {rows,result,conclusion,title:scope.territory ? String(scope.territory[scope.dataset.schema.nombre!]) : scope.locality ? 'Consolidado de '+scope.locality : 'Consolidado de la selección'}
+  const conclusion=gap===null ? 'Nos faltan datos para interpretar la brecha de los territorios que elegiste.' : gap>0
+    ? 'En los territorios que elegiste, el índice de necesidad es mayor que el de presencia CVP. Para entender esa diferencia, mira también las condiciones de los hogares y los registros de cada línea. La diferencia no permite contar hogares pendientes de atención.'
+    : gap<0 ? 'En los territorios que elegiste, el índice de presencia CVP es mayor que el de necesidad. Eso no demuestra exceso de ayuda ni que todas las necesidades estén resueltas: los índices comparan medidas relativas y datos de años diferentes.'
+    : 'Necesidad y presencia tienen el mismo valor en tu selección. Esa igualdad no significa que todos los hogares hayan recibido atención ni que todas las necesidades estén resueltas.'
+  return {rows,result,conclusion,title:scope.territory ? String(scope.territory[scope.dataset.schema.nombre!]) : scope.locality ? 'Resumen de '+scope.locality : 'Resumen de tu selección'}
 }
 const fmt=(v:number|null,digits=2)=>v===null?'Sin dato':new Intl.NumberFormat('es-CO',{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(v)
 type Raster={data:string;width:number;height:number}
@@ -72,14 +72,14 @@ class Pdf {
 }
 
 export async function downloadTerritorialReport(scope:ReportScope,base:string) {
-  if(scope.dataset.status!=='final'||!scope.rows.length)throw Error('Selecciona al menos un territorio de la base final.')
+  if(scope.dataset.status!=='final'||!scope.rows.length)throw Error('Elige al menos un territorio para preparar tu reporte.')
   const snapshot={...scope,rows:[...scope.rows]}, model=reportData(snapshot)
   const [logo,map]=await Promise.all([logoImage(base),mapImage(snapshot,base)])
   const pdf=new Pdf(logo)
-  pdf.page('Reporte territorial de la selección')
+  pdf.page('Tu exploración del territorio')
   pdf.paragraph(model.title,true)
   pdf.paragraph('Generado: '+new Intl.DateTimeFormat('es-CO',{dateStyle:'long',timeStyle:'short',timeZone:'America/Bogota'}).format(new Date())+' (hora de Bogotá).')
-  pdf.paragraph('Alcance: '+model.rows.length+' territorio(s) estadístico(s). Localidad: '+(scope.locality||'Todas las disponibles')+'. Indicador del mapa: '+scope.metricLabel+'. Filtro de líneas: '+(scope.presenceFilter||'Cualquier cantidad')+'.')
+  pdf.paragraph('Alcance: '+model.rows.length+' territorio(s) estadístico(s). Localidad: '+(scope.locality||'Todas las disponibles')+'. Indicador del mapa: '+scope.metricLabel+'. Filtro de líneas: '+(scope.presenceFilter||'Sin limitar por cantidad')+'.')
   if(scope.territory)pdf.paragraph('Ficha individual seleccionada. El mapa del reporte y los resultados corresponden solo a este territorio; la selección visible del visor puede contener otros territorios.')
   pdf.row('Hogares encuestados',fmt(model.result('hogares_muestra'),0));pdf.row('Hogares representados',fmt(model.result('hogares_expandidos'),0))
   pdf.heading('Necesidad frente a presencia')
@@ -87,22 +87,22 @@ export async function downloadTerritorialReport(scope:ReportScope,base:string) {
   pdf.paragraph('Los índices van de 0 a 1; la brecha va de -1 a 1. Son medidas relativas, no porcentajes de hogares atendidos. Brecha = necesidad menos presencia. Las cifras se redondean solo al mostrarlas; restar los valores redondeados puede dar una pequeña diferencia.')
   pdf.row('Indicador actual: '+scope.metricLabel.slice(0,47),fmt(model.result(scope.metric.replace('final:',''))))
   if(scope.territory){pdf.row('Posición según la brecha',String(scope.territory.prioridad??'Sin dato'));pdf.row('Quintil original de la brecha',String(scope.territory.categoria_brecha??'Sin dato'))}
-  pdf.heading('Conclusión de esta selección');pdf.paragraph('Necesidad: '+fmt(model.result('indice_necesidad'))+'; presencia CVP: '+fmt(model.result('indice_presencia'))+'; brecha: '+fmt(model.result('brecha'))+'.');pdf.paragraph(model.conclusion)
-  pdf.paragraph('Para profundizar, revisa qué condiciones de los hogares y qué registros misionales explican la diferencia. Este reporte no establece una prioridad institucional ni demuestra causalidad.')
+  pdf.heading('¿Qué nos dice tu selección?');pdf.paragraph('Necesidad: '+fmt(model.result('indice_necesidad'))+'; presencia CVP: '+fmt(model.result('indice_presencia'))+'; brecha: '+fmt(model.result('brecha'))+'.');pdf.paragraph(model.conclusion)
+  pdf.paragraph('Para entender mejor la diferencia, revisa las condiciones de los hogares y los registros de cada línea. Este reporte ayuda a explorar los datos; no define una prioridad oficial ni demuestra que una condición cause otra.')
   pdf.page('Mapa y condiciones de los hogares');pdf.paragraph(scope.metricLabel,true)
   pdf.images.push(map);pdf.image(1,82,pdf.y,432,275);pdf.y+=289
-  pdf.paragraph(scope.metric==='final:brecha'?'Leyenda: amarillo claro Muy baja; amarillo Baja; amarillo dorado Media; rojo anaranjado Alta; rojo oscuro Muy alta. Gris: sin dato. Quintiles del archivo completo, sin recalcular al filtrar.':'Escala: amarillo claro = menor valor; rojo oscuro = mayor valor; gris = sin dato. Los límites se calculan sobre la base completa.')
+  pdf.paragraph(scope.metric==='final:brecha'?'Leyenda: amarillo claro Muy baja; amarillo Baja; amarillo dorado Media; rojo anaranjado Alta; rojo oscuro Muy alta. Gris: dato no disponible. Quintiles del archivo completo, sin recalcular al filtrar.':'Escala: amarillo claro = menor valor; rojo oscuro = mayor valor; gris = sin dato. Los límites se calculan sobre la base completa.')
   pdf.heading('Condiciones de los hogares')
   for(const [field,label]of [['ind_tenencia','Tenencia'],['ind_vivienda','Déficit habitacional'],['ind_entorno','Entorno'],['ind_vulnerabilidad','Jefatura femenina en pobreza']])pdf.bar(label!,model.result(field!),true)
-  pdf.paragraph('Los porcentajes describen hogares representados. Jefatura femenina mide hogares con jefatura femenina en pobreza monetaria sobre todos los hogares; no toda la jefatura femenina.')
+  pdf.paragraph('Los porcentajes se refieren a los hogares representados por la encuesta. Aquí, jefatura femenina cuenta hogares con jefatura femenina que están en pobreza monetaria, como proporción de todos los hogares; no cuenta todos los hogares con jefatura femenina.')
   pdf.row('Área en amenaza alta',fmt(model.result('pct_amenaza_alta'))+' %');pdf.row('Área en amenaza media',fmt(model.result('pct_amenaza_media'))+' %')
   pdf.paragraph('Amenaza mide área, no hogares expuestos. Incluye movimientos en masa; no todos los riesgos. El mapa reproduce el indicador, no las capas superpuestas ni el nivel de zoom del visor.')
   pdf.page('Presencia CVP, fuentes y lectura')
   pdf.heading('Registros de las cinco líneas')
   for(const [field,label]of [['viv_presencia','Vivienda - predios'],['tit_presencia','Titulación - predios por territorio'],['barrios_presencia','Barrios - tramos por territorio'],['reas_presencia','Reasentamientos - procesos'],['cps_presencia','Curaduría - predios']])pdf.row(label!,fmt(model.result(field!),0))
-  pdf.paragraph('No se suman estas líneas como personas u hogares beneficiados. La suma de identificadores únicos por territorio no acredita unicidad global.')
+  pdf.paragraph('No se suman estas líneas como personas u hogares beneficiados. Aunque cada identificador se cuente una vez dentro de un territorio, sumarlos no garantiza que sean únicos en toda la ciudad.')
   pdf.heading('Cómo se obtuvo este reporte')
-  pdf.paragraph(scope.territory?'Se conservan los valores originales del territorio. Los indicadores ind_ se multiplican por 100 para mostrar porcentajes.':'Conteos: suma. Tasas: total de registros por 1.000 hogares. Índices e indicadores de hogares: promedio ponderado por hogares representados. Amenaza: promedio ponderado por área. Son resúmenes descriptivos de valores publicados redondeados; no nuevos índices oficiales.')
+  pdf.paragraph(scope.territory?'Se conservan los valores originales del territorio. Los indicadores ind_ se multiplican por 100 para mostrar porcentajes.':'Sumamos los registros y calculamos sus tasas por cada 1.000 hogares. Para promediar índices y datos de hogares, damos más peso a los territorios con más hogares representados; en amenaza, a los de mayor área. Partimos de cifras publicadas ya redondeadas. El resultado es un resumen para explorar, no un nuevo índice oficial.')
   pdf.paragraph('La base final usa cinco componentes con pesos iguales en cada índice: 1/5 = 20 %. Normalización con tope en percentil 95 y min-max. Los filtros no recalculan los índices originales.')
   pdf.heading('Fuentes y períodos')
   pdf.paragraph('Fuente del visor: '+scope.dataset.source.name+'. Construcción: cuadernos 01, 02 y 03. Encuesta: EM 2021. Descarga de las cinco capas CVP registrada: 10/10/2026; no es un corte común ni fecha de validación.')

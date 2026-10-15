@@ -1,6 +1,7 @@
 import type { Dataset, Schema } from '../types/data'
 import { parseCsv, numberColumn, download, exportRows } from '../utils/csv'
 import { filterRows, need, integral } from '../utils/analytics'
+import { fieldDescription } from '../utils/field-descriptions'
 export function useTerritorialData() {
   const dataset = ref<Dataset>({ rows: [], columns: [], schema: {}, source: { name: 'Sin archivo', date: null, license: null } })
   const loading = ref(true), error = ref(''), original = ref(''), configured = ref(false)
@@ -10,11 +11,11 @@ export function useTerritorialData() {
     loading.value = true; error.value = ''
     try {
       const data = await $fetch<Dataset>(`${config.app.baseURL}data/final-dataset.json`)
-      if (!Array.isArray(data.rows) || !Array.isArray(data.columns)) throw new Error('Estructura de datos inválida.')
-      data.fieldDefinitions = data.fieldDefinitions?.map(field => ({ ...field, description: field.description.replace(/\bdominio(s)?\b/gi, word => word[0] === 'D' ? word.endsWith('s') ? 'Territorios' : 'Territorio' : word.endsWith('s') ? 'territorios' : 'territorio') }))
+      if (!Array.isArray(data.rows) || !Array.isArray(data.columns)) throw new Error('No pudimos leer este archivo de datos. Revisa su formato e inténtalo de nuevo.')
+      data.fieldDefinitions = data.fieldDefinitions?.map(field => ({ ...field, description: fieldDescription(field.field,field.description) }))
       dataset.value = data; configured.value = Boolean(data.schema.codigo && data.schema.nombre)
       if (data.rows.length) original.value = await $fetch<string>(`${config.app.baseURL}data/upz_brecha_95.csv`, { responseType: 'text' })
-    } catch (e) { error.value = e instanceof Error ? e.message : 'No se pudieron cargar los datos.' }
+    } catch (e) { error.value = e instanceof Error ? e.message : 'No pudimos cargar los datos. Intenta de nuevo en un momento.' }
     finally { loading.value = false }
   }
   async function upload(file: File) {

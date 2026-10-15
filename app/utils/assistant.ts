@@ -8,7 +8,7 @@ export interface AssistantAnswer {
 }
 export const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 const contains = (query: string, phrase: string) => (` ${query} `).includes(` ${normalize(phrase)} `)
-const model = 'Necesidad responde «¿cuánto necesita esta zona?» y se construye con la Encuesta Multipropósito. Presencia responde «¿cuánto ha llegado la Caja?» y se construye con las capas de las cinco direcciones. Brecha = necesidad − presencia. Las dos medidas deben ser comparables en escala, territorio y alcance antes de restarlas.'
+const model = 'Necesidad responde «¿qué necesidades tienen los hogares?» y se construye con la Encuesta Multipropósito. Presencia responde «¿qué registros tiene la CVP en esta zona?» y se construye con las capas de las cinco direcciones. Brecha = necesidad − presencia. Las dos medidas deben ser comparables en escala, territorio y alcance antes de restarlas.'
 const dimensionModel = 'Tenencia: propiedad legal → Urbanizaciones y Titulación. Vivienda: estado de la casa → Mejoramiento de Vivienda y Curaduría Pública Social. Entorno: condiciones del barrio → Mejoramiento de Barrios. Riesgo: peligro para la casa → Reasentamientos. Vulnerabilidad transversal: capacidad de los hogares para salir del problema por sus propios medios; pondera la necesidad total y ayuda a priorizar zonas con brechas parecidas, sin una dirección exclusiva.'
 
 /** Consultas locales sobre columnas conocidas. No ejecuta código ni envía datos a servicios. */
@@ -17,7 +17,7 @@ export function askData(question: string, dataset: Dataset, selection: Row[], sc
   const baseRows = scope === 'all' ? dataset.rows : selection
   const answer: AssistantAnswer = { text: '', note: '', fields: [], items: [], metric: '', scope: `${scope === 'all' ? 'Archivo completo' : 'Filtros actuales'} · ${baseRows.length} territorios`, source: dataset.source.name, matchedCodes: [] }
   const finish = (text: string, note = '') => ({ ...answer, text, note })
-  const publishedNote = dataset.analysis ? 'El índice disponible es exploratorio de cuatro dimensiones (0–100), no una priorización institucional. Vulnerabilidad aún no está ponderada.' : 'Necesidad exploratoria calculada con las cuatro dimensiones configuradas. No es una priorización institucional.'
+  const publishedNote = dataset.analysis ? 'Este índice combina cuatro dimensiones en una escala de 0 a 100. Sirve para explorar los datos; no define una prioridad oficial. La vulnerabilidad todavía no tiene un peso asignado.' : 'Calculamos esta necesidad exploratoria con las cuatro dimensiones que configuraste. El resultado no define una prioridad oficial.'
   if (!q) return finish('Escribe una pregunta para consultar los datos.')
   if (/\b(inventa|inventar|finge|fingir|ignora|ignorar|ejecuta|ejecutar)\b/.test(q)) return finish('Solo puedo consultar datos y explicar el modelo. No invento cifras ni ejecuto instrucciones contenidas en las preguntas.')
   if (/\b(que es|que significa|diferencia entre|como se calcula)\b/.test(q) && /\b(necesidad|presencia|brecha)\b/.test(q)) return finish(model, publishedNote)
@@ -25,7 +25,7 @@ export function askData(question: string, dataset: Dataset, selection: Row[], sc
   if (/\b(vulnerabilidad|vulnerables)\b/.test(q) && !/\b(pobreza|jefatura)\b/.test(q)) return finish(dimensionModel, 'El CSV aporta pobreza y jefatura femenina como contexto. No trae un índice transversal ni una regla validada de ponderación; no los sustituyo por vulnerabilidad.')
   if (/\b(fuente|fuentes|periodo|periodos|fecha|corte|encuesta)\b/.test(q)) {
     answer.fields = ['periodos_presencia', 'fecha_validacion'].filter(c => dataset.columns.includes(c))
-    return finish(`Archivo: ${dataset.source.name}. ${dataset.analysis ? 'Necesidad: Encuesta Multipropósito 2021. Presencia publicada: registros de períodos heterogéneos, sin corte común.' : 'Consulta las columnas y la procedencia del archivo cargado; no se presupone su período.'} Fecha declarada: ${dataset.source.date || 'sin dato'}.`, 'La fecha declarada no acredita un corte temporal común de las actuaciones.')
+    return finish(`Archivo: ${dataset.source.name}. ${dataset.analysis ? 'Necesidad: Encuesta Multipropósito 2021. Presencia publicada: registros de años distintos, sin corte común.' : 'Consulta las columnas y la procedencia del archivo cargado; no se presupone su período.'} Fecha declarada: ${dataset.source.date || 'sin dato'}.`, 'Que el archivo tenga una fecha no significa que todas las actuaciones sean de ese momento.')
   }
 
   // Selección territorial: códigos de territorio, UPZ integrantes y nombres explícitos.
@@ -65,7 +65,7 @@ export function askData(question: string, dataset: Dataset, selection: Row[], sc
   }
   answer.matchedCodes = rows.map(r => String(value(r, schema, 'codigo')))
   if (!rows.length) return finish('No hay territorios para esta consulta dentro del alcance seleccionado. Revisa los filtros o cambia a «Archivo completo».')
-  if (/\b(19\d{2}|20\d{2}|desde|hasta|ultimo|ultimos|ano|anos|mes|meses)\b/.test(q)) return finish('No puedo filtrar actuaciones por año o intervalo con estos conteos agregados. Los períodos de presencia son heterogéneos; se necesitan fechas de las actuaciones para responder esa pregunta.')
+  if (/\b(19\d{2}|20\d{2}|desde|hasta|ultimo|ultimos|ano|anos|mes|meses)\b/.test(q)) return finish('Para filtrar por año o intervalo necesito las fechas de cada actuación. Estos datos solo traen totales. Los períodos de presencia corresponden a años distintos; se necesitan fechas de las actuaciones para responder esa pregunta.')
   if (/\b(multidimensional|deficit|inundacion|derrumbe|hundimiento|escritura|propietarios)\b/.test(q) || (/\b(porcentaje|porcentajes)\b/.test(q) && /\b(tenencia|vivienda|entorno|riesgo)\b/.test(q))) return finish('Esa consulta pide un indicador original específico. Puedes consultarlo con su porcentaje y denominador en la ficha territorial. Aquí puedo comparar los índices relativos por dimensión, pobreza monetaria y jefatura femenina; no sustituyo un porcentaje original por un índice.')
 
   let key = '', label = '', counts = false
@@ -79,7 +79,7 @@ export function askData(question: string, dataset: Dataset, selection: Row[], sc
     if (requested.length > 1 && recordIntent) return finish('Consulta una línea misional por pregunta. Sus registros tienen unidades distintas y no se suman como hogares o beneficiarios únicos.')
     if (requested[0] && recordIntent) {
       if (/\b(tasa|tasas|porcentaje|porcentajes|promedio|media|ids|identificadores)\b/.test(q)) return finish('Esta consulta admite conteos de registros publicados de una línea. Las tasas y los IDs distintos pueden consultarse en la ficha de cada territorio; no los sustituyo por el total de registros.')
-      if (/\b(ejecutadas|ejecutados|terminadas|terminados|beneficiarios|beneficiadas|beneficiados|cobertura|hogares|personas|casas|familias)\b/.test(q)) return finish('Los registros publicados no acreditan beneficiarios únicos, obras terminadas ni cobertura efectiva. Esa medida necesita definición y validación.', 'Mejoramiento de Vivienda está limitado a Plan Terrazas; asistencia técnica ejecutada no equivale a obra terminada.')
+      if (/\b(ejecutadas|ejecutados|terminadas|terminados|beneficiarios|beneficiadas|beneficiados|cobertura|hogares|personas|casas|familias)\b/.test(q)) return finish('Estos registros no permiten contar personas beneficiadas sin repetirlas ni confirmar obras terminadas. Tampoco indican qué proporción de hogares recibió atención; para responderlo necesitamos otra medida y validarla.', 'Mejoramiento de Vivienda está limitado a Plan Terrazas; asistencia técnica ejecutada no equivale a obra terminada.')
       key = `registros_${requested[0].key}`; label = `${requested[0].label} · registros publicados`; counts = true
     } else if (/\b(necesidad|necesita|necesitan)\b/.test(q)) { key = 'need'; label = 'Necesidad exploratoria · cuatro dimensiones · 0–100' }
     else if (/\b(tenencia|vivienda|entorno|riesgo)\b/.test(q)) { key = q.match(/\b(tenencia|vivienda|entorno|riesgo)\b/)![1]!; label = `${key[0]!.toUpperCase()}${key.slice(1)}${key === 'riesgo' && dataset.analysis ? ' reportado' : ''} · ${dataset.analysis ? 'dimensión relativa · 0–100' : 'valor original · unidad según diccionario'}` }
@@ -92,7 +92,7 @@ export function askData(question: string, dataset: Dataset, selection: Row[], sc
   const get = (r: Row) => key === 'need' ? need(r, dataset.rows, schema) : numeric(value(r, schema, key))
   const available = rows.filter(r => get(r) !== null)
   if (!available.length) return finish(`${label}: pendiente; no hay valores disponibles en los ${rows.length} territorios consultados.`, key === 'brecha' || key === 'presencia_validada' ? `${model} Los conteos publicados no sustituyen al índice de presencia. Su construcción está a cargo del equipo; no calculo una brecha a partir de conteos.` : 'Los nulos se conservan como datos faltantes, nunca como cero.')
-  if (!counts && /\b(total|totales|promedio|media|suma|sumar)\b/.test(q)) return finish('No sumo índices ni promedio porcentajes entre territorios. Para obtener una medida de localidad se requiere una metodología y denominadores compatibles. Puedes comparar los valores de sus territorios.', publishedNote)
+  if (!counts && /\b(total|totales|promedio|media|suma|sumar)\b/.test(q)) return finish('No sumo índices ni promedio porcentajes directamente entre territorios. Para resumir una localidad, necesitamos saber cuántos hogares o qué área representa cada dato y usar un método compatible. Sí puedes comparar los valores de sus territorios.', publishedNote)
   const lowest = /\b(menor|menores|menos|baja|bajo)\b/.test(q)
   const ordered = [...rows].sort((a,b) => { const x=get(a), y=get(b); return x===null ? (y===null?0:1) : y===null ? -1 : (lowest ? x-y : y-x) || String(value(a,schema,'codigo')).localeCompare(String(value(b,schema,'codigo'))) })
   const requestedLimit = q.match(/\b(?:top|los|las)\s+(\d+)\b/)
@@ -103,7 +103,7 @@ export function askData(question: string, dataset: Dataset, selection: Row[], sc
   // Tras una comparación/orden, «y vivienda» usa los territorios mostrados; tras un total, todo su ámbito.
   if (!aggregate) answer.matchedCodes = answer.items.map(item => item.code)
   answer.text = aggregate ? `Hay ${format(total(rows,schema,key))} registros publicados de ${lines.find(l=>key===`registros_${l.key}`)?.label}. Suma de ${available.length} de ${rows.length} territorios con dato${available.length < rows.length ? ' (parcial: hay datos faltantes)' : ''}. La tabla muestra ${shown.length} territorios de referencia.` : `${label}: ${rows.length <= 2 ? 'valores de los territorios consultados' : `se muestran ${shown.length} de ${rows.length} territorios, ordenados de ${lowest ? 'menor a mayor' : 'mayor a menor'}`}. ${available.length} territorios tienen dato; ${rows.length - available.length} no tienen dato.`
-  answer.note = counts ? (dataset.analysis ? 'Conteos publicados de períodos heterogéneos; no son índice de presencia ni beneficiarios únicos. No se suman líneas ni IDs distintos como personas. Vivienda: solo Plan Terrazas.' : 'Conteos de las columnas asignadas. Verifica unidades, período y alcance del archivo; no son beneficiarios únicos ni índice de presencia.') : key === 'brecha' || key === 'presencia_validada' ? 'Se muestran las columnas asignadas del archivo; esta consulta no certifica su validación. Comprueba escala, período y metodología antes de interpretarlas.' : publishedNote
+  answer.note = counts ? (dataset.analysis ? 'Conteos publicados de años distintos; no son índice de presencia ni beneficiarios únicos. No se suman líneas ni IDs distintos como personas. Vivienda: solo Plan Terrazas.' : 'Conteos de las columnas asignadas. Verifica unidades, período y alcance del archivo; no son beneficiarios únicos ni índice de presencia.') : key === 'brecha' || key === 'presencia_validada' ? 'Aquí ves las columnas que elegiste. Antes de interpretar los valores, revisa su escala, sus fechas y cómo se calcularon: esta consulta no confirma que estén validados.' : publishedNote
   if (shown.some(r => String(value(r,schema,'tipo')) === 'grupo_UPZ')) answer.note += ' Una agrupación representa todas sus UPZ: no se atribuye su estimación a una UPZ individual.'
   return answer
 }

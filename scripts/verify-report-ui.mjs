@@ -32,10 +32,10 @@ try{
   assert.ok(data.subarray(0,8).toString().startsWith('%PDF-1.4'))
   assert.ok(data.length>10000)
   const text=data.toString('latin1')
-  assert.ok(text.includes('Conclusión de esta selección'))
+  assert.ok(text.includes('¿Qué nos dice tu selección?'))
   assert.ok(text.includes('Necesidad frente a presencia'))
   if(name==='general'){assert.ok(text.includes('84.274'));assert.ok(text.includes('2.801.128'))}
-  if(name==='localidad'){assert.ok(text.includes('Consolidado de Antonio Nariño'));assert.ok(text.includes('28.218'))}
+  if(name==='localidad'){assert.ok(text.includes('Resumen de Antonio Nariño'));assert.ok(text.includes('28.218'))}
   if(name==='upz'){assert.ok(text.includes('Ciudad Jardín'));assert.ok(text.includes('Ficha individual seleccionada'))}
   assert.equal(await file.failure(),null)
   assert.ok(!await page.locator('[role="alert"]').count())

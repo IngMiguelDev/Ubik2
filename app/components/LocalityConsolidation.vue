@@ -14,5 +14,5 @@ const indicator = computed(() => props.dataset.fieldDefinitions?.find(f => 'fina
 <template>
   <div v-if="indicator" class="territory-highlight"><p>{{ indicator.description }}</p><strong>{{ display(indicator.field,indicator.unit) }}</strong><small v-if="indicator.field!=='brecha'">{{ indicator.unit }}</small></div>
   <h3>Presencia CVP</h3><div class="territory-presence"><div v-for="line in presenceLines" :key="line.field"><span>{{ line.label }}<small>{{ line.note }}</small></span><strong>{{ display(line.field,'') }}</strong></div></div>
-  <p class="notice">Registros publicados por línea; no equivalen a hogares atendidos.</p>
+  <p class="notice">Estos son los registros de cada línea. No permiten contar cuántos hogares recibieron atención.</p>
 </template>

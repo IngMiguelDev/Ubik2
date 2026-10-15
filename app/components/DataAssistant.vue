@@ -14,7 +14,7 @@ const config=useRuntimeConfig()
 const endpoint=String(config.public.aiBaseUrl||`${config.app.baseURL}api/assistant`).replace(/\/$/,'')
 const messages = ref<{ question: string; answer: AssistantAnswer; engine:'local'|'openai'; evidence?:AIEvidence[]; model?:string }[]>([])
 const history = ref<HTMLElement>()
-const suggestions = ['¿Cuáles son los 5 territorios con mayor necesidad?', '¿Cuántos registros de Barrios hay en Usaquén?', 'Compara la necesidad de UPZ 9 y UPZ 11', '¿Cómo se calcula la brecha?', '¿Qué significa vulnerabilidad?']
+const suggestions = ['¿Cuáles son los 5 territorios con mayor necesidad?', '¿Cuántos registros de Barrios hay en Usaquén?', 'Compara la necesidad de UPZ 9 y UPZ 11', '¿Cómo se calcula la brecha?', '¿Cómo leer este dato vulnerabilidad?']
 watch(() => props.dataset, () => clear(), { deep: false })
 watch(scope, () => { previousCodes.value = [] })
 watch(mode,()=>{previousCodes.value=[];aiError.value=''})
@@ -43,7 +43,7 @@ async function send(text = question.value) {
     }
     question.value=''
     nextTick(()=>{if(history.value)history.value.scrollTop=history.value.scrollHeight})
-  }catch(e){const error=e as {data?:{statusMessage?:string};message?:string};aiError.value=error.data?.statusMessage||'No se pudo obtener la respuesta de IA. Reintenta; tu pregunta se conserva.'}
+  }catch(e){const error=e as {data?:{statusMessage?:string};message?:string};aiError.value=error.data?.statusMessage||'No pudimos completar la respuesta. Inténtalo de nuevo; tu pregunta sigue aquí.'}
   finally{pending.value=false}
 }
 function exportConversation() { download('ubik2_consultas.json', JSON.stringify({ exportedAt: new Date().toISOString(), messages: messages.value }, null, 2), 'application/json') }
@@ -51,12 +51,12 @@ function evidenceLabel(name:string){return name==='query_data'?'Consulta de indi
 </script>
 <template>
   <section class="panel assistant" aria-label="Asistente de datos">
-    <div class="panel-heading"><div><h2><MessageCircle :size="20"/>Pregunta al territorio</h2><p>Pregunta con tus propias palabras. La IA consulta los archivos compartidos y explica sus resultados.</p></div><span class="tag">{{ mode==='ai' ? (connection==='ready'?'IA · OpenAI':connection==='checking'?'Comprobando conexión…':'IA pendiente de conexión') : 'Consulta básica · local' }}</span></div>
-    <p class="assistant-intro">Puedes comparar zonas, explorar relaciones entre indicadores, consultar cifras o pedir explicaciones del método. El asistente de IA conserva el contexto de la conversación y muestra las consultas, los datos y las páginas que sustentan cada respuesta.</p>
-    <div v-if="mode==='ai' && connection==='unavailable'" class="notice assistant-connection"><p><strong>La IA todavía no está conectada en esta instalación.</strong> El administrador debe activar la conexión en el servidor. Puedes usar mientras tanto las consultas básicas locales.</p><button class="text-button" @click="mode='local'">Usar consulta básica</button><button class="text-button" @click="checkConnection">Comprobar conexión</button></div>
-    <p v-if="mode==='ai' && !dataset.analysis" class="notice">La IA consulta los archivos compartidos del observatorio. Para el CSV alternativo cargado en esta sesión usa la consulta básica local.</p>
-    <div class="assistant-controls"><label>Tipo de asistente<select v-model="mode" aria-label="Tipo de asistente" :disabled="pending"><option value="ai">IA · preguntas libres sobre los archivos compartidos</option><option value="local">Consulta básica · reglas locales</option></select></label></div>
-    <div class="assistant-controls"><label>Alcance de las preguntas<select v-model="scope" aria-label="Alcance de las preguntas" :disabled="pending"><option value="all">Archivo completo · {{ dataset.rows.length }} territorios</option><option value="filtered">Filtros actuales · {{ rows.length }} territorios</option></select></label><button class="text-button" :disabled="!messages.length || pending" @click="clear"><RotateCcw :size="14"/>Limpiar conversación</button><button class="outline" :disabled="!messages.length" @click="exportConversation"><Download :size="15"/>Descargar conversación</button></div>
+    <div class="panel-heading"><div><h2><MessageCircle :size="20"/>Pregunta al territorio</h2><p>Escribe lo que quieres saber. El asistente busca en los archivos y te explica lo que encuentra.</p></div><span class="tag">{{ mode==='ai' ? (connection==='ready'?'IA · OpenAI':connection==='checking'?'Comprobando conexión…':'IA pendiente de conexión') : 'Consulta básica · local' }}</span></div>
+    <p class="assistant-intro">Puedes comparar territorios, buscar cifras o preguntar cómo se hizo un cálculo. También puedes continuar una pregunta anterior. Debajo de cada respuesta encontrarás los datos y las fuentes que usó el asistente.</p>
+    <div v-if="mode==='ai' && connection==='unavailable'" class="notice assistant-connection"><p><strong>El asistente de IA aún no está disponible.</strong> Mientras se activa la conexión, puedes consultar preguntas básicas con los datos de tu navegador.</p><button class="text-button" @click="mode='local'">Usar consulta básica</button><button class="text-button" @click="checkConnection">Comprobar conexión</button></div>
+    <p v-if="mode==='ai' && !dataset.analysis" class="notice">La IA consulta los archivos compartidos del observatorio. Si cargaste tu propio CSV, elige la consulta básica para explorarlo en tu navegador.</p>
+    <div class="assistant-controls"><label>Tipo de asistente<select v-model="mode" aria-label="Tipo de asistente" :disabled="pending"><option value="ai">IA · preguntas libres sobre los archivos compartidos</option><option value="local">Consulta básica · en tu navegador</option></select></label></div>
+    <div class="assistant-controls"><label>¿Qué territorios quieres consultar?<select v-model="scope" aria-label="¿Qué territorios quieres consultar?" :disabled="pending"><option value="all">Archivo completo · {{ dataset.rows.length }} territorios</option><option value="filtered">Filtros actuales · {{ rows.length }} territorios</option></select></label><button class="text-button" :disabled="!messages.length || pending" @click="clear"><RotateCcw :size="14"/>Limpiar conversación</button><button class="outline" :disabled="!messages.length" @click="exportConversation"><Download :size="15"/>Descargar conversación</button></div>
     <div class="assistant-suggestions" aria-label="Preguntas sugeridas"><button v-for="s in suggestions" :key="s" class="outline" :disabled="!canSend" @click="send(s)">{{ s }}</button></div>
     <div ref="history" class="assistant-history" role="log" aria-label="Conversación de datos" aria-live="polite" aria-relevant="additions" tabindex="0">
       <p v-if="!messages.length" class="muted">Empieza con una pregunta sugerida o escribe la tuya. Puedes continuar con «y vivienda» para consultar los mismos territorios.</p>
@@ -65,13 +65,13 @@ function evidenceLabel(name:string){return name==='query_data'?'Consulta de indi
         <div class="assistant-answer"><strong>UBiK2 · {{ m.engine==='openai'?'IA':'consulta básica' }}</strong><p class="answer-text">{{ m.answer.text }}</p>
           <div v-if="m.answer.items.length" class="table-scroll"><table><caption>{{ m.answer.metric }}</caption><thead><tr><th>Territorio</th><th>Localidad</th><th>Valor</th><th>Consulta</th></tr></thead><tbody><tr v-for="item in m.answer.items" :key="item.code"><th>{{ item.name }}<small class="block muted">Código {{ item.code }} · {{ item.grouped ? 'Agrupación completa' : 'Territorio completo' }}</small></th><td>{{ item.locality }}</td><td>{{ format(item.value) }}</td><td><button class="text-button" @click="$emit('select',item.code)">Ver ficha</button></td></tr></tbody></table></div>
           <p v-if="m.answer.note" class="notice">{{ m.answer.note }}</p>
-          <details v-for="evidence in m.evidence" :key="evidence.id" class="assistant-evidence"><summary>[{{evidence.id}}] {{evidenceLabel(evidence.description)}} · {{evidence.source}}</summary><p v-if="evidence.fields.length">Campos consultados: {{evidence.fields.join(', ')}}</p><pre>{{JSON.stringify(evidence.result,null,2)}}</pre></details>
+          <details v-for="evidence in m.evidence" :key="evidence.id" class="assistant-evidence"><summary>[{{evidence.id}}] {{evidenceLabel(evidence.description)}} · {{evidence.source}}</summary><p v-if="evidence.fields.length">Datos que se consultaron: {{evidence.fields.join(', ')}}</p><pre>{{JSON.stringify(evidence.result,null,2)}}</pre></details>
           <details class="assistant-evidence"><summary>Datos y alcance de esta respuesta</summary><p>{{ m.answer.scope }}<br>Archivo: {{ m.answer.source }}</p><p>Campos: {{ m.answer.fields.length ? m.answer.fields.join(', ') : 'Explicación del modelo o consulta sin resultado numérico' }}</p></details>
         </div>
       </article>
     </div>
-    <p v-if="pending" role="status" class="notice">Consultando los archivos y preparando la respuesta…</p><p v-if="aiError" role="alert" class="notice error">{{aiError}}</p>
+    <p v-if="pending" role="status" class="notice">Buscando en los datos para responderte…</p><p v-if="aiError" role="alert" class="notice error">{{aiError}}</p>
     <form class="assistant-form" @submit.prevent="send()"><label for="assistant-question">Tu pregunta<textarea id="assistant-question" v-model="question" rows="3" maxlength="2000" placeholder="Ej.: ¿Dónde coinciden pobreza alta y viviendas que necesitan mejoras? Explícamelo con los datos." :disabled="!configured || loading || pending" @keydown.enter.exact.prevent="send()"/></label><div><small>Enter para consultar · Shift + Enter para una nueva línea</small><button class="primary" type="submit" :disabled="!question.trim() || !canSend"><Send :size="16"/>Consultar datos</button></div></form>
-    <p class="chart-footnote">{{mode==='ai'?'La IA recibe tu pregunta, el contexto de la conversación y los resultados pertinentes de los archivos publicados. Las claves permanecen en el servidor.':'La consulta básica procesa preguntas habituales en tu navegador mediante reglas.'}} No interpreta códigos sin diccionario ni completa datos faltantes. Las respuestas previas conservan su alcance.</p>
+    <p class="chart-footnote">{{mode==='ai'?'La IA recibe tu pregunta, el contexto de la conversación y los resultados pertinentes de los archivos publicados. Las claves permanecen en el servidor.':'La consulta básica responde preguntas habituales directamente en tu navegador.'}} No interpreta códigos sin diccionario ni completa datos faltantes. Si cambias los filtros, las respuestas anteriores siguen referidas a la selección con la que las pediste.</p>
   </section>
 </template>
