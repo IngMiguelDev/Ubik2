@@ -5,7 +5,7 @@ const emit = defineEmits<{ apply: [schema: Schema, source: Dataset['source']] }>
 const mapping = reactive<Schema>({ ...props.dataset.schema })
 const source = reactive({ ...props.dataset.source })
 const fields = computed(() => [
-  ...[['codigo','Código de dominio'],['nombre','Nombre del dominio'],['localidad','Localidad'],['tipo','Tipo de dominio'],['fuente','Fuente de la fila'],['corte','Corte de la fila'],['limitaciones','Limitaciones de la fila']],
+  ...[['codigo','Código de territorio'],['nombre','Nombre del territorio'],['localidad','Localidad'],['tipo','Tipo de territorio'],['fuente','Fuente de la fila'],['corte','Corte de la fila'],['limitaciones','Limitaciones de la fila']],
   ...dimensions.map(k => [k, `Dimensión: ${k}`]),
   ...[['pobreza','Pobreza (contexto)'],['jefatura','Jefatura femenina (contexto)']],
   ...lines.flatMap(l => [[`registros_${l.key}`, `Registros: ${l.label}`], [`tasa_${l.key}`, `Tasa publicada: ${l.label}`], [`distintos_${l.key}`, `Identificadores distintos: ${l.label}`], [`ejecutada_${l.key}`, `Actuaciones ejecutadas: ${l.label}`]]),

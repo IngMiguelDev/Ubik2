@@ -39,8 +39,8 @@ export function queryData(query:DataQuery, scopeCodes:string[]|null, dataset=pub
   const columns=query.columns.map(c=>resolveColumn(c,dataset)),sortBy=query.sortBy?resolveColumn(query.sortBy,dataset):null
   const filters=query.filters.map(f=>{if(!['eq','gt','gte','lt','lte','contains','not_null'].includes(f.operator))throw new Error('Filtro inválido.');if(['gt','gte','lt','lte'].includes(f.operator)&&numeric(f.value)===null)throw new Error('Las comparaciones numéricas requieren un valor numérico.');return {...f,column:resolveColumn(f.column,dataset)}})
   let rows=dataset.rows.filter(r=>(scopeCodes===null||scopeCodes.includes(String(value(r,dataset.schema,'codigo')))) && (!query.codes.length||query.codes.includes(String(value(r,dataset.schema,'codigo')))) && (!query.locality||normalize(value(r,dataset.schema,'localidad'))===normalize(query.locality)) && filters.every(f=>filter(r,f.column,f.operator,f.value,dataset)))
-  const base={source:dataset.source.name,fields:[...new Set([...columns,...filters.map(f=>f.column),...(sortBy?[sortBy]:[])])],matched:rows.length,scope:scopeCodes===null?'archivo completo':'dominios de los filtros actuales'}
-  if(query.operation==='count')return {...base,count:rows.length,unit:'dominios completos'}
+  const base={source:dataset.source.name,fields:[...new Set([...columns,...filters.map(f=>f.column),...(sortBy?[sortBy]:[])])],matched:rows.length,scope:scopeCodes===null?'archivo completo':'territorios de los filtros actuales'}
+  if(query.operation==='count')return {...base,count:rows.length,unit:'territorios completos'}
   if(query.operation==='correlation') {
     if(columns.length!==2)throw new Error('Correlación requiere exactamente dos columnas numéricas.')
     const pairs=rows.map(r=>({x:numeric(read(r,columns[0]!,dataset)),y:numeric(read(r,columns[1]!,dataset))})).filter((p):p is {x:number;y:number}=>p.x!==null&&p.y!==null)
@@ -61,5 +61,5 @@ export function readKnowledge(pages:number[]) {
 export function queryInterventions(localityCode:string|null,year:number|null,limit:number) {
   if(!Number.isInteger(limit)||limit<1||limit>30)throw new Error('Límite inválido.')
   const features=interventions.features.filter(f=>(!localityCode||String(Number(f.properties.loccodigo))===String(Number(localityCode)))&&(year===null||Number(f.properties['año_contr'])===year))
-  return {source:'intervencion_de_mejoramiento_de_barrios.geojson',fields:['loccodigo','año_contr','id_interve','id_element','estado_con'],elements:features.length,distinctInterventions:new Set(features.map(f=>f.properties.id_interve).filter(v=>v!==null&&v!==undefined)).size,sample:features.slice(0,limit).map(f=>f.properties),limitation:'Universo del GeoJSON, distinto del CSV. Año de contrato, no fecha de ejecución. Estados sin diccionario. No hay cruce espacial validado por dominio; los filtros de dominios no se trasladan al GeoJSON.'}
+  return {source:'intervencion_de_mejoramiento_de_barrios.geojson',fields:['loccodigo','año_contr','id_interve','id_element','estado_con'],elements:features.length,distinctInterventions:new Set(features.map(f=>f.properties.id_interve).filter(v=>v!==null&&v!==undefined)).size,sample:features.slice(0,limit).map(f=>f.properties),limitation:'Universo del GeoJSON, distinto del CSV. Año de contrato, no fecha de ejecución. Estados sin diccionario. No hay cruce espacial validado por territorio; los filtros de territorios no se trasladan al GeoJSON.'}
 }

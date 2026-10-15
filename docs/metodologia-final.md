@@ -4,7 +4,7 @@ Este documento describe la base final y el comportamiento vigente del visor. Los
 
 ## Unidad de análisis y procedencia
 
-La unidad de análisis es el dominio estadístico de la Encuesta Multipropósito (EM) 2021: 95 dominios, correspondientes a 80 UPZ individuales y 15 agrupaciones, con 112 UPZ integrantes. Una agrupación conserva su resultado conjunto; el visor no reparte sus estimaciones entre las UPZ que la componen.
+La unidad de análisis es el territorio estadístico de la Encuesta Multipropósito (EM) 2021: 95 territorios, correspondientes a 80 UPZ individuales y 15 agrupaciones, con 112 UPZ integrantes. Una agrupación conserva su resultado conjunto; el visor no reparte sus estimaciones entre las UPZ que la componen.
 
 La cadena documentada es:
 
@@ -18,19 +18,19 @@ El visor carga ese JSON y utiliza la cartografía `public/data/upz_brecha_95.geo
 
 ## Indicadores de necesidad
 
-Los indicadores de hogares se calculan sobre todos los hogares del dominio, ponderados por `FEX_C`: el factor de expansión indica cuántos hogares representa cada hogar encuestado.
+Los indicadores de hogares se calculan sobre todos los hogares del territorio, ponderados por `FEX_C`: el factor de expansión indica cuántos hogares representa cada hogar encuestado.
 
 - **Tenencia:** hogares en otra forma de tenencia (código 6) o propietarios sin escritura registrada, según las reglas del cuaderno 02.
 - **Vivienda:** déficit habitacional de las variables adicionales de la SDP, con componentes cuantitativo y cualitativo.
 - **Entorno:** vía sin pavimentar, vía en mal estado o ausencia de andén; la iluminación se conserva como detalle y no entra en el indicador principal.
-- **Vulnerabilidad:** hogares con jefatura femenina en pobreza monetaria, divididos entre todos los hogares del dominio. No mide toda la jefatura femenina.
-- **Amenaza:** porcentaje del área del dominio en amenaza alta por movimientos en masa. Es una medida de área, no de hogares expuestos ni de riesgo integral; no incluye inundación.
+- **Vulnerabilidad:** hogares con jefatura femenina en pobreza monetaria, divididos entre todos los hogares del territorio. No mide toda la jefatura femenina.
+- **Amenaza:** porcentaje del área del territorio en amenaza alta por movimientos en masa. Es una medida de área, no de hogares expuestos ni de riesgo integral; no incluye inundación.
 
 Los indicadores de encuesta `ind_*` originales están en proporción 0–1 y se multiplican por 100 para mostrar porcentajes. Los campos normalizados `*_n` no representan porcentajes de hogares. Los porcentajes de amenaza ya están en escala 0–100.
 
 ## Normalización, índices y brechas
 
-Las diez variables del modelo (cinco dimensiones de necesidad y cinco tasas de presencia) se normalizan a 0–1 sobre los 95 dominios. Se limita cada variable a su percentil 95 y se aplica min–max entre el mínimo y ese tope. Si el percentil coincide con el mínimo, el cuaderno usa el máximo. Los resultados se redondean a cuatro decimales. Los filtros no recalculan esta normalización.
+Las diez variables del modelo (cinco dimensiones de necesidad y cinco tasas de presencia) se normalizan a 0–1 sobre los 95 territorios. Se limita cada variable a su percentil 95 y se aplica min–max entre el mínimo y ese tope. Si el percentil coincide con el mínimo, el cuaderno usa el máximo. Los resultados se redondean a cuatro decimales. Los filtros no recalculan esta normalización.
 
 El cuaderno 03 calcula promedios simples de cinco componentes: suma los cinco valores y divide entre cinco. Cada componente tiene el mismo peso, una quinta parte o **20 %**. Este peso no es un porcentaje de hogares.
 
@@ -40,7 +40,7 @@ El cuaderno 03 calcula promedios simples de cinco componentes: suma los cinco va
 
 Cada dimensión se compara además con la línea de la CVP que la atiende (brecha por línea): tenencia–Titulación, vivienda–Vivienda y Curaduría, entorno–Barrios y amenaza alta–Reasentamientos. En vivienda se normaliza la suma de las tasas de Vivienda y Curaduría Pública Social; no se suman sus índices ya normalizados.
 
-La posición ordena la brecha de mayor a menor; los empates comparten la menor posición (`rank(method="min")`). Las categorías son quintiles: cinco grupos de 19 dominios en el archivo final. **Muy baja** describe brecha relativa, no necesidad baja. La paleta del mapa es: Muy baja `#FFF1A6`, Baja `#FFDE09`, Media `#F7B325`, Alta `#E3351F`, Muy alta `#AA1023` y Sin dato `#C4C4C4`. Los colores no cambian los valores ni las categorías.
+La posición ordena la brecha de mayor a menor; los empates comparten la menor posición (`rank(method="min")`). Las categorías son quintiles: cinco grupos de 19 territorios en el archivo final. **Muy baja** describe brecha relativa, no necesidad baja. La paleta del mapa es: Muy baja `#FFF1A6`, Baja `#FFDE09`, Media `#F7B325`, Alta `#E3351F`, Muy alta `#AA1023` y Sin dato `#C4C4C4`. Los colores no cambian los valores ni las categorías.
 
 Los cuadrantes del cuaderno clasifican necesidad alta o baja respecto a la mediana y presencia por encima o no de su mediana. En la base revisada, la mediana de presencia es cero; por eso se interpretan como con o sin registros. El GeoJSON conserva las etiquetas alta/baja presencia exportadas antes del cambio de texto en el cuaderno. La ficha individual utiliza los valores entregados y no asigna clasificaciones institucionales nuevas.
 
@@ -57,21 +57,21 @@ Los cuadrantes del cuaderno clasifican necesidad alta o baja respecto a la media
 | Amenaza | IDIGER 2016 según el diccionario final |
 | Descarga de las cinco capas misionales | 10/10/2026 en `fuentes.csv` |
 
-Las tasas se expresan por cada 1.000 hogares expandidos de la EM 2021. Las unidades de líneas distintas no se suman como beneficiarios únicos; la suma Vivienda + Curaduría Pública Social se utiliza en la brecha de vivienda porque ambas se miden en predios. Las sumas de IDs distintos por dominio no acreditan unicidad global.
+Las tasas se expresan por cada 1.000 hogares expandidos de la EM 2021. Las unidades de líneas distintas no se suman como beneficiarios únicos; la suma Vivienda + Curaduría Pública Social se utiliza en la brecha de vivienda porque ambas se miden en predios. Las sumas de IDs distintos por territorio no acreditan unicidad global.
 
 Fecha de descarga, período de las actuaciones, fecha de generación del reporte y validación son conceptos distintos. No existe un corte común ni una fecha de validación institucional acreditada en los archivos revisados.
 
 ## Cartografía
 
-El cuaderno 01 usa la capa DADEP Espacio Público Total por UPZ 2021, agrupada por dominio. Los cálculos espaciales se realizan en EPSG:9377. Las copias web se simplifican y reproyectan a WGS84.
+El cuaderno 01 usa la capa DADEP Espacio Público Total por UPZ 2021, agrupada por territorio. Los cálculos espaciales se realizan en EPSG:9377. Las copias web se simplifican y reproyectan a WGS84.
 
 Las actuaciones se asignan mediante un punto interior de su geometría. Se asignaron por cercanía 63 elementos de Barrios fuera de los límites, hasta 200 m; es una decisión metodológica documentada del equipo. El mapa de amenaza superpuesto permite consultar las categorías alta y media.
 
 ## Selección y ficha
 
-El checklist incluye UPZ o agrupaciones completas. Al cambiar de localidad se marcan todos sus dominios. **Seleccionar todas** incluye todos los dominios disponibles de la localidad, incluso si la lista tiene una búsqueda activa. La búsqueda filtra las opciones por nombre o código y conserva las casillas marcadas.
+El checklist incluye UPZ o agrupaciones completas. Al cambiar de localidad se marcan todos sus territorios. **Seleccionar todas** incluye todos los territorios disponibles de la localidad, incluso si la lista tiene una búsqueda activa. La búsqueda filtra las opciones por nombre o código y conserva las casillas marcadas.
 
-El mapa, tarjetas, consolidados, gráficos, comparación y exportación del panorama usan los dominios marcados junto con los otros filtros activos. El filtro de cantidad de líneas conserva dominios con la integralidad solicitada.
+El mapa, tarjetas, consolidados, gráficos, comparación y exportación del panorama usan los territorios marcados junto con los otros filtros activos. El filtro de cantidad de líneas conserva territorios con la integralidad solicitada.
 
 Elegir una localidad o cambiar casillas muestra el consolidado. Dejar una sola casilla marcada también mantiene el modo consolidado: la ficha individual se abre al pulsar explícitamente un territorio del mapa o la tabla. Limpiar la selección territorial devuelve el consolidado.
 
@@ -113,7 +113,7 @@ El catálogo consultado el 6 de octubre de 2026 se conserva como **antecedente h
 
 ## Reporte territorial PDF
 
-**Descargar reporte PDF** genera localmente un documento de los dominios visibles, o de la ficha individual activa. Se captura el alcance al pulsar el botón. Incluye indicador, hogares, índices, condiciones de hogares, amenaza, conteos de las cinco líneas, mapa, gráficos, fuentes y lista de territorios.
+**Descargar reporte PDF** genera localmente un documento de los territorios visibles, o de la ficha individual activa. Se captura el alcance al pulsar el botón. Incluye indicador, hogares, índices, condiciones de hogares, amenaza, conteos de las cinco líneas, mapa, gráficos, fuentes y lista de territorios.
 
 La conclusión sigue reglas según el signo de la brecha, con precisión completa; no inventa prioridades ni cobertura. Los valores se redondean al presentarlos. La fecha de generación utiliza `America/Bogota`.
 

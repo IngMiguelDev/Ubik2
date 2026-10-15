@@ -27,7 +27,7 @@ const rows = parsed.data.map((r, i) => Object.fromEntries(columns.map(k => {
   return [k, Number(normalized)]
 })))
 const codes=rows.map(r=>r[config.schema.codigo])
-if(codes.some(c=>c===null) || new Set(codes).size!==codes.length) throw new Error('Códigos de dominio vacíos o duplicados; se requiere una fila por dominio')
+if(codes.some(c=>c===null) || new Set(codes).size!==codes.length) throw new Error('Códigos de territorio vacíos o duplicados; se requiere una fila por territorio')
 await fs.mkdir(path.dirname(output), { recursive: true })
 await fs.writeFile(output, JSON.stringify({ columns, rows, schema: config.schema, source: config.source, analysis: config.analysis, status: 'ready' }, null, 2))
 await fs.copyFile(input, path.join(path.dirname(output), 'original.csv'))

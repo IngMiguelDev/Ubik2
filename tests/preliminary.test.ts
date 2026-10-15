@@ -6,7 +6,7 @@ import type { Dataset } from '../app/types/data'
 import { total, need, integral, filterRows } from '../app/utils/analytics'
 const dataset:Dataset=JSON.parse(await fs.readFile('public/data/dataset.json','utf8'))
 const config=JSON.parse(await fs.readFile('data/preliminary-schema.json','utf8'))
-test('95 dominios, 106 columnas; cada celda coincide con el CSV original',async()=>{
+test('95 territorios, 106 columnas; cada celda coincide con el CSV original',async()=>{
   const parsed=Papa.parse<Record<string,string>>(await fs.readFile('public/data/original.csv','utf8'),{header:true,skipEmptyLines:'greedy'})
   assert.equal(parsed.errors.length,0);assert.equal(parsed.data.length,95);assert.equal(dataset.columns.length,106)
   for(let i=0;i<95;i++)for(const column of dataset.columns){const raw=parsed.data[i]![column];assert.equal(dataset.rows[i]![column],raw===''?null:config.numericColumns.includes(column)?Number(raw):raw)}
@@ -31,7 +31,7 @@ test('índices publicados, sensibilidad y pendientes conservados en las 95 filas
     assert.equal(row.alcance_vivienda,'SOLO_PLAN_TERRAZAS')
   }
 })
-test('cartografía: dominios completos y GeoJSON de actuaciones separado',async()=>{
+test('cartografía: territorios completos y GeoJSON de actuaciones separado',async()=>{
   const geo=JSON.parse(await fs.readFile('public/data/dominios.geojson','utf8'))
   const original=JSON.parse(await fs.readFile('public/data/upz-oficiales.geojson','utf8'))
   assert.equal(geo.features.length,95);assert.equal(new Set(original.features.map((f:any)=>f.properties.UPLCODIGO)).size,112)

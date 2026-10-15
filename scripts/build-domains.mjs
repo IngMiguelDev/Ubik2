@@ -13,7 +13,7 @@ const used=new Set()
 const features=dataset.rows.map(r=>{
   const members=r.codigos_upz.split('|')
   const polygons=members.flatMap(c=>{
-    if(used.has(c)) throw new Error(`UPZ ${c} asignada a más de un dominio`)
+    if(used.has(c)) throw new Error(`UPZ ${c} asignada a más de un territorio`)
     used.add(c)
     if(!codes.has(`UPZ${c}`)) throw new Error(`Falta geometría oficial de UPZ ${c}`)
     return codes.get(`UPZ${c}`)
@@ -23,4 +23,4 @@ const features=dataset.rows.map(r=>{
 const provenance={source:'Secretaría Distrital de Planeación / servicio Catastro Distrital',url:'https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/ordenamientoterritorial/unidadplaneamiento/MapServer/55',downloadedAt:'2026-10-06',license:'CC BY 4.0 (ficha IDECA)',crs:'EPSG:4326',sourceFeatures:raw.features.length,domains:features.length,memberUpz:used.size,method:'Multipartes oficiales agrupadas por codigos_upz del CSV; se preservan los límites internos, sin desagregar indicadores.',limitation:'Correspondencia por códigos verificada; equivalencia exacta con límites históricos EM 2021 pendiente de validación SIG.'}
 await fs.writeFile('public/data/dominios.geojson',JSON.stringify({type:'FeatureCollection',features}))
 await fs.writeFile('public/data/geometry-provenance.json',JSON.stringify(provenance,null,2))
-console.log(`${features.length} dominios completos; ${used.size} UPZ integrantes; ninguna clave faltante ni duplicada.`)
+console.log(`${features.length} territorios completos; ${used.size} UPZ integrantes; ninguna clave faltante ni duplicada.`)

@@ -1,10 +1,10 @@
 # UBÍK2: escenario exploratorio V1 — 7 de octubre de 2026
 
-Este escenario complementa el CSV original de 95 dominios con 16 columnas. La fórmula es una propuesta del análisis, no una decisión aprobada por el equipo ni una medida oficial de cobertura. Los 106 campos originales conservan sus valores. Las columnas validadas continúan vacías.
+Este escenario complementa el CSV original de 95 territorios con 16 columnas. La fórmula es una propuesta del análisis, no una decisión aprobada por el equipo ni una medida oficial de cobertura. Los 106 campos originales conservan sus valores. Las columnas validadas continúan vacías.
 
 ## Fórmulas
 
-Normalización min–max: 100 × (valor − mínimo)/(máximo − mínimo), entre los 95 dominios originales. Los filtros del dashboard no deben recalcular los límites. Si una variable es constante, su índice se define como cero y debe revisarse su utilidad.
+Normalización min–max: 100 × (valor − mínimo)/(máximo − mínimo), entre los 95 territorios originales. Los filtros del dashboard no deben recalcular los límites. Si una variable es constante, su índice se define como cero y debe revisarse su utilidad.
 
 - Vulnerabilidad económica V: normalización del porcentaje ponderado de hogares con pobreza monetaria. Pobreza multidimensional y jefatura femenina permanecen como contexto. La jefatura femenina no se trata como carencia. No representa todas las dimensiones de vulnerabilidad.
 - Necesidad física N4: índice existente, promedio de tenencia, vivienda, entorno y riesgo reportado, cada uno normalizado. Se conserva sin cambios.

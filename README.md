@@ -22,7 +22,7 @@ La generación produce `.output/public` para un servidor estático. La navegaci�
 
 ## Base vigente y metodología
 
-El visor carga `public/data/final-dataset.json`, importado de `upz_brecha_95.geojson`: 95 dominios estadísticos, 80 UPZ individuales y 15 agrupaciones, con 112 UPZ integrantes. Conserva los valores originales de índices, ranking y categorías. La encuesta es EM 2021; las capas misionales tienen períodos distintos.
+El visor carga `public/data/final-dataset.json`, importado de `upz_brecha_95.geojson`: 95 territorios estadísticos, 80 UPZ individuales y 15 agrupaciones, con 112 UPZ integrantes. Conserva los valores originales de índices, ranking y categorías. La encuesta es EM 2021; las capas misionales tienen períodos distintos.
 
 La [metodología final](docs/metodologia-final.md) documenta fórmulas, normalización con tope en percentil 95, pesos iguales del 20 %, temporalidad, cartografía, consolidados, fuentes, licencia y limitaciones.
 
@@ -32,22 +32,22 @@ Los cuadernos de construcción están en `insumos/metodologia/` y los productos 
 python scripts/import-final-data.py "insumos/datos_procesados/web"
 ```
 
-Este comando importa el GeoJSON y diccionario; no reconstruye el análisis desde microdatos. Requiere Python. Los conteos finales sumados por dominio son:
+Este comando importa el GeoJSON y diccionario; no reconstruye el análisis desde microdatos. Requiere Python. Los conteos finales sumados por territorio son:
 
 | Línea | Valor | Unidad |
 |---|---:|---|
 | Mejoramiento de Vivienda | 402 | Predios ejecutados o en ejecución de Plan Terrazas |
 | Curaduría Pública Social | 1.185 | Predios con acto de reconocimiento |
-| Titulación | 5.893 | Predios únicos por dominio |
+| Titulación | 5.893 | Predios únicos por territorio |
 | Reasentamientos | 9.408 | Procesos terminados |
-| Barrios | 233 | Tramos únicos por dominio |
+| Barrios | 233 | Tramos únicos por territorio |
 
-No se suman líneas como hogares beneficiados ni se interpreta la suma de IDs por dominio como unicidad global.
+No se suman líneas como hogares beneficiados ni se interpreta la suma de IDs por territorio como unicidad global.
 
 ## Exploración y consolidados
 
-- Elegir localidad marca automáticamente sus dominios. El checklist permite marcar varias UPZ o agrupaciones completas.
-- La búsqueda filtra la lista por nombre o código sin alterar las casillas. Seleccionar todas incluye todos los dominios disponibles de la localidad.
+- Elegir localidad marca automáticamente sus territorios. El checklist permite marcar varias UPZ o agrupaciones completas.
+- La búsqueda filtra la lista por nombre o código sin alterar las casillas. Seleccionar todas incluye todos los territorios disponibles de la localidad.
 - Las tarjetas, ficha, gráficos y comparación presentan el consolidado de los territorios visibles. Una sola casilla marcada mantiene el modo consolidado.
 - Pulsar un territorio en mapa o tabla muestra sus valores individuales. Limpiar selección territorial devuelve el consolidado.
 - Los conteos y áreas se suman; tasas usan los totales; indicadores de hogares e índices se ponderan por hogares; amenaza se pondera por área. El consolidado no recibe ranking, quintil ni cuadrante.
@@ -56,9 +56,9 @@ No se suman líneas como hogares beneficiados ni se interpreta la suma de IDs po
 
 El panorama cuenta una historia visual en tres preguntas: necesidad, presencia y brecha. Un recorrido de tres pasos permite ir a los filtros, los resultados y la comparación con navegación por teclado. Las tarjetas de territorio, muestra, hogares representados y fecha comparten un mismo grupo con los índices de necesidad, presencia y brecha. Las explicaciones de cálculo y términos se consultan en el instructivo. El instructivo contiene una primera consulta paso a paso y un diccionario, y permanece disponible en celular.
 
-«Una exploración trazable» presenta la metodología como una línea de tiempo con ilustraciones, navegación entre etapas y animaciones al recorrerla. Conserva el texto metodológico y usa «Territorio» en lugar de «dominio». La animación respeta la preferencia de movimiento reducido.
+«Una exploración trazable» presenta la metodología como una línea de tiempo con ilustraciones, navegación entre etapas y animaciones al recorrerla. Conserva el texto metodológico y usa «Territorio» en toda la interfaz. La animación respeta la preferencia de movimiento reducido.
 
-La descarga CSV del panorama corresponde a los dominios visibles. Las funciones de CSV alternativo se conservan para uso local de sesión; no modifican la entrega final publicada.
+La descarga CSV del panorama corresponde a los territorios visibles. Las funciones de CSV alternativo se conservan para uso local de sesión; no modifican la entrega final publicada.
 
 ## Reporte territorial PDF
 

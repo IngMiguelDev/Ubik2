@@ -8,7 +8,7 @@ function display(field: string, unit: string) {
   if (value === null) return 'Sin dato'
   return (presenceLines.some(line => line.field === field) || ['hogares_muestra','hogares_expandidos','integralidad'].includes(field) ? format(Math.round(value)) : formatDecimal(value)) + ' ' + (field==='brecha' ? '' : field.startsWith('ind_') ? '%' : unit)
 }
-const presenceLines=[{field:'viv_presencia',label:'Mejoramiento de Vivienda',note:'Plan Terrazas · ejecutados o en ejecución · estados 2021–2024'},{field:'tit_presencia',label:'Titulación Predial',note:'Suma de predios únicos por dominio · 2015–2025'},{field:'barrios_presencia',label:'Mejoramiento de Barrios',note:'Suma de tramos por dominio · contratos 2020–2023'},{field:'reas_presencia',label:'Reasentamientos',note:'Procesos terminados · histórico'},{field:'cps_presencia',label:'Curaduría Pública Social',note:'Actos de reconocimiento · fechas 2021–2024'}]
+const presenceLines=[{field:'viv_presencia',label:'Mejoramiento de Vivienda',note:'Plan Terrazas · ejecutados o en ejecución · estados 2021–2024'},{field:'tit_presencia',label:'Titulación Predial',note:'Suma de predios únicos por territorio · 2015–2025'},{field:'barrios_presencia',label:'Mejoramiento de Barrios',note:'Suma de tramos por territorio · contratos 2020–2023'},{field:'reas_presencia',label:'Reasentamientos',note:'Procesos terminados · histórico'},{field:'cps_presencia',label:'Curaduría Pública Social',note:'Actos de reconocimiento · fechas 2021–2024'}]
 const indicator = computed(() => props.dataset.fieldDefinitions?.find(f => 'final:' + f.field === props.metric))
 </script>
 <template>

@@ -7,7 +7,7 @@ const data = JSON.parse(fs.readFileSync('public/data/dataset.json','utf8')) as D
 const ask = (q: string) => askData(q,data,data.rows,'all')
 
 test('lenguaje natural: ranking exploratorio real y trazabilidad sin modificar índices', () => {
-  const result = ask('¿Cuáles son los 5 dominios con mayor necesidad?')
+  const result = ask('¿Cuáles son los 5 territorios con mayor necesidad?')
   assert.equal(result.items.length,5)
   const expected = [...data.rows].sort((a,b)=>Number(b.indice_necesidad_exploratorio_4dim)-Number(a.indice_necesidad_exploratorio_4dim))
   assert.deepEqual(result.items.map(i=>i.code),expected.slice(0,5).map(r=>r.codigo_dominio_em))
@@ -41,7 +41,7 @@ test('alcance filtrado no se amplía y continuación mantiene territorios explí
   const follow=askData('Y vivienda',data,data.rows,'all',compared.matchedCodes)
   assert.deepEqual(new Set(follow.items.map(i=>i.code)),new Set(['9','11']))
   assert.deepEqual(follow.fields,['indice_vivienda_relativo'])
-  const ranked=ask('Los 5 dominios con mayor necesidad')
+  const ranked=ask('Los 5 territorios con mayor necesidad')
   assert.deepEqual(new Set(askData('Y vivienda',data,data.rows,'all',ranked.matchedCodes).items.map(i=>i.code)),new Set(ranked.items.map(i=>i.code)))
 })
 test('brecha y presencia ausentes conservan nulos; vulnerabilidad sin ponderación supuesta', () => {
@@ -63,5 +63,5 @@ test('suma parcial informa faltantes y una selección vacía nunca produce ceros
   const partial: Dataset = { ...data, rows: [{...data.rows[0]!,barrios_registros_publicados:2},{...data.rows[1]!,barrios_registros_publicados:null}] }
   const result=askData('Total de registros de Barrios',partial,partial.rows,'all')
   assert.match(result.text,/Hay 2 registros/); assert.match(result.text,/parcial/)
-  assert.match(askData('Total de registros de Barrios',partial,[],'filtered').text,/No hay dominios/)
+  assert.match(askData('Total de registros de Barrios',partial,[],'filtered').text,/No hay territorios/)
 })

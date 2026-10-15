@@ -21,12 +21,14 @@ try{
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   await page.goto('http://127.0.0.1:4174/')
   await page.waitForSelector('.leaflet-overlay-pane path')
+  assert.ok(!/\bdominios?\b/i.test(await page.locator('body').innerText()));
   assert.equal(await page.getByRole('heading',{name:'¿Qué nos cuentan estos datos?'}).isVisible(),true);
   await page.getByRole('button',{name:/1. Elige un territorio/}).click();
   assert.equal(await page.locator('#explorar-territorio').evaluate(el=>document.activeElement===el),true);
   await page.getByRole('button',{name:'Empieza aquí · guía de uso',exact:true}).click();
   assert.equal(await page.getByRole('dialog').getByText('Tu primera consulta, en cuatro pasos').isVisible(),true);
   await page.getByRole('dialog').getByText('Diccionario rápido:',{exact:false}).click();
+  assert.ok(!/\bdominios?\b/i.test(await page.getByRole('dialog').innerText()));
   assert.equal(await page.getByRole('dialog').getByText('Unidad de Planeamiento Zonal:',{exact:false}).isVisible(),true);
   await page.keyboard.press('Escape');
   await page.getByRole('button',{name:'Empieza aquí · guía de uso',exact:true}).click();

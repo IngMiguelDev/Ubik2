@@ -11,6 +11,7 @@ export function useTerritorialData() {
     try {
       const data = await $fetch<Dataset>(`${config.app.baseURL}data/final-dataset.json`)
       if (!Array.isArray(data.rows) || !Array.isArray(data.columns)) throw new Error('Estructura de datos inválida.')
+      data.fieldDefinitions = data.fieldDefinitions?.map(field => ({ ...field, description: field.description.replace(/\bdominio(s)?\b/gi, word => word[0] === 'D' ? word.endsWith('s') ? 'Territorios' : 'Territorio' : word.endsWith('s') ? 'territorios' : 'territorio') }))
       dataset.value = data; configured.value = Boolean(data.schema.codigo && data.schema.nombre)
       if (data.rows.length) original.value = await $fetch<string>(`${config.app.baseURL}data/upz_brecha_95.csv`, { responseType: 'text' })
     } catch (e) { error.value = e instanceof Error ? e.message : 'No se pudieron cargar los datos.' }
@@ -26,14 +27,14 @@ export function useTerritorialData() {
     error.value = ''
     try {
       for (const [key, column] of Object.entries(schema)) if (column && !key.startsWith('direccion_') && !dataset.value.columns.includes(column)) throw new Error(`Columna inexistente: ${column}`)
-      if (!schema.codigo || !schema.nombre || !schema.localidad || !schema.tipo) throw new Error('Asigna código, nombre, localidad y tipo de dominio.')
+      if (!schema.codigo || !schema.nombre || !schema.localidad || !schema.tipo) throw new Error('Asigna código, nombre, localidad y tipo de territorio.')
       let rows = parseCsv(original.value).rows
       const numericKeys = Object.keys(schema).filter(k => !['codigo', 'nombre', 'localidad', 'tipo', 'fuente', 'corte', 'limitaciones'].includes(k) && !k.startsWith('direccion_'))
       const textColumns = ['codigo','nombre','localidad','tipo','fuente','corte','limitaciones'].map(k => schema[k]).filter(Boolean)
       if (numericKeys.some(k => textColumns.includes(schema[k]))) throw new Error('Una columna de identificación no puede asignarse también como indicador numérico.')
       for (const key of numericKeys) if (schema[key]) rows = numberColumn(rows, schema[key]!)
       const codes = rows.map(r => r[schema.codigo!])
-      if (codes.some(c => c === null) || new Set(codes).size !== codes.length) throw new Error('Se requiere una fila por dominio y códigos únicos no vacíos. Revisa la unidad del CSV.')
+      if (codes.some(c => c === null) || new Set(codes).size !== codes.length) throw new Error('Se requiere una fila por territorio y códigos únicos no vacíos. Revisa la unidad del CSV.')
       dataset.value = { ...dataset.value, rows, schema: { ...schema }, source: { ...source } }; configured.value = true; reset()
     } catch (e) { error.value = (e as Error).message }
   }
