@@ -30,7 +30,10 @@ try{
   assert.equal(await banner.locator('button,a').count(),0);
   assert.equal(await banner.evaluate(el=>getComputedStyle(el).position),'relative');
   const desktopBanner=await banner.boundingBox();
-  assert.ok(desktopBanner.height>=180 && desktopBanner.height<=220);
+  assert.ok(desktopBanner.height>=260 && desktopBanner.height<=300);
+  assert.equal(await banner.locator('img').evaluate(el=>getComputedStyle(el).animationDuration),'4s');
+  assert.equal(await banner.locator('img').evaluate(el=>getComputedStyle(el).animationIterationCount),'1');
+  assert.equal(await banner.locator('.overview-banner-content').evaluate(el=>getComputedStyle(el).animationDuration),'0.6s');
   assert.ok(desktopBanner.y<(await page.locator('.territory-results').boundingBox()).y);
   await banner.screenshot({path:'artifacts/panorama-banner-desktop.png'});
   assert.ok(!/\bdominios?\b/i.test(await page.locator('body').innerText()));
@@ -154,15 +157,17 @@ try{
   await page.goto('http://127.0.0.1:4174/')
   await page.waitForSelector('.leaflet-overlay-pane path')
   await page.setViewportSize({width:390,height:844})
+  assert.equal(await banner.locator('img').evaluate(el=>getComputedStyle(el).animationName),'none');
+  assert.equal(await banner.locator('.overview-banner-content').evaluate(el=>getComputedStyle(el).animationName),'none');
   await banner.scrollIntoViewIfNeeded();
   const mobileBanner=await banner.boundingBox();
   assert.ok(mobileBanner.height>=130 && mobileBanner.height<=180);
-  assert.ok(await banner.evaluate(el=>el.scrollWidth<=el.clientWidth && el.scrollHeight<=el.clientHeight));
+  assert.ok(await banner.evaluate(el=>{const box=el.getBoundingClientRect(),text=el.querySelector('.overview-banner-content').getBoundingClientRect();return text.left>=box.left && text.right<=box.right && text.top>=box.top && text.bottom<=box.bottom}));
   await banner.screenshot({path:'artifacts/panorama-banner-mobile.png'});
   await page.setViewportSize({width:320,height:740});
   await banner.locator('h1').evaluate(el=>el.style.fontSize='48px');
   await banner.locator('p').evaluate(el=>el.style.fontSize='26px');
-  assert.ok(await banner.evaluate(el=>el.scrollWidth<=el.clientWidth && el.scrollHeight<=el.clientHeight));
+  assert.ok(await banner.evaluate(el=>{const box=el.getBoundingClientRect(),text=el.querySelector('.overview-banner-content').getBoundingClientRect();return text.left>=box.left && text.right<=box.right && text.top>=box.top && text.bottom<=box.bottom}));
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
   await banner.locator('h1,p').evaluateAll(els=>els.forEach(el=>el.style.removeProperty('font-size')));
   await page.setViewportSize({width:390,height:844});
