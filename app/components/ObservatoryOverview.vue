@@ -9,6 +9,7 @@ import { consolidatedField } from '../utils/consolidation'
 import { scenarioRows } from '../utils/scenario'
 const props=defineProps<{dataset:Dataset;rows:Row[];filters:{locality:string;domain:string;line:string;search:string};configured:boolean}>()
 const baseURL=useRuntimeConfig().app.baseURL
+const bannerImageURL=`${baseURL}images/bogota_urbana.jpg`
 const emit=defineEmits<{updateFilters:[filters:Partial<typeof props.filters>];reset:[];select:[code:string];navigate:[id:string]}>()
 const reportBusy=ref(false), reportError=ref(''), showHazards=ref(false)
 async function exportReport(){
@@ -79,7 +80,13 @@ function exportSelection(){const scenario=scenarioRows(props.dataset);download('
 </script>
 <template>
   <div class="observatory-overview">
-    <div class="overview-heading"><div><div class="section-label">OBSERVATORIO TERRITORIAL / BOGOTÁ</div><h1>Bogotá, territorio a territorio.</h1><p>Cada lugar tiene una historia. Descubre la suya en los datos.</p></div></div>
+    <header class="overview-banner" aria-labelledby="overview-title">
+      <img class="overview-banner-image" :src="bannerImageURL" alt="" width="738" height="270" fetchpriority="high">
+      <div class="overview-banner-content">
+        <h1 id="overview-title">UBiK2 · Observatorio territorial</h1>
+        <p>Datos para comprender y transformar el territorio de Bogotá.</p>
+      </div>
+    </header>
     <ExplorationIntro :final="dataset.status==='final'"/>
     <div v-if="!dataset.analysis && dataset.status!=='final'" class="stats-grid overview-stats"><StatCard v-for="card in contextCards" :key="card.label" :label="card.label" :value="card.value" :note="card.note"/></div>
     <TerritoryResults v-if="dataset.analysis||dataset.status==='final'" :row="territory" :rows="visible" :scope-label="filters.locality ? `Consolidado de ${filters.locality} · ${visible.length} territorios visibles` : `Consolidado general de la selección · ${visible.length} territorios visibles`" :dataset="dataset" :metric="metric" @indicator="metric=$event"><template #context><StatCard v-for="card in contextCards" :key="card.label" :label="card.label" :value="card.value" :note="card.note"/></template></TerritoryResults>

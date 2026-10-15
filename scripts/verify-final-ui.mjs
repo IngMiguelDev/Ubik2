@@ -21,6 +21,18 @@ try{
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   await page.goto('http://127.0.0.1:4174/')
   await page.waitForSelector('.leaflet-overlay-pane path')
+  const banner=page.locator('.overview-banner');
+  await banner.locator('img').evaluate(img=>img.decode());
+  assert.match(await banner.locator('img').getAttribute('src'),/images\/bogota_urbana\.jpg$/);
+  assert.equal(await page.locator('main h1').count(),1);
+  assert.equal(await banner.getByRole('heading',{level:1}).innerText(),'UBiK2 · Observatorio territorial');
+  assert.equal(await banner.locator('p').innerText(),'Datos para comprender y transformar el territorio de Bogotá.');
+  assert.equal(await banner.locator('button,a').count(),0);
+  assert.equal(await banner.evaluate(el=>getComputedStyle(el).position),'relative');
+  const desktopBanner=await banner.boundingBox();
+  assert.ok(desktopBanner.height>=180 && desktopBanner.height<=220);
+  assert.ok(desktopBanner.y<(await page.locator('.territory-results').boundingBox()).y);
+  await banner.screenshot({path:'artifacts/panorama-banner-desktop.png'});
   assert.ok(!/\bdominios?\b/i.test(await page.locator('body').innerText()));
   assert.equal(await page.getByRole('heading',{name:'¿Qué nos cuentan estos datos?'}).isVisible(),true);
   await page.getByRole('button',{name:/1. Elige un territorio/}).click();
@@ -142,6 +154,18 @@ try{
   await page.goto('http://127.0.0.1:4174/')
   await page.waitForSelector('.leaflet-overlay-pane path')
   await page.setViewportSize({width:390,height:844})
+  await banner.scrollIntoViewIfNeeded();
+  const mobileBanner=await banner.boundingBox();
+  assert.ok(mobileBanner.height>=130 && mobileBanner.height<=180);
+  assert.ok(await banner.evaluate(el=>el.scrollWidth<=el.clientWidth && el.scrollHeight<=el.clientHeight));
+  await banner.screenshot({path:'artifacts/panorama-banner-mobile.png'});
+  await page.setViewportSize({width:320,height:740});
+  await banner.locator('h1').evaluate(el=>el.style.fontSize='48px');
+  await banner.locator('p').evaluate(el=>el.style.fontSize='26px');
+  assert.ok(await banner.evaluate(el=>el.scrollWidth<=el.clientWidth && el.scrollHeight<=el.clientHeight));
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
+  await banner.locator('h1,p').evaluateAll(els=>els.forEach(el=>el.style.removeProperty('font-size')));
+  await page.setViewportSize({width:390,height:844});
   assert.equal(await page.getByRole('button',{name:'Empieza aquí · guía de uso',exact:true}).isVisible(),true);
   await page.getByRole('button',{name:'Empieza aquí · guía de uso',exact:true}).click();
   assert.equal(await page.getByRole('dialog').isVisible(),true);
@@ -154,5 +178,16 @@ try{
   for(const file of ['upz_brecha_95.geojson','diccionario_campos_upz_brecha_95.csv','idiger_amenaza_mm_urbano.geojson']){
     assert.equal((await page.request.get(`http://127.0.0.1:4174/data/${file}`)).status(),200)
   }
+  const preliminary=await browser.newPage({viewport:{width:390,height:844}});
+  await preliminary.route('**/data/final-dataset.json',async route=>{
+    const data=JSON.parse(await fs.readFile('public/data/final-dataset.json','utf8'));
+    delete data.status;
+    await route.fulfill({json:data});
+  });
+  await preliminary.goto('http://127.0.0.1:4174/');
+  await preliminary.locator('.overview-banner').waitFor();
+  assert.equal(await preliminary.getByText('Observatorio territorial · Datos preliminares sujetos a validación',{exact:true}).count(),1);
+  assert.equal(await preliminary.locator('.footer').isVisible(),true);
+  await preliminary.close();
   console.log('Final UI passed: 95 polygons, legend, IDIGER toggle, filters, percentage units, cards, downloads and mobile render.')
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve))}
