@@ -25,8 +25,9 @@ try{
   await banner.locator('img').evaluate(img=>img.decode());
   assert.match(await banner.locator('img').getAttribute('src'),/images\/bogota_urbana-mejorada\.webp$/);
   assert.equal(await banner.locator('img').evaluate(img=>img.naturalWidth),2058);
-  assert.equal(await banner.locator('h1').evaluate(el=>getComputedStyle(el).color),'rgb(255, 222, 9)');
-  assert.equal(await banner.locator('.overview-banner-brand').evaluate(el=>getComputedStyle(el).color),'rgb(237, 41, 25)');
+  assert.equal(await banner.locator('h1').evaluate(el=>getComputedStyle(el).color),'rgb(255, 255, 255)');
+  assert.equal(await banner.locator('.overview-banner-brand').evaluate(el=>getComputedStyle(el).color),'rgb(255, 255, 255)');
+  assert.equal(await banner.locator('p').evaluate(el=>getComputedStyle(el).color),'rgb(255, 255, 255)');
   assert.equal(await page.locator('main h1').count(),1);
   assert.equal(await banner.getByRole('heading',{level:1}).innerText(),'UBiK2 · Observatorio territorial');
   assert.equal(await banner.locator('p').innerText(),'Datos para comprender y transformar el territorio de Bogotá.');

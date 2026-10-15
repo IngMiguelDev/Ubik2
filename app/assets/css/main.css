@@ -79,9 +79,9 @@ thead th { font-size: 11px; color: #726476; }
 .overview-banner::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg,rgba(9,28,48,.88) 0%,rgba(9,28,48,.68) 48%,rgba(9,28,48,.38) 70%,rgba(9,28,48,0) 100%); }
 .overview-banner-content { min-width: 0; max-width: min(720px,65%); text-shadow: 0 1px 4px rgba(0,0,0,.5); animation: overview-text-enter 600ms ease-out both; }
 .overview-banner-content::before { content: ''; display: block; width: 44px; height: 4px; margin-bottom: 16px; border-radius: 2px; background: #FFDE09; }
-.overview-banner h1 { color: #FFDE09; font-size: clamp(32px,3vw,44px); line-height: 1.15; letter-spacing: -.8px; overflow-wrap: break-word; }
-.overview-banner-brand { color: #ed2919; }
-.overview-banner p { margin-top: 14px; color: #fff4ba; font-size: 16px; line-height: 1.6; text-wrap: pretty; }
+.overview-banner h1 { color: #fff; font-size: clamp(32px,3vw,44px); line-height: 1.15; letter-spacing: -.8px; overflow-wrap: break-word; }
+.overview-banner-brand { color: inherit; }
+.overview-banner p { margin-top: 14px; color: #fff; font-size: 16px; line-height: 1.6; text-wrap: pretty; }
 @keyframes overview-photo-enter { from { transform: scale(1); } to { transform: scale(1.04); } }
 @keyframes overview-text-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @media(prefers-reduced-motion:reduce) { .overview-banner-image,.overview-banner-content { animation: none; transform: none; } }
