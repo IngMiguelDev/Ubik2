@@ -55,7 +55,7 @@ Los cuadrantes del cuaderno clasifican necesidad alta o baja respecto a la media
 | Barrios | Contratos 2020–2023; no se filtra por terminación |
 | Reasentamientos | Histórico de procesos terminados; año extraído del identificador, no fecha de terminación |
 | Amenaza | IDIGER 2016 según el diccionario final |
-| Descarga de las cinco capas misionales | 10/10/2026 en `fuentes.csv` |
+| Descarga de las ocho fuentes | 10/10/2026 en `fuentes.csv` |
 
 Las tasas se expresan por cada 1.000 hogares expandidos de la EM 2021. Las unidades de líneas distintas no se suman como beneficiarios únicos; la suma Vivienda + Curaduría Pública Social se utiliza en la brecha de vivienda porque ambas se miden en predios. Las sumas de IDs distintos por territorio no acreditan unicidad global.
 
@@ -105,7 +105,7 @@ Los porcentajes consolidados son aproximaciones a partir de proporciones publica
 
 ## Fuentes y licencia
 
-`data/final-sources.json` reúne la procedencia registrada en `fuentes.csv` y los cuadernos: cinco líneas CVP, encuesta, cartografía DADEP y amenaza IDIGER. Las fechas no registradas se señalan como no documentadas. Los enlaces consignados no acreditan disponibilidad actual.
+`data/final-sources.json` reúne la procedencia registrada en `fuentes.csv` y los cuadernos: cinco líneas CVP, encuesta, cartografía DADEP y amenaza IDIGER. El registro actualizado documenta la descarga de las ocho fuentes el 10/10/2026, sus archivos y notas. Puede descargarse desde la tabla de fuentes del visor como `public/data/fuentes.csv`. Los enlaces consignados no acreditan disponibilidad actual.
 
 El catálogo consultado el 6 de octubre de 2026 se conserva como **antecedente histórico**, independiente de la tabla de fuentes finales. Sus estados pendientes corresponden a esa consulta.
 
